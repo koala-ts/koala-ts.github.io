@@ -1,9 +1,3 @@
----
-title: Configuration
-nav_order: 1
-parent: Getting Started
----
-
 # Configuration
 
 Applications often need to be configured to run in different environments. For example, you might want to use a
