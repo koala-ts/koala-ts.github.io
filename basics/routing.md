@@ -1,9 +1,3 @@
----
-title: Routing
-parent: Basics
-nav_order: 1
----
-
 # Routing
 
 When your application receives a request, it calls a controller method to generate the response. The routing
@@ -19,10 +13,10 @@ TypeScript, you must also add the Controller class to the `controllers` array in
 import { type IScope, Route } from '@koala-ts/framework';
 
 export class HomeController {
-    @Route({ method: 'GET', path: '/' })
-    index(scope: IScope): void {
+  @Route({method: 'GET', path: '/'})
+  index(scope: IScope): void {
 
-    }
+  }
 }
 
 ```
@@ -33,9 +27,9 @@ import { HomeController } from '../controller/HomeController';
 import { type IKoalaConfig } from '@koala-ts/framework';
 
 export const appConfig: IKoalaConfig = {
-    controllers: [
-        HomeController,
-    ]
+  controllers: [
+    HomeController,
+  ]
 };
 ``` 
 
@@ -50,15 +44,15 @@ one of the following methods: `GET`, `POST`, `PUT`, `PATCH`, `DELETE`, `OPTIONS`
 You can also match multiple HTTP methods by passing an array of methods to the `method` property.
 
 ```typescript
-@Route({ method: 'GET', path: '/' }) // Matches only GET requests
-@Route({ method: ['GET', 'POST'], path: '/' }) // Matches both GET and POST requests
+@Route({method: 'GET', path: '/'}) // Matches only GET requests
+@Route({method: ['GET', 'POST'], path: '/'}) // Matches both GET and POST requests
 ```
 
 And to match all HTTP methods, you can use the `ALL` or `ANY` method.
 
 ```typescript
-@Route({ method: 'ALL', path: '/' }) // Matches all HTTP methods
-@Route({ method: 'ANY', path: '/' }) // Matches all HTTP methods
+@Route({method: 'ALL', path: '/'}) // Matches all HTTP methods
+@Route({method: 'ANY', path: '/'}) // Matches all HTTP methods
 ```
 
 ## Route Parameters
@@ -67,13 +61,13 @@ You can define route parameters by adding a colon `:` followed by the parameter 
 `@Route` decorator.
 
 ```typescript
-@Route({ method: 'GET', path: '/user/:id' })
+@Route({method: 'GET', path: '/user/:id'})
 ```
 
 Then you can access the parameter value in the controller method by using the `scope.params` object.
 
 ```typescript
-const { id } = scope.params;
+const {id} = scope.params;
 ````
 
 ## Middleware
@@ -84,10 +78,10 @@ the `@Route` decorator.
 ```typescript
 // src/controller/HomeController.ts
 export class HomeController {
-    @Route({ method: 'GET', path: '/', middleware: [exampleMiddleware] })
-    index(scope: IScope): void {
+  @Route({method: 'GET', path: '/', middleware: [exampleMiddleware]})
+  index(scope: IScope): void {
 
-    }
+  }
 }
 ```
 
@@ -96,8 +90,8 @@ Below is an example of a middleware function.
 ```typescript
 // src/middleware/exampleMiddleware.ts
 export async function exampleMiddleware(scope: IScope, next: INext): Promise<void> {
-    console.log('Example middleware: Before controller');
-    await next();
-    console.log('Example middleware: After controller');
+  console.log('Example middleware: Before controller');
+  await next();
+  console.log('Example middleware: After controller');
 }
 ```

@@ -1,9 +1,3 @@
----
-title: Response
-parent: Basics
-nav_order: 3
----
-
 # Http Response
 
 All routes in a controller method should return a response. You can set the response data using the `response` object of
@@ -15,14 +9,14 @@ The response `body` can be `string`, `Buffer`, `Stream`, `Object`, `Array`, `nul
 
 ```typescript
 export class UserController {
-    @Route({ method: 'GET', path: '/users/:id' })
-    show({ response, params }: IScope) {
-        // Find user by id
-        const user = findUserById(params.id);
+  @Route({method: 'GET', path: '/users/:id'})
+  show({response, params}: IScope) {
+    // Find user by id
+    const user = findUserById(params.id);
 
-        // Set response body
-        response.body = user;
-    }
+    // Set response body
+    response.body = user;
+  }
 }
 ```
 
@@ -32,21 +26,21 @@ By default, the response status is `404`. You can set the response status using 
 
 ```typescript
 export class UserController {
-    @Route({ method: 'GET', path: '/users/:id' })
-    show({ response, params }: IScope) {
-        // Find user by id
-        const user = findUserById(params.id);
+  @Route({method: 'GET', path: '/users/:id'})
+  show({response, params}: IScope) {
+    // Find user by id
+    const user = findUserById(params.id);
 
-        // If user not found
-        if (!user) {
-            response.status = 404;
-            response.body = { message: 'User not found' };
-            return;
-        }
-
-        // This will automatically set the status to 200
-        response.body = user;
+    // If user not found
+    if (!user) {
+      response.status = 404;
+      response.body = {message: 'User not found'};
+      return;
     }
+
+    // This will automatically set the status to 200
+    response.body = user;
+  }
 }
 ```
 
@@ -67,14 +61,12 @@ There are two ways to set response headers:
 
 ```typescript
 // using response.SetHeader for single header per call
-scope.response
-     .setHeader('X-Header-One', 'Header Value')
-     .setHeader('X-Header-Two', 'Header Value');
+scope.response.setHeader('X-Header-One', 'Header Value').setHeader('X-Header-Two', 'Header Value');
 
 // using response.withHeaders to set multiple headers
 scope.response.withHeaders({
-    'X-Header-One': 'Header Value',
-    'X-Header-Two': 'Header Value'
+  'X-Header-One': 'Header Value',
+  'X-Header-Two': 'Header Value'
 });
 ```
 
