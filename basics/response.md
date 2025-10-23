@@ -1,7 +1,7 @@
 # Http Response
 
 All routes in a controller method should return a response. You can set the response data using the `response` object of
-the `IScope` interface.
+the `HttpScope` interface.
 
 ## Response Body
 
@@ -10,7 +10,7 @@ The response `body` can be `string`, `Buffer`, `Stream`, `Object`, `Array`, `nul
 ```typescript
 export class UserController {
   @Route({method: 'GET', path: '/users/:id'})
-  show({response, params}: IScope) {
+  show({response, params}: HttpScope) {
     // Find user by id
     const user = findUserById(params.id);
 
@@ -27,7 +27,7 @@ By default, the response status is `404`. You can set the response status using 
 ```typescript
 export class UserController {
   @Route({method: 'GET', path: '/users/:id'})
-  show({response, params}: IScope) {
+  show({response, params}: HttpScope) {
     // Find user by id
     const user = findUserById(params.id);
 

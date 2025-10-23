@@ -10,11 +10,11 @@ TypeScript, you must also add the Controller class to the `controllers` array in
 
 ```typescript
 // src/controller/HomeController.ts
-import { type IScope, Route } from '@koala-ts/framework';
+import { type HttpScope, Route } from '@koala-ts/framework';
 
 export class HomeController {
   @Route({method: 'GET', path: '/'})
-  index(scope: IScope): void {
+  index(scope: HttpScope): void {
 
   }
 }
@@ -24,9 +24,9 @@ export class HomeController {
 ```typescript
 // src/config/app.ts
 import { HomeController } from '../controller/HomeController';
-import { type IKoalaConfig } from '@koala-ts/framework';
+import { type KoalaConfig } from '@koala-ts/framework';
 
-export const appConfig: IKoalaConfig = {
+export const appConfig: KoalaConfig = {
   controllers: [
     HomeController,
   ]
@@ -79,7 +79,7 @@ the `@Route` decorator.
 // src/controller/HomeController.ts
 export class HomeController {
   @Route({method: 'GET', path: '/', middleware: [exampleMiddleware]})
-  index(scope: IScope): void {
+  index(scope: HttpScope): void {
 
   }
 }
@@ -89,7 +89,7 @@ Below is an example of a middleware function.
 
 ```typescript
 // src/middleware/exampleMiddleware.ts
-export async function exampleMiddleware(scope: IScope, next: INext): Promise<void> {
+export async function exampleMiddleware(scope: HttpScope, next: NextMiddleware): Promise<void> {
   console.log('Example middleware: Before controller');
   await next();
   console.log('Example middleware: After controller');
