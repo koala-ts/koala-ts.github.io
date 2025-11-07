@@ -136,7 +136,7 @@ type RequestScope = {
 const requestScopeStore = createStore<RequestScope>();
 
 export async function requestContextMiddleware(scope: HttpScope, next: NextMiddleware): Promise<void> {
-  const requestId = scope.request.headers['x-request-id'] || generateRequestId();
+  const requestId = scope.request.headers['x-request-id'] || crypto.randomUUID();
   
   await requestScopeStore.run(
     { 
