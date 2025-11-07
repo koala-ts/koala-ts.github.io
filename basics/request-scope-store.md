@@ -144,6 +144,14 @@ export async function requestContextMiddleware(scope: HttpScope, next: NextMiddl
       requestId, 
       timestamp: Date.now() 
     }, 
+    next
+  );
+}
+    { 
+      userId: 'anonymous', 
+      requestId, 
+      timestamp: Date.now() 
+    }, 
     async () => {
       await next();
     }
