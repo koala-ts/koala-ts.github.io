@@ -29,3 +29,4 @@ npm run start
     + [Routing](./basics/routing.md)
     + [Request](./basics/request.md)
     + [Response](./basics/response.md)
+    + [Request Scope Store](./basics/request-scope-store.md)
