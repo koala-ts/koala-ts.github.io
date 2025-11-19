@@ -30,3 +30,4 @@ npm run start
     + [Request](./basics/request.md)
     + [Response](./basics/response.md)
     + [Request Scope Store](./basics/request-scope-store.md)
+    + [Serving Static Files](./basics/static-files.md)
