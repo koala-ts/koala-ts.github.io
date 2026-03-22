@@ -1,4 +1,6 @@
-# Http Response
+---
+title: Response
+---
 
 All routes in a controller method should return a response. You can set the response data using the `response` object of
 the `HttpScope` interface.

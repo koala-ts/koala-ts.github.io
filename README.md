@@ -1,33 +1,63 @@
-# KoalaTs 🐨
+# KoalaTs Docs
 
-Welcome to KoalaTs! KoalaTs is crafted for the laziest backend developers because nothing pairs better with clean APIs
-than a good nap.
+This repository contains the documentation website for KoalaTs.
 
-## Getting Started
+The site is generated with Docusaurus and published to GitHub Pages with branch-based version paths.
 
-To get started, you can use the [KoalaTs CLI](https://www.npmjs.com/package/@koala-ts/cli) to generate a new project:
+## Version publishing model
+
+Only these branches are deployed:
+
+- `main`
+- `*.x` such as `1.x`, `2.x`, or `3.x`
+
+Published paths:
+
+- `main` -> `/docs/next`
+- `1.x` -> `/docs/1.x`
+- `2.x` -> `/docs/2.x`
+
+Branches outside this policy are not deployed.
+
+A version selector in the navbar is generated from `docs/versions.json` on the `gh-pages` branch.
+
+## Local development
+
+Requirements:
+
+- Node.js 24.x
+- npm 11.x
+
+Install dependencies:
 
 ```bash
-npx @koala-ts/cli create my-app
+npm install
 ```
 
-The above command will generate a new project in the `my-app` directory.
-
-Then, navigate to the project directory and start the server:
+Run the docs locally:
 
 ```bash
-cd my-app
-npm install
 npm run start
 ```
 
-## Next Steps
+Build static files:
 
-- Get started
-    + [Configuration](./get-started/configuration.md)
-- Basics
-    + [Routing](./basics/routing.md)
-    + [Request](./basics/request.md)
-    + [Response](./basics/response.md)
-    + [Request Scope Store](./basics/request-scope-store.md)
-    + [Serving Static Files](./basics/static-files.md)
+```bash
+npm run build
+```
+
+Run validation:
+
+```bash
+npm run validate
+```
+
+## GitHub Pages setup
+
+Set GitHub Pages source to the `gh-pages` branch root.
+
+The deploy workflow updates:
+
+- `/docs/<version>/` for the current branch build
+- `/docs/versions.json` for version navigation
+- root redirects to the default branch version

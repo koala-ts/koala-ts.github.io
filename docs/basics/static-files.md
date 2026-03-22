@@ -1,4 +1,6 @@
-# Serving Static Files
+---
+title: Serving Static Files
+---
 
 KoalaTs includes built-in support for serving static files such as HTML, CSS, JavaScript, images, and other assets. This is useful for serving public files like client-side assets, documentation, or any files that don't require server-side processing.
 
@@ -24,5 +26,6 @@ export const appConfig: KoalaConfig = {
 ## Default Behavior
 
 If you don't specify the `staticFiles` configuration, KoalaTs will use these defaults:
+
 - **Root directory**: `public`
 - **Index file**: `index.html`

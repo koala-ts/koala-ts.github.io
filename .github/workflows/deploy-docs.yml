@@ -1,0 +1,128 @@
+name: Deploy Docs
+
+on:
+  push:
+    branches:
+      - main
+      - "*.x"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: docs-pages-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source branch
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Resolve target version
+        id: version
+        run: node scripts/resolve-version.js --github-output "$GITHUB_OUTPUT"
+
+      - name: Resolve default branch version
+        id: default_version
+        run: node scripts/resolve-version.js "${{ github.event.repository.default_branch }}" --github-output "$GITHUB_OUTPUT"
+
+      - name: Prepare gh-pages workspace
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if git ls-remote --exit-code --heads origin gh-pages; then
+            git clone --depth 1 --branch gh-pages "https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git" .gh-pages
+          else
+            mkdir -p .gh-pages
+            cd .gh-pages
+            git init
+            git checkout --orphan gh-pages
+            git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git"
+          fi
+
+      - name: Build versions catalog
+        id: catalog
+        run: |
+          mkdir -p .gh-pages/docs
+          VERSION_CSV=$(node scripts/build-version-catalog.js .gh-pages/docs/versions.json "${{ steps.version.outputs.version_slug }}")
+          echo "version_csv=${VERSION_CSV}" >> "$GITHUB_OUTPUT"
+
+      - name: Resolve site base
+        id: site
+        run: |
+          if [ -f .gh-pages/CNAME ]; then
+            DOMAIN=$(head -n 1 .gh-pages/CNAME | tr -d '[:space:]')
+            echo "site_url=https://${DOMAIN}" >> "$GITHUB_OUTPUT"
+            echo "site_base=/" >> "$GITHUB_OUTPUT"
+          else
+            OWNER_LC=$(echo "${GITHUB_REPOSITORY_OWNER}" | tr '[:upper:]' '[:lower:]')
+            REPO_NAME="${GITHUB_REPOSITORY#*/}"
+            REPO_LC=$(echo "${REPO_NAME}" | tr '[:upper:]' '[:lower:]')
+            echo "site_url=https://${GITHUB_REPOSITORY_OWNER}.github.io" >> "$GITHUB_OUTPUT"
+            if [ "${REPO_LC}" = "${OWNER_LC}.github.io" ]; then
+              echo "site_base=/" >> "$GITHUB_OUTPUT"
+            else
+              echo "site_base=/${REPO_NAME}/" >> "$GITHUB_OUTPUT"
+            fi
+          fi
+
+      - name: Build Docusaurus site
+        env:
+          DOCS_VERSION: ${{ steps.version.outputs.version_slug }}
+          DOCS_VERSIONS: ${{ steps.catalog.outputs.version_csv }}
+          DOCS_SITE_BASE: ${{ steps.site.outputs.site_base }}
+          DOCS_BASE_URL: ${{ steps.site.outputs.site_base }}docs/${{ steps.version.outputs.version_slug }}/
+          SITE_URL: ${{ steps.site.outputs.site_url }}
+        run: npm run build
+
+      - name: Publish version folder
+        run: |
+          mkdir -p ".gh-pages/docs/${{ steps.version.outputs.version_slug }}"
+          rsync -a --delete build/ ".gh-pages/docs/${{ steps.version.outputs.version_slug }}/"
+
+      - name: Create index redirects
+        run: |
+          ROOT_REDIRECT="./docs/${{ steps.default_version.outputs.version_slug }}/"
+          DOCS_REDIRECT="./${{ steps.default_version.outputs.version_slug }}/"
+
+          cat > .gh-pages/index.html <<EOF
+          <!doctype html>
+          <meta charset="utf-8">
+          <meta http-equiv="refresh" content="0; url=${ROOT_REDIRECT}">
+          <title>KoalaTs Docs</title>
+          <a href="${ROOT_REDIRECT}">Go to documentation</a>
+          EOF
+
+          cat > .gh-pages/docs/index.html <<EOF
+          <!doctype html>
+          <meta charset="utf-8">
+          <meta http-equiv="refresh" content="0; url=${DOCS_REDIRECT}">
+          <title>KoalaTs Docs</title>
+          <a href="${DOCS_REDIRECT}">Go to documentation</a>
+          EOF
+
+      - name: Commit and push gh-pages
+        working-directory: .gh-pages
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs index.html
+          if git diff --cached --quiet; then
+            echo "No changes to publish"
+            exit 0
+          fi
+          git commit -m "chore: publish docs ${{ steps.version.outputs.version_slug }}"
+          git push origin HEAD:gh-pages

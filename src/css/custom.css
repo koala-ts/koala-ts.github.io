@@ -1,0 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&display=swap');
+
+:root {
+  --ifm-color-primary: #2d7b6c;
+  --ifm-color-primary-dark: #286f62;
+  --ifm-color-primary-darker: #26695d;
+  --ifm-color-primary-darkest: #20564d;
+  --ifm-color-primary-light: #328775;
+  --ifm-color-primary-lighter: #348d79;
+  --ifm-color-primary-lightest: #3da58e;
+  --ifm-link-color: #20564d;
+  --ifm-menu-color-active: #20564d;
+  --ifm-font-family-base: 'Plus Jakarta Sans', sans-serif;
+  --ifm-heading-font-family: 'Plus Jakarta Sans', sans-serif;
+  --ifm-font-family-monospace: 'Fira Code', monospace;
+  --ifm-background-color: #f7fbfa;
+  --ifm-footer-background-color: #102a27;
+  --ifm-code-font-size: 95%;
+}
+
+[data-theme='dark'] {
+  --ifm-color-primary: #74c7ae;
+  --ifm-color-primary-dark: #5ebf9f;
+  --ifm-color-primary-darker: #53ba98;
+  --ifm-color-primary-darkest: #3fa280;
+  --ifm-color-primary-light: #8acfbd;
+  --ifm-color-primary-lighter: #95d4c3;
+  --ifm-color-primary-lightest: #b6e1d5;
+  --ifm-link-color: #b6e1d5;
+  --ifm-menu-color-active: #b6e1d5;
+}
+
+.footer {
+  --ifm-footer-background-color: #102a27;
+}

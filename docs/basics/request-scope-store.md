@@ -1,4 +1,6 @@
-# Request Scope Store
+---
+title: Request Scope Store
+---
 
 The Request Scope Store is a utility that helps manage and propagate context-specific data (such as user information, request IDs, or feature flags) across asynchronous operations without manual parameter passing.
 
@@ -25,7 +27,7 @@ The Request Scope Store is particularly useful for:
 You can create a request scope store by using the `createStore` function and defining the shape of your store using TypeScript generics.
 
 ```typescript
-import { createStore } from '@koala-ts/framework';
+import {createStore} from '@koala-ts/framework';
 
 type RequestScope = {
   userId: string;
@@ -42,7 +44,7 @@ const requestScopeStore = createStore<RequestScope>();
 Initializes a new scope with the given state and runs the callback within that context.
 
 ```typescript
-requestScopeStore.run({ userId: 'anonymous', requestId: 'req-123' }, () => {
+requestScopeStore.run({userId: 'anonymous', requestId: 'req-123'}, () => {
   // Your code runs within this scope
   console.log(requestScopeStore.get('userId')); // 'anonymous'
 });
@@ -89,7 +91,7 @@ if (requestScopeStore.has('userId')) {
 Here's a complete example of how to use the Request Scope Store in your application:
 
 ```typescript
-import { createStore, type HttpScope, Route } from '@koala-ts/framework';
+import {createStore, type HttpScope, Route} from '@koala-ts/framework';
 
 type RequestScope = {
   userId: string;
@@ -102,7 +104,7 @@ export class UserController {
   @Route({method: 'GET', path: '/users/:id'})
   show({request}: HttpScope) {
     // Initialize the scope with default values
-    requestScopeStore.run({ userId: 'anonymous', requestId: 'req-123' }, () => {
+    requestScopeStore.run({userId: 'anonymous', requestId: 'req-123'}, () => {
       // Set userId after authentication
       requestScopeStore.set('userId', request.params.id);
 
@@ -125,7 +127,7 @@ export class UserController {
 You can also use the Request Scope Store in middleware to set up context that will be available to all subsequent handlers:
 
 ```typescript
-import { createStore, type HttpScope, type NextMiddleware } from '@koala-ts/framework';
+import {createStore, type HttpScope, type NextMiddleware} from '@koala-ts/framework';
 
 type RequestScope = {
   userId: string;
@@ -135,26 +137,21 @@ type RequestScope = {
 
 const requestScopeStore = createStore<RequestScope>();
 
-export async function requestContextMiddleware(scope: HttpScope, next: NextMiddleware): Promise<void> {
+export async function requestContextMiddleware(
+  scope: HttpScope,
+  next: NextMiddleware,
+): Promise<void> {
   const requestId = scope.request.headers['x-request-id'] || crypto.randomUUID();
-  
+
   await requestScopeStore.run(
-    { 
-      userId: 'anonymous', 
-      requestId, 
-      timestamp: Date.now() 
-    }, 
-    next
-  );
-}
-    { 
-      userId: 'anonymous', 
-      requestId, 
-      timestamp: Date.now() 
-    }, 
+    {
+      userId: 'anonymous',
+      requestId,
+      timestamp: Date.now(),
+    },
     async () => {
       await next();
-    }
+    },
   );
 }
 ```
@@ -168,7 +165,7 @@ export class UserController {
     // Access the request context set by the middleware
     const requestId = requestScopeStore.get('requestId');
     const timestamp = requestScopeStore.get('timestamp');
-    
+
     console.log(`Request ${requestId} started at ${timestamp}`);
   }
 }
