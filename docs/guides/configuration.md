@@ -2,6 +2,8 @@
 title: Configuration
 ---
 
+Use configuration after you have a project running and want to adapt it to a specific environment.
+
 Applications often need to be configured to run in different environments. For example, you might want to use a
 different database in development than in production.
 

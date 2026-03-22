@@ -52,7 +52,7 @@ const config = {
       },
       items: [
         {
-          to: '/docs/intro',
+          to: '/docs/overview/intro',
           position: 'left',
           label: 'Documentation',
         },
@@ -62,7 +62,7 @@ const config = {
           items: versionItems,
         },
         {
-          href: 'https://github.com/koala-ts/koala-ts.github.io',
+          href: 'https://github.com/koala-ts',
           label: 'GitHub',
           position: 'right',
         },

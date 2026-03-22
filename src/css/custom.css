@@ -1,36 +1,67 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&display=swap');
 
 :root {
-  --ifm-color-primary: #2d7b6c;
-  --ifm-color-primary-dark: #286f62;
-  --ifm-color-primary-darker: #26695d;
-  --ifm-color-primary-darkest: #20564d;
-  --ifm-color-primary-light: #328775;
-  --ifm-color-primary-lighter: #348d79;
-  --ifm-color-primary-lightest: #3da58e;
-  --ifm-link-color: #20564d;
-  --ifm-menu-color-active: #20564d;
-  --ifm-font-family-base: 'Plus Jakarta Sans', sans-serif;
-  --ifm-heading-font-family: 'Plus Jakarta Sans', sans-serif;
+  --ifm-color-primary: #0f766e;
+  --ifm-color-primary-dark: #0d6962;
+  --ifm-color-primary-darker: #0c635c;
+  --ifm-color-primary-darkest: #0a524c;
+  --ifm-color-primary-light: #118378;
+  --ifm-color-primary-lighter: #12897d;
+  --ifm-color-primary-lightest: #16a092;
+  --ifm-link-color: #2dd4bf;
+  --ifm-menu-color-active: #2dd4bf;
+  --ifm-font-family-base: 'Manrope', sans-serif;
+  --ifm-heading-font-family: 'Manrope', sans-serif;
   --ifm-font-family-monospace: 'Fira Code', monospace;
-  --ifm-background-color: #f7fbfa;
-  --ifm-footer-background-color: #102a27;
+  --ifm-background-color: #ffffff;
+  --ifm-background-surface-color: #f9fafb;
+  --ifm-navbar-background-color: #ffffff;
+  --ifm-footer-background-color: #f9fafb;
+  --ifm-font-color-base: #0b0f14;
+  --ifm-heading-color: #0b0f14;
+  --ifm-navbar-link-color: #0b0f14;
+  --ifm-navbar-link-hover-color: #0f766e;
+  --ifm-toc-link-color: #0b0f14;
+  --ifm-menu-color: #0b0f14;
   --ifm-code-font-size: 95%;
+  --ifm-code-background: #f3f4f6;
+  --ifm-pre-background: #0b0f14;
+  --ifm-pre-color: #e5e7eb;
 }
 
 [data-theme='dark'] {
-  --ifm-color-primary: #74c7ae;
-  --ifm-color-primary-dark: #5ebf9f;
-  --ifm-color-primary-darker: #53ba98;
-  --ifm-color-primary-darkest: #3fa280;
-  --ifm-color-primary-light: #8acfbd;
-  --ifm-color-primary-lighter: #95d4c3;
-  --ifm-color-primary-lightest: #b6e1d5;
-  --ifm-link-color: #b6e1d5;
-  --ifm-menu-color-active: #b6e1d5;
+  --ifm-color-primary: #2dd4bf;
+  --ifm-color-primary-dark: #18c3ae;
+  --ifm-color-primary-darker: #16b9a5;
+  --ifm-color-primary-darkest: #129887;
+  --ifm-color-primary-light: #44d9c6;
+  --ifm-color-primary-lighter: #51dccb;
+  --ifm-color-primary-lightest: #74e4d6;
+  --ifm-link-color: #2dd4bf;
+  --ifm-menu-color-active: #2dd4bf;
+  --ifm-font-color-base: #e5e7eb;
+  --ifm-heading-color: #f9fafb;
 }
 
 .footer {
-  --ifm-footer-background-color: #102a27;
+  --ifm-footer-background-color: #f9fafb;
+  color: #0b0f14;
+  border-top: 1px solid rgba(15, 118, 110, 0.1);
+}
+
+.navbar {
+  border-bottom: 1px solid rgba(15, 118, 110, 0.08);
+  box-shadow: none;
+}
+
+.navbar__brand,
+.footer a,
+.menu__link,
+.table-of-contents__link {
+  font-family: 'Manrope', sans-serif;
+}
+
+.footer__title {
+  color: #0b0f14;
 }
