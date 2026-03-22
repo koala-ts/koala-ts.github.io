@@ -1,4 +1,8 @@
-# Configuration
+---
+title: Configuration
+---
+
+Use configuration after you have a project running and want to adapt it to a specific environment.
 
 Applications often need to be configured to run in different environments. For example, you might want to use a
 different database in development than in production.
@@ -25,13 +29,16 @@ const port = process.env.PORT;
 If you need to override an environment value (e.g. to a different value on your local machine), you can do that in a
 `.env.local` file:
 
-```
+```dotenv
 # .env.local
 DATABASE_URL="mysql://root:@127.0.0.1:3306/my_database_name"
 ```
 
-{: .caution}
+:::caution
+
 The `.env.local` file should not be committed to your repository. It is meant to be used for local development only.
+
+:::
 
 Several other .env files are available to set environment variables in just the right situation:
 

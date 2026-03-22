@@ -1,0 +1,381 @@
+.page {
+  background:
+    radial-gradient(circle at top center, rgba(45, 212, 191, 0.12), transparent 26rem),
+    linear-gradient(180deg, #ffffff 0%, #ffffff 100%);
+  color: #0b0f14;
+}
+
+.container {
+  width: min(100% - 2rem, 68.75rem);
+  margin: 0 auto;
+}
+
+.section {
+  padding: 5.5rem 0;
+}
+
+.sectionHeader {
+  max-width: 40rem;
+  margin-bottom: 2.5rem;
+}
+
+.eyebrow {
+  margin: 0 0 0.75rem;
+  color: #0f766e;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.sectionTitle {
+  margin: 0;
+  color: #0b0f14;
+  font-size: clamp(2rem, 4vw, 2.9rem);
+  line-height: 1.1;
+}
+
+.sectionDescription {
+  margin: 1rem 0 0;
+  color: rgba(11, 15, 20, 0.72);
+  font-size: 1.05rem;
+  line-height: 1.75;
+}
+
+.hero {
+  padding: 6rem 0 4.5rem;
+}
+
+.heroGrid {
+  display: grid;
+  gap: 2.5rem;
+  align-items: center;
+  grid-template-columns: minmax(0, 1.2fr) minmax(18rem, 0.8fr);
+}
+
+.heroCopy {
+  max-width: 40rem;
+}
+
+.heroTitle {
+  margin: 0;
+  color: #0b0f14;
+  font-size: clamp(2.8rem, 7vw, 4.8rem);
+  line-height: 0.96;
+  letter-spacing: -0.04em;
+}
+
+.heroText {
+  margin: 1.5rem 0 0;
+  color: rgba(11, 15, 20, 0.72);
+  font-size: 1.125rem;
+  line-height: 1.8;
+}
+
+.buttonRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3rem;
+  padding: 0.85rem 1.2rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: border-color 120ms ease, background-color 120ms ease, color 120ms ease;
+}
+
+.button:hover {
+  text-decoration: none;
+}
+
+.buttonPrimary {
+  background: #0f766e;
+  color: #f9fafb;
+}
+
+.buttonPrimary:hover {
+  background: #115e59;
+  color: #f9fafb;
+}
+
+.buttonSecondary {
+  border-color: rgba(15, 118, 110, 0.18);
+  background: #f9fafb;
+  color: #0b0f14;
+}
+
+.buttonSecondary:hover {
+  border-color: #0f766e;
+  color: #0b0f14;
+}
+
+.card {
+  height: 100%;
+  padding: 1.5rem;
+  border: 1px solid rgba(15, 118, 110, 0.1);
+  border-radius: 1.25rem;
+  background: #f9fafb;
+  box-shadow: 0 14px 38px rgba(15, 23, 42, 0.06);
+}
+
+.heroCard {
+  display: grid;
+  gap: 1rem;
+}
+
+.heroCardTitle {
+  margin: 0;
+  color: #0b0f14;
+  font-size: 1.1rem;
+}
+
+.heroCardText {
+  margin: 0;
+  color: rgba(11, 15, 20, 0.72);
+  line-height: 1.7;
+}
+
+.heroCardList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.85rem;
+}
+
+.heroCardList li {
+  color: rgba(11, 15, 20, 0.8);
+  padding-left: 1.1rem;
+  position: relative;
+}
+
+.heroCardList li::before {
+  content: '';
+  position: absolute;
+  top: 0.7rem;
+  left: 0;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: #2dd4bf;
+}
+
+.splitGrid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.copyList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 1rem;
+}
+
+.copyList li {
+  color: rgba(11, 15, 20, 0.8);
+  line-height: 1.75;
+  padding-left: 1.25rem;
+  position: relative;
+}
+
+.copyList li::before {
+  content: '';
+  position: absolute;
+  top: 0.75rem;
+  left: 0;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: #2dd4bf;
+}
+
+.featureGrid {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.featureCardTitle {
+  margin: 0;
+  color: #0b0f14;
+  font-size: 1rem;
+}
+
+.featureCardText {
+  margin: 0.8rem 0 0;
+  color: rgba(11, 15, 20, 0.7);
+  line-height: 1.7;
+}
+
+.codeTabs {
+  overflow: hidden;
+  border: 1px solid rgba(15, 118, 110, 0.1);
+  border-radius: 1.25rem;
+  background: #f9fafb;
+}
+
+.tabList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding: 1rem;
+  border-bottom: 1px solid rgba(15, 118, 110, 0.08);
+}
+
+.tabButton,
+.tabButtonActive {
+  appearance: none;
+  border: 0;
+  border-radius: 999px;
+  padding: 0.65rem 0.95rem;
+  background: transparent;
+  color: rgba(11, 15, 20, 0.62);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.tabButtonActive {
+  background: rgba(45, 212, 191, 0.18);
+  color: #0f766e;
+}
+
+.codePanel {
+  padding: 0 1rem 1rem;
+}
+
+.codeBlock {
+  margin: 0;
+  padding: 1.5rem;
+  overflow-x: auto;
+  border-radius: 1rem;
+  background: #0b0f14;
+  color: #e5e7eb;
+  font-size: 0.92rem;
+  line-height: 1.7;
+}
+
+.architectureGrid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: minmax(0, 1.1fr) minmax(18rem, 0.9fr);
+}
+
+.architectureCardGrid {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.architectureList {
+  margin: 1.25rem 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.9rem;
+}
+
+.architectureList li {
+  color: rgba(11, 15, 20, 0.8);
+  line-height: 1.75;
+}
+
+.architectureDetailCard {
+  min-height: 0;
+}
+
+.stepsGrid {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.stepNumber {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  margin-bottom: 1rem;
+  border-radius: 50%;
+  background: rgba(45, 212, 191, 0.18);
+  color: #0f766e;
+  font-weight: 700;
+}
+
+.stepTitle {
+  margin: 0;
+  color: #0b0f14;
+  font-size: 1.1rem;
+}
+
+.stepText {
+  margin: 0.8rem 0 0;
+  color: rgba(11, 15, 20, 0.72);
+  line-height: 1.7;
+}
+
+.ctaSection {
+  padding-top: 1rem;
+  padding-bottom: 6rem;
+}
+
+.ctaCard {
+  text-align: center;
+  padding: 2.5rem;
+}
+
+.ctaTitle {
+  margin: 0;
+  color: #0b0f14;
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1.1;
+}
+
+.ctaText {
+  max-width: 36rem;
+  margin: 1rem auto 0;
+  color: rgba(11, 15, 20, 0.72);
+  line-height: 1.75;
+}
+
+@media (max-width: 996px) {
+  .heroGrid,
+  .splitGrid,
+  .architectureGrid,
+  .stepsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .featureGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .section {
+    padding: 4rem 0;
+  }
+
+  .hero {
+    padding-top: 4.5rem;
+  }
+
+  .featureGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .ctaCard {
+    padding: 2rem 1.25rem;
+  }
+}

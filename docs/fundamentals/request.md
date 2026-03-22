@@ -1,4 +1,6 @@
-# Http Request
+---
+title: Request
+---
 
 The `HttpScope` interface which is passed to the controller method provides access to the incoming request data.
 
@@ -29,7 +31,7 @@ export class UserController {
     const avatar = scope.request.files?.avatar as unknown as UploadedFile;
   }
 }
-````
+```
 
 ## Request details
 

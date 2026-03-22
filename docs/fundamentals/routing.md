@@ -1,4 +1,6 @@
-# Routing
+---
+title: Routing
+---
 
 When your application receives a request, it calls a controller method to generate the response. The routing
 configuration defines which action to run for each incoming URL.
@@ -31,7 +33,7 @@ export const appConfig: KoalaConfig = {
     HomeController,
   ]
 };
-``` 
+```
 
 In the example above, the `index` method of the `HomeController` class will be called when the application receives a
 `GET` request to the `/` URL.
@@ -68,7 +70,7 @@ Then you can access the parameter value in the controller method by using the `s
 
 ```typescript
 const {id} = scope.params;
-````
+```
 
 ## Middleware
 
