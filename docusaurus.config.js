@@ -24,7 +24,7 @@ const versionItems = buildVersionNavbarItems({
 const config = {
   title: 'KoalaTs',
   tagline: 'TypeScript framework documentation',
-  favicon: 'img/favicon.svg',
+  favicon: 'favicon.ico',
   url: siteUrl,
   baseUrl,
   onBrokenLinks: 'throw',
@@ -47,7 +47,7 @@ const config = {
       title: 'KoalaTs',
       logo: {
         alt: 'KoalaTs Logo',
-        src: 'img/favicon.svg',
+        src: 'img/logo.png',
         href: baseUrl,
       },
       items: [
@@ -74,7 +74,7 @@ const config = {
       copyright: `Copyright © ${new Date().getFullYear()} KoalaTs.`,
       logo: {
         alt: 'KoalaTs Logo',
-        src: 'img/favicon.svg',
+        src: 'img/logo.png',
         href: baseUrl,
         width: 32,
         height: 32,
@@ -85,6 +85,41 @@ const config = {
       darkTheme: prismReact.themes.dracula,
     },
   },
+  headTags: [
+    {
+      tagName: 'link',
+      attributes: {
+        rel: 'apple-touch-icon',
+        sizes: '180x180',
+        href: `${baseUrl}favicon/apple-touch-icon.png`,
+      },
+    },
+    {
+      tagName: 'link',
+      attributes: {
+        rel: 'icon',
+        type: 'image/png',
+        sizes: '32x32',
+        href: `${baseUrl}favicon/favicon-32x32.png`,
+      },
+    },
+    {
+      tagName: 'link',
+      attributes: {
+        rel: 'icon',
+        type: 'image/png',
+        sizes: '16x16',
+        href: `${baseUrl}favicon/favicon-16x16.png`,
+      },
+    },
+    {
+      tagName: 'link',
+      attributes: {
+        rel: 'manifest',
+        href: `${baseUrl}site.webmanifest`,
+      },
+    },
+  ],
   presets: [
     [
       'classic',
