@@ -26,7 +26,7 @@ export const featureItems = [
   {
     title: 'Consistent structure',
     description:
-      'Use the same controller and configuration patterns across services so teams can read and extend code without re-learning the project shape.',
+      'Use the same route, middleware, and configuration patterns across services so teams can read and extend code without re-learning the project shape.',
   },
   {
     title: 'Scalable by design',
@@ -51,7 +51,7 @@ export const gettingStartedSteps = [
   },
   {
     title: 'Add your first endpoint',
-    body: 'Define a controller, register routes, and build from the documented basics for requests, responses, and middleware.',
+    body: 'Define a route, register it explicitly, and build from the documented basics for requests, responses, and middleware.',
   },
 ] as const;
 
@@ -59,7 +59,7 @@ export const architectureCards = [
   {
     title: 'Application shape',
     description:
-      'Controllers define HTTP entry points, middleware handles cross-cutting concerns, and the HTTP scope keeps request and response data explicit.',
+      'Function-first routes define HTTP entry points, middleware handles cross-cutting concerns, and the HTTP scope keeps request and response data explicit.',
   },
   {
     title: 'Why it matters',
@@ -72,10 +72,13 @@ export const codeTabs = [
   {
     label: 'Routing',
     language: 'ts',
-    code: `export class DashboardController {
-  @Route({method: 'GET', path: '/dashboard'})
-  show() {}
-}`,
+    code: `export const dashboardRoute = Route({
+  method: 'GET',
+  path: '/dashboard',
+  handler: async (scope) => {
+    scope.response.body = {ok: true};
+  },
+});`,
   },
   {
     label: 'Validation',

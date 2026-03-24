@@ -2,7 +2,7 @@
 title: Request
 ---
 
-The `HttpScope` interface which is passed to the controller method provides access to the incoming request data.
+The `HttpScope` interface passed to a route handler provides access to the incoming request data.
 
 ## Input
 
@@ -11,12 +11,16 @@ The `HttpScope` interface which is passed to the controller method provides acce
 The `request` object provides access to the request `body` and `query` parameters.
 
 ```typescript
-export class UserController {
-  @Route({method: 'POST', path: '/users'})
-  store({request}: HttpScope) {
+import {Route} from '@koala-ts/framework/routing';
+import type {HttpScope} from '@koala-ts/framework';
+
+export const storeUser = Route({
+  method: 'POST',
+  path: '/users',
+  handler: async ({request}: HttpScope) => {
     const {body, query} = request;
-  }
-}
+  },
+});
 ```
 
 ### File uploads
@@ -24,13 +28,18 @@ export class UserController {
 If you need to allow file uploads on a specific route, you need to pass `multipart: true` in the route `options`.
 
 ```typescript
-export class UserController {
-  @Route({method: 'POST', path: '/users', options: {multipart: true}})
-  store({request}: HttpScope) {
+import {Route} from '@koala-ts/framework/routing';
+import type {HttpScope, UploadedFile} from '@koala-ts/framework';
+
+export const storeUser = Route({
+  method: 'POST',
+  path: '/users',
+  options: {multipart: true},
+  handler: async ({request}: HttpScope) => {
     // assuming `avatar` is the name of the file input
-    const avatar = scope.request.files?.avatar as unknown as UploadedFile;
-  }
-}
+    const avatar = request.files?.avatar as unknown as UploadedFile;
+  },
+});
 ```
 
 ## Request details
@@ -40,12 +49,13 @@ export class UserController {
 The `request` object contains information about the incoming request, such as `path`, `host`, and `method`.
 
 ```typescript
-export class UserController {
-  @Route({method: 'POST', path: '/users'})
-  store({request}: HttpScope) {
+export const storeUser = Route({
+  method: 'POST',
+  path: '/users',
+  handler: async ({request}: HttpScope) => {
     const {path, host, method} = request;
-  }
-}
+  },
+});
 ```
 
 ### Request Parameters
@@ -53,13 +63,14 @@ export class UserController {
 You can access the request parameters using the `params` property.
 
 ```typescript
-export class UserController {
-  @Route({method: 'GET', path: '/users/:id'})
-  show({request}: HttpScope) {
+export const showUser = Route({
+  method: 'GET',
+  path: '/users/:id',
+  handler: async ({request}: HttpScope) => {
     const {params} = request;
     const userId = params.id;
-  }
-}
+  },
+});
 ```
 
 ### Request headers
@@ -67,11 +78,12 @@ export class UserController {
 You can access the request headers using the `headers` property.
 
 ```typescript
-export class UserController {
-  @Route({method: 'POST', path: '/users'})
-  store({request}: HttpScope) {
+export const storeUser = Route({
+  method: 'POST',
+  path: '/users',
+  handler: async ({request}: HttpScope) => {
     const {headers} = request;
     const contentType = headers['content-type'];
-  }
-}
+  },
+});
 ```

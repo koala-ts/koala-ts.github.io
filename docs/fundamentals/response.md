@@ -2,24 +2,28 @@
 title: Response
 ---
 
-All routes in a controller method should return a response. You can set the response data using the `response` object of
-the `HttpScope` interface.
+All routes should return a response. You can set the response data using the `response` object of the `HttpScope`
+interface.
 
 ## Response Body
 
 The response `body` can be `string`, `Buffer`, `Stream`, `Object`, `Array`, `null`, or `undefined`.
 
 ```typescript
-export class UserController {
-  @Route({method: 'GET', path: '/users/:id'})
-  show({response, params}: HttpScope) {
+import {Route} from '@koala-ts/framework/routing';
+import type {HttpScope} from '@koala-ts/framework';
+
+export const showUser = Route({
+  method: 'GET',
+  path: '/users/:id',
+  handler: async ({response, request}: HttpScope) => {
     // Find user by id
-    const user = findUserById(params.id);
+    const user = findUserById(request.params.id);
 
     // Set response body
     response.body = user;
-  }
-}
+  },
+});
 ```
 
 ## Response Status
@@ -27,11 +31,12 @@ export class UserController {
 By default, the response status is `404`. You can set the response status using the `status` property of the `response`
 
 ```typescript
-export class UserController {
-  @Route({method: 'GET', path: '/users/:id'})
-  show({response, params}: HttpScope) {
+export const showUser = Route({
+  method: 'GET',
+  path: '/users/:id',
+  handler: async ({response, request}: HttpScope) => {
     // Find user by id
-    const user = findUserById(params.id);
+    const user = findUserById(request.params.id);
 
     // If user not found
     if (!user) {
@@ -42,8 +47,8 @@ export class UserController {
 
     // This will automatically set the status to 200
     response.body = user;
-  }
-}
+  },
+});
 ```
 
 Since `response.status` default is set to 404, to send a response without a body and with a different status is to be

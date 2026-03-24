@@ -91,7 +91,8 @@ if (requestScopeStore.has('userId')) {
 Here's a complete example of how to use the Request Scope Store in your application:
 
 ```typescript
-import {createStore, type HttpScope, Route} from '@koala-ts/framework';
+import {createStore, type HttpScope} from '@koala-ts/framework';
+import {Route} from '@koala-ts/framework/routing';
 
 type RequestScope = {
   userId: string;
@@ -100,9 +101,10 @@ type RequestScope = {
 
 const requestScopeStore = createStore<RequestScope>();
 
-export class UserController {
-  @Route({method: 'GET', path: '/users/:id'})
-  show({request}: HttpScope) {
+export const showUser = Route({
+  method: 'GET',
+  path: '/users/:id',
+  handler: async ({request}: HttpScope) => {
     // Initialize the scope with default values
     requestScopeStore.run({userId: 'anonymous', requestId: 'req-123'}, () => {
       // Set userId after authentication
@@ -118,8 +120,8 @@ export class UserController {
       // Use the data in your business logic
       console.log(`Processing request ${requestId} for user ${userId}`);
     });
-  }
-}
+  },
+});
 ```
 
 ## With Middleware
@@ -156,17 +158,19 @@ export async function requestContextMiddleware(
 }
 ```
 
-Then in your controller, you can access the data set by the middleware:
+Then in your route handler, you can access the data set by the middleware:
 
 ```typescript
-export class UserController {
-  @Route({method: 'GET', path: '/profile', middleware: [requestContextMiddleware]})
-  profile({request}: HttpScope) {
+export const profileRoute = Route({
+  method: 'GET',
+  path: '/profile',
+  middleware: [requestContextMiddleware],
+  handler: async ({request}: HttpScope) => {
     // Access the request context set by the middleware
     const requestId = requestScopeStore.get('requestId');
     const timestamp = requestScopeStore.get('timestamp');
 
     console.log(`Request ${requestId} started at ${timestamp}`);
-  }
-}
+  },
+});
 ```

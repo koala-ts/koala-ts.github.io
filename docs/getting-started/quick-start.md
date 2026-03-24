@@ -24,6 +24,29 @@ npm install
 npm run start
 ```
 
+## First endpoint
+
+KoalaTs now prefers function-first route declarations through `@koala-ts/framework/routing`.
+
+```ts
+import { create, type HttpScope } from '@koala-ts/framework';
+import { Route } from '@koala-ts/framework/routing';
+
+const helloRoute = Route({
+  method: 'GET',
+  path: '/',
+  handler: async (scope: HttpScope) => {
+    scope.response.body = { message: 'Hello KoalaTs' };
+  },
+});
+
+const app = create({
+  routes: [helloRoute],
+});
+
+app.listen(3000);
+```
+
 ## What to read next
 
 - [Routing](../fundamentals/routing.md) to define your first endpoints
