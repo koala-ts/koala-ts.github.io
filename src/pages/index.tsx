@@ -52,7 +52,7 @@ export default function Home(): React.JSX.Element {
                 <h2 className={styles.heroCardTitle}>Why teams reach for it</h2>
                 <p className={styles.heroCardText}>
                   KoalaTS gives backend projects a clear starting point:
-                  controllers for routes, middleware for request flow, explicit
+                  function-first routes, middleware for request flow, explicit
                   request and response handling, and utilities like request
                   scope storage when context needs to follow async work.
                 </p>
@@ -98,7 +98,7 @@ export default function Home(): React.JSX.Element {
               <Card>
                 <p className={styles.sectionDescription}>
                   KoalaTS gives you a stable baseline built around explicit
-                  controllers, middleware, request and response primitives, and
+                  routes, middleware, request and response primitives, and
                   predictable application structure. You spend less time
                   inventing conventions and more time building backend behavior.
                 </p>

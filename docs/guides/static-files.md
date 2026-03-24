@@ -11,11 +11,10 @@ By default, static files are served from the `public` directory in your project 
 ```typescript
 // src/config/app.ts
 import { type KoalaConfig } from '@koala-ts/framework';
+import { homeRoute } from '../routes/home-route';
 
 export const appConfig: KoalaConfig = {
-  controllers: [
-    // your controllers
-  ],
+  routes: [homeRoute],
   staticFiles: {
     root: 'public',       // Directory to serve static files from
     index: 'index.html',  // Default index file name

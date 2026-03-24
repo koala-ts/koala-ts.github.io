@@ -2,98 +2,151 @@
 title: Routing
 ---
 
-When your application receives a request, it calls a controller method to generate the response. The routing
-configuration defines which action to run for each incoming URL.
+KoalaTs routing is function-first. You define routes as explicit values and register them through the application
+configuration.
+
+The preferred routing API lives in `@koala-ts/framework/routing`.
 
 ## Defining Routes
 
-Routes can be defined by adding the `@Route` decorator to a controller method. Due to the way decorators work in
-TypeScript, you must also add the Controller class to the `controllers` array in the `config/app.ts` file.
+Use `Route(...)` to declare a route as an exported value.
 
 ```typescript
-// src/controller/HomeController.ts
-import { type HttpScope, Route } from '@koala-ts/framework';
+import { Route } from '@koala-ts/framework/routing';
+import type { HttpScope } from '@koala-ts/framework';
 
-export class HomeController {
-  @Route({method: 'GET', path: '/'})
-  index(scope: HttpScope): void {
-
-  }
-}
-
+export const homeRoute = Route({
+  method: 'GET',
+  path: '/',
+  handler: async (scope: HttpScope) => {
+    scope.response.body = { ok: true };
+  },
+});
 ```
 
+## Registering Routes
+
+Register routes through the `routes` configuration key.
+
 ```typescript
-// src/config/app.ts
-import { HomeController } from '../controller/HomeController';
 import { type KoalaConfig } from '@koala-ts/framework';
+import { homeRoute } from '../routes/home-route';
 
 export const appConfig: KoalaConfig = {
-  controllers: [
-    HomeController,
-  ]
+  routes: [homeRoute],
 };
 ```
 
-In the example above, the `index` method of the `HomeController` class will be called when the application receives a
-`GET` request to the `/` URL.
+This keeps routing explicit and avoids controller registration through configuration.
 
 ## Matching HTTP Methods
 
-The `method` property of the `@Route` decorator can be used to match specific HTTP methods. The value can be
-one of the following methods: `GET`, `POST`, `PUT`, `PATCH`, `DELETE`, `OPTIONS`, or `HEAD`.
-
-You can also match multiple HTTP methods by passing an array of methods to the `method` property.
+The `method` property accepts either one HTTP method or an array of methods.
 
 ```typescript
-@Route({method: 'GET', path: '/'}) // Matches only GET requests
-@Route({method: ['GET', 'POST'], path: '/'}) // Matches both GET and POST requests
+Route({ method: 'GET', path: '/', handler });
+Route({ method: ['GET', 'POST'], path: '/', handler });
 ```
 
-And to match all HTTP methods, you can use the `ALL` or `ANY` method.
+To match all HTTP methods, use `ALL` or `ANY`.
 
 ```typescript
-@Route({method: 'ALL', path: '/'}) // Matches all HTTP methods
-@Route({method: 'ANY', path: '/'}) // Matches all HTTP methods
+Route({ method: 'ALL', path: '/', handler });
+Route({ method: 'ANY', path: '/', handler });
 ```
 
 ## Route Parameters
 
-You can define route parameters by adding a colon `:` followed by the parameter name in the `path` property of the
-`@Route` decorator.
+Define route parameters by using `:` inside the route path.
 
 ```typescript
-@Route({method: 'GET', path: '/user/:id'})
-```
+Route({
+  method: 'GET',
+  path: '/users/:id',
+  handler: async (scope: HttpScope) => {
+    const { id } = scope.request.params;
 
-Then you can access the parameter value in the controller method by using the `scope.params` object.
-
-```typescript
-const {id} = scope.params;
+    scope.response.body = { id };
+  },
+});
 ```
 
 ## Middleware
 
-You can add multiple middleware functions to a route by passing an array of middleware functions to the `middleware` of
-the `@Route` decorator.
+Attach route middleware with the `middleware` property.
 
 ```typescript
-// src/controller/HomeController.ts
-export class HomeController {
-  @Route({method: 'GET', path: '/', middleware: [exampleMiddleware]})
-  index(scope: HttpScope): void {
+import { Route } from '@koala-ts/framework/routing';
+import type { HttpScope, NextMiddleware } from '@koala-ts/framework';
 
-  }
-}
-```
-
-Below is an example of a middleware function.
-
-```typescript
-// src/middleware/exampleMiddleware.ts
-export async function exampleMiddleware(scope: HttpScope, next: NextMiddleware): Promise<void> {
-  console.log('Example middleware: Before controller');
+async function exampleMiddleware(scope: HttpScope, next: NextMiddleware): Promise<void> {
+  scope.response.set('x-example', 'applied');
   await next();
-  console.log('Example middleware: After controller');
 }
+
+export const homeRoute = Route({
+  method: 'GET',
+  path: '/',
+  middleware: [exampleMiddleware],
+  handler: async (scope: HttpScope) => {
+    scope.response.body = { ok: true };
+  },
+});
 ```
+
+## Route Options
+
+Use `options` when a route needs body parsing behavior such as multipart handling.
+
+```typescript
+Route({
+  method: 'POST',
+  path: '/upload-avatar',
+  options: { multipart: true },
+  handler: async (scope: HttpScope) => {
+    scope.response.body = { ok: true };
+  },
+});
+```
+
+You can also disable body parsing for routes that need access to the raw request body.
+
+```typescript
+Route({
+  method: 'POST',
+  path: '/raw-body',
+  options: { parseBody: false },
+  handler: async (scope: HttpScope) => {
+    scope.response.body = { ok: true };
+  },
+});
+```
+
+## Legacy Decorator Routing
+
+:::warning Deprecated
+
+Decorator-based controller routing from `@koala-ts/framework` is deprecated.
+
+:::
+
+Legacy surface:
+
+- `Route` from `@koala-ts/framework`
+- `controllers` in `KoalaConfig`
+- `getRoutes` from `@koala-ts/framework`
+- `registerRoutes` from `@koala-ts/framework`
+
+Recommended path:
+
+- `Route` from `@koala-ts/framework/routing`
+- `routes` in `KoalaConfig`
+
+## Routing Mode Rule
+
+An application instance must use exactly one routing style:
+
+- legacy decorator routing with `controllers`
+- function-first routing with `routes`
+
+Mixing both in the same app or test agent is rejected.
