@@ -30,14 +30,10 @@ KoalaTs now prefers function-first route declarations through `@koala-ts/framewo
 
 ```ts
 import { create, type HttpScope } from '@koala-ts/framework';
-import { Route } from '@koala-ts/framework/routing';
+import { Get } from '@koala-ts/framework/routing';
 
-const helloRoute = Route({
-  method: 'GET',
-  path: '/',
-  handler: async (scope: HttpScope) => {
-    scope.response.body = { message: 'Hello KoalaTs' };
-  },
+const helloRoute = Get('/', async (scope: HttpScope) => {
+  scope.response.body = { message: 'Hello KoalaTs' };
 });
 
 const app = create({
