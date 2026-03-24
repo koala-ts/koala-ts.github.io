@@ -24,6 +24,37 @@ export const homeRoute = Route({
 });
 ```
 
+For simple routes, you can also use HTTP verb helpers:
+
+```typescript
+import { Get } from '@koala-ts/framework/routing';
+import type { HttpScope } from '@koala-ts/framework';
+
+export const homeRoute = Get('/', async (scope: HttpScope) => {
+  scope.response.body = { ok: true };
+});
+```
+
+Helpers are convenience wrappers for the common case:
+
+- `Get`
+- `Post`
+- `Put`
+- `Patch`
+- `Delete`
+- `Head`
+- `Options`
+- `Any`
+
+Helpers support both:
+
+```typescript
+Get('/', handler);
+Get('/', 'home.show', handler);
+```
+
+Use `Route(...)` when a route needs middleware, body parsing options, or multiple methods.
+
 ## Registering Routes
 
 Register routes through the `routes` configuration key.
@@ -55,6 +86,12 @@ Route({ method: 'ALL', path: '/', handler });
 Route({ method: 'ANY', path: '/', handler });
 ```
 
+Or use the `Any(...)` helper for the common case:
+
+```typescript
+Any('/', handler);
+```
+
 ## Route Parameters
 
 Define route parameters by using `:` inside the route path.
@@ -70,6 +107,29 @@ Route({
   },
 });
 ```
+
+## Route Names
+
+Routes may define a name to give them a stable identity.
+
+Use `name` with the canonical `Route(...)` API:
+
+```typescript
+Route({
+  name: 'users.list',
+  method: 'GET',
+  path: '/users',
+  handler,
+});
+```
+
+Or pass the name as the second argument to a verb helper:
+
+```typescript
+Get('/users', 'users.list', handler);
+```
+
+Route names are useful when a route needs an explicit identity beyond its method and path.
 
 ## Middleware
 

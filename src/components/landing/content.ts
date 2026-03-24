@@ -72,12 +72,8 @@ export const codeTabs = [
   {
     label: 'Routing',
     language: 'ts',
-    code: `export const dashboardRoute = Route({
-  method: 'GET',
-  path: '/dashboard',
-  handler: async (scope) => {
-    scope.response.body = {ok: true};
-  },
+    code: `export const dashboardRoute = Get('/dashboard', async (scope) => {
+  scope.response.body = {ok: true};
 });`,
   },
   {
