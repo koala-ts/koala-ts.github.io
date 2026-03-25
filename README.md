@@ -6,7 +6,7 @@ The site is generated with Docusaurus and published to GitHub Pages with branch-
 
 ## Version publishing model
 
-Only these branches are deployed:
+Only these branches are deployable:
 
 - `main`
 - `*.x` such as `1.x`, `2.x`, or `3.x`
@@ -17,7 +17,7 @@ Published paths:
 - `1.x` -> `/docs/1.x`
 - `2.x` -> `/docs/2.x`
 
-Branches outside this policy are not deployed.
+Branches outside this policy cannot be published.
 
 A version selector in the navbar is generated from `docs/versions.json` on the `gh-pages` branch.
 
@@ -55,6 +55,8 @@ npm run validate
 ## GitHub Pages setup
 
 Set GitHub Pages source to the `gh-pages` branch root.
+
+Docs publication is manual. Merging into `main` or `*.x` keeps the branch ready to publish, but does not update GitHub Pages until `Deploy Docs` is triggered with the target branch/ref.
 
 The deploy workflow updates:
 
