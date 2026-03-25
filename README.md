@@ -56,7 +56,7 @@ npm run validate
 
 Set GitHub Pages source to the `gh-pages` branch root.
 
-Docs publication is manual. Merging into `main` or `*.x` keeps the branch ready to publish, but does not update GitHub Pages until `Deploy Docs` is triggered with the target branch/ref.
+Docs publication is manual. Select the branch in GitHub's `Use workflow from` menu, then run `Deploy Docs` from that branch. Merging into `main` or `*.x` keeps the branch ready to publish, but does not update GitHub Pages until the workflow is run.
 
 The deploy workflow updates:
 
