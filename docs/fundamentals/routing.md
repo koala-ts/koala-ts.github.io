@@ -68,7 +68,41 @@ export const appConfig: KoalaConfig = {
 };
 ```
 
+Route groups can be registered in the same `routes` array. See [Grouping Routes](#grouping-routes).
+
+```typescript
+import { type KoalaConfig } from '@koala-ts/framework';
+import { apiRoutes } from '../routes/api-routes';
+
+export const appConfig: KoalaConfig = {
+  routes: [apiRoutes],
+};
+```
+
 This keeps routing explicit and avoids controller registration through configuration.
+
+## Route Names
+
+Routes may define a name to give them a stable identity.
+
+Use `name` with the canonical `Route(...)` API:
+
+```typescript
+Route({
+  name: 'users.list',
+  method: 'GET',
+  path: '/users',
+  handler,
+});
+```
+
+Or pass the name as the second argument to a verb helper:
+
+```typescript
+Get('/users', 'users.list', handler);
+```
+
+Route names are useful when a route needs an explicit identity beyond its method and path.
 
 ## Matching HTTP Methods
 
@@ -107,29 +141,6 @@ Route({
   },
 });
 ```
-
-## Route Names
-
-Routes may define a name to give them a stable identity.
-
-Use `name` with the canonical `Route(...)` API:
-
-```typescript
-Route({
-  name: 'users.list',
-  method: 'GET',
-  path: '/users',
-  handler,
-});
-```
-
-Or pass the name as the second argument to a verb helper:
-
-```typescript
-Get('/users', 'users.list', handler);
-```
-
-Route names are useful when a route needs an explicit identity beyond its method and path.
 
 ## Middleware
 
@@ -181,6 +192,111 @@ Route({
   },
 });
 ```
+
+## Grouping Routes
+
+Use `RouteGroup(...)` when multiple routes share a path prefix, name prefix, middleware, or route-level configuration.
+
+```typescript
+import { Get, Post, RouteGroup } from '@koala-ts/framework/routing';
+import type { HttpScope } from '@koala-ts/framework';
+
+async function listPosts(scope: HttpScope): Promise<void> {
+  scope.response.body = [{ id: 1 }];
+}
+
+async function createPost(scope: HttpScope): Promise<void> {
+  scope.response.body = { ok: true };
+}
+
+export const postsRoutes = RouteGroup(
+  {
+    prefix: '/posts',
+    namePrefix: 'posts.',
+  },
+  () => [
+    Get('/', 'list', listPosts),
+    Post('/', 'create', createPost),
+  ],
+);
+```
+
+`RouteGroup(...)` is callback-based on purpose. The callback is synchronous, takes no arguments, and returns route
+sources.
+
+In that example:
+
+- every child route is mounted under `/posts`
+- local route names like `list` and `create` become `posts.list` and `posts.create`
+
+### Nested Groups
+
+Groups can be nested to compose larger route trees.
+
+```typescript
+import { Get, RouteGroup } from '@koala-ts/framework/routing';
+
+export const postsRoutes = RouteGroup(
+  {
+    prefix: '/posts',
+    namePrefix: 'posts.',
+  },
+  () => [
+    Get('/', 'list', handler),
+  ],
+);
+
+export const apiRoutes = RouteGroup(
+  {
+    prefix: '/api',
+    namePrefix: 'api.',
+  },
+  () => [postsRoutes],
+);
+```
+
+The final route in that example is:
+
+- path: `/api/posts`
+- name: `api.posts.list`
+
+## Group Route Config
+
+Use `routeConfig` when grouped routes need extra middleware or route options without abandoning helper syntax.
+
+Each `routeConfig` entry targets a route by its local name inside the current group.
+
+```typescript
+import { Post, RouteGroup } from '@koala-ts/framework/routing';
+
+export const postsRoutes = RouteGroup(
+  {
+    prefix: '/posts',
+    namePrefix: 'posts.',
+    routeConfig: {
+      create: {
+        middleware: [validateCreatePostMiddleware],
+        options: { parseBody: false },
+      },
+    },
+  },
+  () => [
+    Post('/', 'create', createPost),
+  ],
+);
+```
+
+In that example:
+
+- `create` matches the local route name declared inside the group
+- the final route name is still `posts.create` because `namePrefix` is applied after local route configuration
+- the `create` route gets both `validateCreatePostMiddleware` and `parseBody: false`
+
+Important rules:
+
+- `routeConfig` matches direct child routes by their local route name
+- parent groups do not target nested child routes by local name
+- `middleware` and `options` are the supported overlay fields in the current API
 
 ## Legacy Decorator Routing
 
