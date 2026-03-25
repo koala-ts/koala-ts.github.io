@@ -7,6 +7,13 @@ configuration.
 
 The preferred routing API lives in `@koala-ts/framework/routing`.
 
+:::tip
+
+KoalaTs is function-first by design. Routes are explicit values that can be composed, grouped, validated, and reused
+without relying on controller discovery.
+
+:::
+
 ## Defining Routes
 
 Use `Route(...)` to declare a route as an exported value.
@@ -103,6 +110,66 @@ Get('/users', 'users.list', handler);
 ```
 
 Route names are useful when a route needs an explicit identity beyond its method and path.
+
+## Generate Paths From Route Names
+
+Use `createPathFor(routes)` when application code needs a stable way to generate paths from named routes.
+
+```typescript
+import { Get, createPathFor } from '@koala-ts/framework/routing';
+
+const routes = [
+  Get('/users', 'users.list', listUsers),
+  Get('/users/:id', 'users.show', showUser),
+];
+
+const pathFor = createPathFor(routes);
+
+const usersPath = pathFor('users.list'); // '/users'
+const userPath = pathFor('users.show', { id: '42' }); // '/users/42'
+```
+
+In that example:
+
+- `usersPath` is `/users`
+- `userPath` is `/users/42`
+
+:::important
+
+`createPathFor(...)` returns paths, not full URLs.
+
+:::
+
+It throws when:
+
+- the route name does not exist in the provided routes
+- a required path parameter is missing
+
+The route names used with `pathFor(...)` depend on the exact `routes` value passed to `createPathFor(...)`.
+
+For example, when a group adds a name prefix, the generated path uses the normalized name from that route source tree:
+
+```typescript
+import { Get, RouteGroup, createPathFor } from '@koala-ts/framework/routing';
+
+const routes = [
+  RouteGroup(
+    {
+      prefix: '/api',
+      namePrefix: 'api.',
+    },
+    () => [
+      Get('/users/:id', 'users.show', showUser),
+    ],
+  ),
+];
+
+const pathFor = createPathFor(routes);
+
+const userPath = pathFor('api.users.show', { id: '42' }); // '/api/users/42'
+```
+
+In that example, `userPath` is `/api/users/42`.
 
 ## Matching HTTP Methods
 
@@ -229,6 +296,9 @@ In that example:
 - every child route is mounted under `/posts`
 - local route names like `list` and `create` become `posts.list` and `posts.create`
 
+Those normalized names are also the ones used by `createPathFor(...)` when you pass this group as part of the route
+source tree.
+
 ### Nested Groups
 
 Groups can be nested to compose larger route trees.
@@ -292,6 +362,12 @@ In that example:
 - the final route name is still `posts.create` because `namePrefix` is applied after local route configuration
 - the `create` route gets both `validateCreatePostMiddleware` and `parseBody: false`
 
+:::note
+
+`routeConfig` matches only direct child routes by their local route name inside the current group.
+
+:::
+
 Important rules:
 
 - `routeConfig` matches direct child routes by their local route name
@@ -319,6 +395,12 @@ Recommended path:
 - `routes` in `KoalaConfig`
 
 ## Routing Mode Rule
+
+:::important
+
+An application instance must choose exactly one routing style.
+
+:::
 
 An application instance must use exactly one routing style:
 
