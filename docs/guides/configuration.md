@@ -2,32 +2,26 @@
 title: Configuration
 ---
 
-Use configuration after you have a project running and want to adapt it to a specific environment.
-
-Applications often need to be configured to run in different environments. For example, you might want to use a
-different database in development than in production.
-
-Thanks to [dotenv](https://www.npmjs.com/package/dotenv), **KoalaTs 🐨** provides a powerful way to manage your
-application configuration.
+Koala uses [dotenv](https://www.npmjs.com/package/dotenv) to load environment files in a predictable order. The goal is
+simple: configuration should feel obvious in the common path and explicit in the custom path.
 
 ## Environment files
 
-A fresh KoalaTs application contains a `.env` file in the root of your project. This file contains the default values
-needed to run your application. It also comes with a `.env.test` file that contains the default values for your tests.
+Koala loads environment files in this order:
 
-## Accessing configuration values
+1. `.env`
+2. `.env.local`
+3. `.env.<environment>`
+4. `.env.<environment>.local`
 
-You can access configuration values using the `process.env` object. For example, to access the `PORT` value, you can use
-the following code:
+When `NODE_ENV` is `test`, Koala skips `.env.local` so test runs stay consistent across machines.
 
-```typescript
-const port = process.env.PORT;
-```
+A fresh Koala application usually includes:
 
-## Overriding configuration values
+- `.env` for the default values needed by the app
+- `.env.test` for test defaults
 
-If you need to override an environment value (e.g. to a different value on your local machine), you can do that in a
-`.env.local` file:
+If you need to override values only on your machine, use a local file such as:
 
 ```dotenv
 # .env.local
@@ -36,31 +30,101 @@ DATABASE_URL="mysql://root:@127.0.0.1:3306/my_database_name"
 
 :::caution
 
-The `.env.local` file should not be committed to your repository. It is meant to be used for local development only.
+Do not commit `.env.local` files. They are meant for machine-specific overrides.
 
 :::
 
-Several other .env files are available to set environment variables in just the right situation:
+## Smallest setup
 
-- `.env`: defines the default values of the env vars needed by the application;
-- `.env.local`: overrides the default values for all environments but only on the machine which contains the file. This
-  file **should not be committed** to the repository and it's ignored in the test environment (because tests should
-  produce the same results for everyone);
-- `.env.<environment>` (e.g. `.env.test`): overrides env vars only for one environment but for all machines (these files
-  are committed);
-- `.env.<environment>.local` (e.g. `.env.test.local`): defines machine-specific env var overrides only for one
-  environment. It's similar to `.env.local`, but the overrides only apply to one environment.
+The smallest setup does not require any dotenv options:
+
+```ts
+loadEnvConfig(process.env.NODE_ENV ?? 'development');
+```
+
+That loads Koala's standard environment file sequence with the default dotenv behavior:
+
+- `quiet: true`
+- `override: true`
+
+## Using the CLI skeleton
+
+If you created your app with the Koala CLI, the generated skeleton already calls `loadEnvConfig()` for you.
+
+In that setup, you do not need to call it again and you do not need to configure anything to get the default behavior.
+
+## Manual setup
+
+If you are wiring the application yourself instead of using the generated skeleton, call `loadEnvConfig()` before
+creating the application:
+
+```ts
+import { create, loadEnvConfig, type KoalaConfig } from '@koala-ts/framework';
+
+const config: KoalaConfig = {};
+
+loadEnvConfig(process.env.NODE_ENV ?? 'development');
+
+const app = create(config);
+```
+
+This is the same mechanism the CLI skeleton uses. The framework does not call `loadEnvConfig()` inside `create()`. The
+difference is only who owns the bootstrap code.
+
+## Customizing dotenv options
+
+You can customize dotenv behavior through `config.environment.dotenv`.
+
+Both `environment` and `environment.dotenv` are optional. If you omit them, Koala still loads the same environment
+files with the default behavior shown above.
+
+Koala intentionally supports a small, explicit subset:
+
+- `encoding`
+- `quiet`
+- `debug`
+- `override`
+
+Example:
+
+```ts
+import { create, loadEnvConfig, type KoalaConfig } from '@koala-ts/framework';
+
+const config: KoalaConfig = {
+  environment: {
+    dotenv: {
+      debug: true,
+      override: false,
+    },
+  },
+};
+
+loadEnvConfig(process.env.NODE_ENV ?? 'development', config.environment?.dotenv);
+
+const app = create(config);
+```
+
+Koala manages environment file selection and load order itself. That is why options such as `path` are not part of the
+supported config surface.
+
+## Accessing values
+
+Once the environment has been loaded, read values from `process.env`:
+
+```ts
+const port = process.env.PORT;
+```
 
 ## Selecting the environment
 
-The environment is selected by the `NODE_ENV` environment variable. If you don't set it, the default value is
-`development`. You can set it before running your application:
+Koala reads the current environment from `NODE_ENV`. If you are calling `loadEnvConfig()` yourself, use
+`development` as the default when `NODE_ENV` is unset:
 
-```bash
-NODE_ENV=production npm start
+```ts
+loadEnvConfig(process.env.NODE_ENV ?? 'development');
 ```
 
-Or in your `package.json` scripts:
+You can also set `NODE_ENV` directly in your scripts:
 
 ```json
 {
