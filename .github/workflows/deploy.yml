@@ -12,7 +12,11 @@ concurrency:
 
 jobs:
   deploy:
+    name: Publish ${{ github.ref_name }}
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
     steps:
       - name: Validate requested ref
         env:
@@ -100,6 +104,13 @@ jobs:
             "${{ steps.version.outputs.version_slug }}" \
             --github-output "$GITHUB_OUTPUT"
 
+      - name: Validate gh-pages workspace
+        run: |
+          if [ ! -d .gh-pages/.git ]; then
+            echo "Expected .gh-pages to be an isolated git checkout"
+            exit 1
+          fi
+
       - name: Build Docusaurus site
         env:
           DOCS_CURRENT_BRANCH: ${{ github.ref_name }}
@@ -115,11 +126,6 @@ jobs:
       - name: Publish default branch site ownership
         if: steps.layout.outputs.is_default_branch == 'true'
         run: |
-          if [ ! -d .gh-pages/.git ]; then
-            echo "Expected .gh-pages to be an isolated git checkout"
-            exit 1
-          fi
-
           rm -rf "${{ steps.layout.outputs.versioned_docs_dir }}"
 
           rsync -a --delete \
@@ -143,11 +149,6 @@ jobs:
       - name: Publish non-default branch docs
         if: steps.layout.outputs.is_default_branch != 'true'
         run: |
-          if [ ! -d .gh-pages/.git ]; then
-            echo "Expected .gh-pages to be an isolated git checkout"
-            exit 1
-          fi
-
           mkdir -p "${{ steps.layout.outputs.publish_target_dir }}"
           rsync -a --delete \
             --exclude .git \

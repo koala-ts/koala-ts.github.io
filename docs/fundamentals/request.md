@@ -2,7 +2,7 @@
 title: Request
 ---
 
-The `HttpScope` interface passed to a route handler provides access to the incoming request data.
+The `HttpScope` instance passed to a route handler provides access to the incoming request data.
 
 ## Input
 
@@ -11,8 +11,8 @@ The `HttpScope` interface passed to a route handler provides access to the incom
 The `request` object provides access to the request `body` and `query` parameters.
 
 ```typescript
-import {Route} from '@koala-ts/framework/routing';
-import type {HttpScope} from '@koala-ts/framework';
+import { Route } from '@koala-ts/framework/routing';
+import type { HttpScope } from '@koala-ts/framework';
 
 export const storeUser = Route({
   method: 'POST',
@@ -28,8 +28,8 @@ export const storeUser = Route({
 If you need to allow file uploads on a specific route, you need to pass `multipart: true` in the route `options`.
 
 ```typescript
-import {Route} from '@koala-ts/framework/routing';
-import type {HttpScope, UploadedFile} from '@koala-ts/framework';
+import { Route } from '@koala-ts/framework/routing';
+import type { HttpScope, UploadedFile } from '@koala-ts/framework';
 
 export const storeUser = Route({
   method: 'POST',
