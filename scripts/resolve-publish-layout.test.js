@@ -13,6 +13,7 @@ test('publishes the default branch build from the site root', () => {
     }),
     {
       buildBaseUrl: '/',
+      docsRouteBasePath: 'docs',
       isDefaultBranch: true,
       publishSourceDir: 'build',
       publishTargetDir: '.gh-pages',
@@ -30,9 +31,10 @@ test('publishes non-default branch docs under /docs/<version>', () => {
       versionSlug: 'next',
     }),
     {
-      buildBaseUrl: '/docs/next/',
+      buildBaseUrl: '/',
+      docsRouteBasePath: 'docs/next',
       isDefaultBranch: false,
-      publishSourceDir: 'build/docs',
+      publishSourceDir: 'build/docs/next',
       publishTargetDir: '.gh-pages/docs/next',
       versionedDocsDir: '.gh-pages/docs/next',
     },
@@ -48,9 +50,10 @@ test('preserves non-root site bases when computing publish urls', () => {
       versionSlug: 'next',
     }),
     {
-      buildBaseUrl: '/koala-ts/docs/next/',
+      buildBaseUrl: '/koala-ts/',
+      docsRouteBasePath: 'docs/next',
       isDefaultBranch: false,
-      publishSourceDir: 'build/docs',
+      publishSourceDir: 'build/docs/next',
       publishTargetDir: '.gh-pages/docs/next',
       versionedDocsDir: '.gh-pages/docs/next',
     },

@@ -108,6 +108,7 @@ jobs:
           DOCS_VERSIONS: ${{ steps.catalog.outputs.version_csv }}
           DOCS_SITE_BASE: ${{ steps.site.outputs.site_base }}
           DOCS_BASE_URL: ${{ steps.layout.outputs.build_base_url }}
+          DOCS_ROUTE_BASE_PATH: ${{ steps.layout.outputs.docs_route_base_path }}
           SITE_URL: ${{ steps.site.outputs.site_url }}
         run: npm run build
 

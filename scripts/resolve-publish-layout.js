@@ -15,13 +15,15 @@ const resolvePublishLayout = ({
   const normalizedSiteBase = normalizeBasePath(siteBase);
   const defaultVersionSlug = resolveVersionSlug(defaultBranch);
   const isDefaultBranch = versionSlug === defaultVersionSlug && currentBranch === defaultBranch;
+  const docsRouteBasePath = isDefaultBranch ? 'docs' : `docs/${versionSlug}`;
 
   return {
-    buildBaseUrl: isDefaultBranch
-      ? normalizedSiteBase
-      : `${normalizedSiteBase}docs/${versionSlug}/`,
+    buildBaseUrl: normalizedSiteBase,
+    docsRouteBasePath,
     isDefaultBranch,
-    publishSourceDir: isDefaultBranch ? 'build' : 'build/docs',
+    publishSourceDir: isDefaultBranch
+      ? 'build'
+      : `build/${docsRouteBasePath}`,
     publishTargetDir: isDefaultBranch ? '.gh-pages' : `.gh-pages/docs/${versionSlug}`,
     versionedDocsDir: `.gh-pages/docs/${versionSlug}`,
   };
@@ -53,6 +55,7 @@ if (require.main === module) {
     appendFileSync(
       githubOutputPath,
       `build_base_url=${layout.buildBaseUrl}\n` +
+        `docs_route_base_path=${layout.docsRouteBasePath}\n` +
         `is_default_branch=${layout.isDefaultBranch}\n` +
         `publish_source_dir=${layout.publishSourceDir}\n` +
         `publish_target_dir=${layout.publishTargetDir}\n` +

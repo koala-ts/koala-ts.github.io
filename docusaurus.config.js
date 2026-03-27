@@ -9,6 +9,7 @@ const {
   siteUrl,
   baseUrl,
   docsSiteBase,
+  docsRouteBasePath,
   defaultBranch,
   versions,
 } = resolveDocsRuntime();
@@ -16,7 +17,6 @@ const {
   buildCanonicalHomePath,
   buildCurrentDocsContentPath,
 } = require('./scripts/build-canonical-site-paths');
-const docsRouteBasePath = 'docs';
 
 const homePath = buildCanonicalHomePath({docsSiteBase});
 const docsIntroPath = buildCurrentDocsContentPath({
