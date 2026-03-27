@@ -91,7 +91,7 @@ jobs:
                 break
               fi
 
-              sleep 5
+              sleep 60
             done
 
             if [ -z "${run_id}" ]; then
