@@ -65,7 +65,3 @@
 .footer__title {
   color: #0b0f14;
 }
-
-.theme-doc-markdown > :first-child {
-  margin-top: 0;
-}
