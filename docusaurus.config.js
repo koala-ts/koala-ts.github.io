@@ -2,6 +2,7 @@ const {
   buildVersionNavbarItems,
 } = require('./scripts/build-version-navbar-items');
 const {resolveDocsRuntime} = require('./scripts/resolve-docs-runtime');
+const {versionFallbackDocPath} = require('./docs-site.config');
 const prismReact = require('prism-react-renderer');
 
 const {
@@ -56,9 +57,12 @@ const config = {
     locales: ['en'],
   },
   customFields: {
+    defaultBranch,
     homePath,
+    docsSiteBase,
     docsIntroPath,
     docsQuickStartPath,
+    versionFallbackDocPath,
   },
   themeConfig: {
     colorMode: {
