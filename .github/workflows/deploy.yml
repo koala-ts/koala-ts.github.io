@@ -12,6 +12,7 @@ concurrency:
 
 jobs:
   deploy:
+    name: Publish ${{ github.ref_name }}
     runs-on: ubuntu-latest
     defaults:
       run:
