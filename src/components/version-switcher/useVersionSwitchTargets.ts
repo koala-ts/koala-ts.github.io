@@ -1,9 +1,11 @@
 import {useEffect, useState} from 'react';
 import {useLocation} from '@docusaurus/router';
-import useBaseUrl from '@docusaurus/useBaseUrl';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 
-const {buildAbsoluteSiteUrl} = require('@site/scripts/build-canonical-site-paths');
+const {
+  buildAbsoluteSiteUrl,
+  buildSharedDocsManifestPath,
+} = require('@site/scripts/build-canonical-site-paths');
 const {resolveVersionSwitchTarget} = require('@site/scripts/resolve-version-switch-target');
 
 type VersionPathsManifest = Record<string, string[]>;
@@ -30,10 +32,13 @@ export const useVersionSwitchTargets = ({
   versions,
 }: UseVersionSwitchTargetsParams): SwitchTarget[] => {
   const {pathname} = useLocation();
-  const manifestUrl = useBaseUrl('/docs/doc-paths.json');
   const {siteConfig} = useDocusaurusContext();
   const {defaultBranch, docsSiteBase, siteUrl, versionFallbackDocPath} =
     siteConfig.customFields as CustomFields;
+  const manifestUrl = buildAbsoluteSiteUrl({
+    siteUrl,
+    path: buildSharedDocsManifestPath({docsSiteBase}),
+  });
   const [manifest, setManifest] = useState<VersionPathsManifest>({});
 
   useEffect(() => {
