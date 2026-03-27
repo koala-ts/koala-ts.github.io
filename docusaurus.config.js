@@ -13,10 +13,18 @@ const {
 } = resolveDocsRuntime();
 const {
   buildCanonicalHomePath,
+  buildCanonicalDocsRootPath,
   buildCurrentDocsContentPath,
 } = require('./scripts/build-canonical-site-paths');
+const {resolveVersionSlug} = require('./scripts/resolve-version-slug');
 
 const homePath = buildCanonicalHomePath({docsSiteBase});
+const currentVersionSlug = versionSlug;
+const stableDocsPath = buildCanonicalDocsRootPath({
+  docsSiteBase,
+  defaultBranch,
+  versionSlug: resolveVersionSlug(defaultBranch),
+});
 const docsIntroPath = buildCurrentDocsContentPath({
   baseUrl,
   docsRouteBasePath,
@@ -46,12 +54,14 @@ const config = {
     locales: ['en'],
   },
   customFields: {
+    currentVersionSlug,
     defaultBranch,
     homePath,
     siteUrl,
     docsSiteBase,
     docsIntroPath,
     docsQuickStartPath,
+    stableDocsPath,
     versionFallbackDocPath,
   },
   themeConfig: {
