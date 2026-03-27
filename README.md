@@ -74,7 +74,7 @@ Current registry state:
 
 Manual operators should use these workflows on `2.x`:
 
-- `Deploy Selected Docs Branch`
-- `Deploy All Deployable Docs Branches`
+- `🚀 Deploy Selected Docs Branch`
+- `🚀 Deploy All Deployable Docs Branches`
 
 That means `1.x` keeps its local preview and publish-simulation support, and it can be published again through the centralized deployment model.

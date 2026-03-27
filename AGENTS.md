@@ -34,6 +34,6 @@
 - Deployable docs branches must not become the source of truth for global release ownership.
 - Branch-local scripts should stay limited to what is necessary for local development and branch builds.
 - Manual operators should use:
-  - `Deploy Selected Docs Branch` on `2.x`
-  - `Deploy All Deployable Docs Branches` on `2.x`
+  - `🚀 Deploy Selected Docs Branch` on `2.x`
+  - `🚀 Deploy All Deployable Docs Branches` on `2.x`
 - A release branch that is not listed in `release-registry.json` is not deployable and should be documented that way.
