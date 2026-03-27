@@ -1,5 +1,5 @@
-name: Publish Branch Docs
-run-name: Publish ${{ github.ref_name }}
+name: Deploy Selected Docs Branch
+run-name: Deploy docs for ${{ github.ref_name }}
 
 on:
   workflow_dispatch:

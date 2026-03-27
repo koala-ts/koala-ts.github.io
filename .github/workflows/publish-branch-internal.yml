@@ -1,5 +1,5 @@
-name: Publish Branch Docs Internal
-run-name: Publish ${{ inputs.target_branch }}
+name: Deploy Docs Branch By Input
+run-name: Deploy docs for ${{ inputs.target_branch }}
 
 on:
   workflow_dispatch:
