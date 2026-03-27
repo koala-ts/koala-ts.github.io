@@ -4,7 +4,13 @@ const sidebars = {
     {
       type: 'category',
       label: 'Overview',
-      items: ['overview/intro'],
+      items: [
+        {
+          type: 'doc',
+          id: 'overview/intro',
+          label: 'Introduction',
+        },
+      ],
     },
     {
       type: 'category',

@@ -6,10 +6,7 @@ import {
   ThemeClassNames,
   useThemeConfig,
 } from '@docusaurus/theme-common';
-import {
-  splitNavbarItems,
-  useNavbarMobileSidebar,
-} from '@docusaurus/theme-common/internal';
+import {useNavbarMobileSidebar} from '@docusaurus/theme-common/internal';
 import DocSidebarItems from '@theme/DocSidebarItems';
 import NavbarItem, {type Props as NavbarItemConfig} from '@theme/NavbarItem';
 import type {Props} from '@theme/DocSidebar/Mobile';
@@ -20,11 +17,10 @@ const DocSidebarMobileSecondaryMenu: NavbarSecondaryMenuComponent<Props> = ({
 }) => {
   const mobileSidebar = useNavbarMobileSidebar();
   const navbarItems = useThemeConfig().navbar.items as NavbarItemConfig[];
-  const [, rightItems] = splitNavbarItems(navbarItems);
 
   return (
     <ul className={clsx(ThemeClassNames.docs.docSidebarMenu, 'menu__list')}>
-      {rightItems.map((item, index) => (
+      {navbarItems.map((item, index) => (
         <NavbarItem
           mobile
           {...item}
