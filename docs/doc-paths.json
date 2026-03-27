@@ -8,5 +8,12 @@
     "guides/static-files",
     "overview/intro",
     "utilities/request-scope-store"
+  ],
+  "1.x": [
+    "basics/request",
+    "basics/response",
+    "basics/routing",
+    "get-started/configuration",
+    "overview/intro"
   ]
 }
