@@ -1,7 +1,11 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 
-const {resolveBranchRuntime} = require('./resolve-branch-runtime');
+const {
+  LOCAL_PREVIEW_MODE,
+  PUBLISH_SIMULATION_MODE,
+  resolveBranchRuntime,
+} = require('./resolve-branch-runtime');
 
 test('uses explicit docs branch configuration when provided', () => {
   const runtime = resolveBranchRuntime({
@@ -16,12 +20,12 @@ test('uses explicit docs branch configuration when provided', () => {
   });
 });
 
-test('defaults current branch to the configured default branch', () => {
+test('defaults current and default branches to the checked out branch', () => {
   const runtime = resolveBranchRuntime({});
 
   assert.deepEqual(runtime, {
-    currentBranch: '2.x',
-    defaultBranch: '2.x',
+    currentBranch: '1.x',
+    defaultBranch: '1.x',
     isDefaultBranch: true,
   });
 });
@@ -45,8 +49,44 @@ test('defaults current branch to an overridden default branch', () => {
   });
 
   assert.deepEqual(runtime, {
-    currentBranch: '3.x',
+    currentBranch: '1.x',
     defaultBranch: '3.x',
+    isDefaultBranch: false,
+  });
+});
+
+test('uses local preview mode to keep the checked out branch canonical locally', () => {
+  const runtime = resolveBranchRuntime({
+    DOCS_RUNTIME_MODE: LOCAL_PREVIEW_MODE,
+    DOCS_DEFAULT_BRANCH: '3.x',
+  });
+
+  assert.deepEqual(runtime, {
+    currentBranch: '1.x',
+    defaultBranch: '1.x',
     isDefaultBranch: true,
   });
+});
+
+test('uses publish simulation mode to honor the injected default branch', () => {
+  const runtime = resolveBranchRuntime({
+    DOCS_RUNTIME_MODE: PUBLISH_SIMULATION_MODE,
+    DOCS_DEFAULT_BRANCH: '3.x',
+  });
+
+  assert.deepEqual(runtime, {
+    currentBranch: '1.x',
+    defaultBranch: '3.x',
+    isDefaultBranch: false,
+  });
+});
+
+test('rejects publish simulation mode without an injected default branch', () => {
+  assert.throws(
+    () =>
+      resolveBranchRuntime({
+        DOCS_RUNTIME_MODE: PUBLISH_SIMULATION_MODE,
+      }),
+    /DOCS_DEFAULT_BRANCH must be provided in publish-simulation mode/,
+  );
 });

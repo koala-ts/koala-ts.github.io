@@ -1,6 +1,10 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 
+const {
+  LOCAL_PREVIEW_MODE,
+  PUBLISH_SIMULATION_MODE,
+} = require('./resolve-branch-runtime');
 const {resolveDocsRuntime} = require('./resolve-docs-runtime');
 
 test('includes resolved branch ownership and docs runtime inputs', () => {
@@ -31,15 +35,15 @@ test('defaults runtime values when docs environment is absent', () => {
   const runtime = resolveDocsRuntime({});
 
   assert.deepEqual(runtime, {
-    currentBranch: '2.x',
-    defaultBranch: '2.x',
+    currentBranch: '1.x',
+    defaultBranch: '1.x',
     isDefaultBranch: true,
-    versionSlug: '2.x',
+    versionSlug: '1.x',
     siteUrl: 'http://localhost:3000',
     baseUrl: '/',
     docsSiteBase: '/',
     docsRouteBasePath: 'docs',
-    versions: ['2.x'],
+    versions: ['1.x'],
   });
 });
 
@@ -59,5 +63,43 @@ test('maps non-default branches to versioned docs route bases', () => {
     docsSiteBase: '/',
     docsRouteBasePath: 'docs/next',
     versions: ['next'],
+  });
+});
+
+test('uses the docs root in local preview mode for the checked out branch', () => {
+  const runtime = resolveDocsRuntime({
+    DOCS_RUNTIME_MODE: LOCAL_PREVIEW_MODE,
+    DOCS_DEFAULT_BRANCH: '3.x',
+  });
+
+  assert.deepEqual(runtime, {
+    currentBranch: '1.x',
+    defaultBranch: '1.x',
+    isDefaultBranch: true,
+    versionSlug: '1.x',
+    siteUrl: 'http://localhost:3000',
+    baseUrl: '/',
+    docsSiteBase: '/',
+    docsRouteBasePath: 'docs',
+    versions: ['1.x'],
+  });
+});
+
+test('uses the versioned docs path in publish simulation mode for a non-default branch', () => {
+  const runtime = resolveDocsRuntime({
+    DOCS_RUNTIME_MODE: PUBLISH_SIMULATION_MODE,
+    DOCS_DEFAULT_BRANCH: '3.x',
+  });
+
+  assert.deepEqual(runtime, {
+    currentBranch: '1.x',
+    defaultBranch: '3.x',
+    isDefaultBranch: false,
+    versionSlug: '1.x',
+    siteUrl: 'http://localhost:3000',
+    baseUrl: '/',
+    docsSiteBase: '/',
+    docsRouteBasePath: 'docs/1.x',
+    versions: ['1.x'],
   });
 });

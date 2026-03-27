@@ -11,6 +11,8 @@ This branch is a non-default release branch.
 - `/docs/next` is owned by `main`
 - `/docs/1.x` is owned by this branch
 
+Release ownership is centralized on the `gh-pages-control` branch in `release-registry.json`.
+
 ## Local development
 
 Requirements:
@@ -24,13 +26,21 @@ Install dependencies:
 npm install
 ```
 
-To run this branch locally with its published route shape, provide the branch override explicitly:
+Run this branch locally in local preview mode:
 
 ```bash
-DOCS_CURRENT_BRANCH=1.x npm run start
+npm run start
 ```
 
-That serves the docs under `/docs/1.x`.
+That keeps the checked out branch canonical locally and serves the docs under `/docs`.
+
+To simulate published routing from the centralized release registry, run with publish simulation inputs:
+
+```bash
+DOCS_RUNTIME_MODE=publish-simulation DOCS_DEFAULT_BRANCH=2.x npm run start
+```
+
+That serves this branch under `/docs/1.x`.
 
 Run validation:
 
@@ -47,3 +57,19 @@ The `1.x` docs preserve the legacy content taxonomy inside Docusaurus:
 - `docs/basics/routing.md`
 - `docs/basics/request.md`
 - `docs/basics/response.md`
+
+## Publication
+
+Publication is centralized, but this branch is not currently deployable.
+
+The live deployment control plane is split like this:
+
+- `gh-pages-control` owns `release-registry.json` and the deploy scripts
+- `2.x` hosts the dispatchable bridge workflows required by GitHub Actions
+
+Current registry state:
+
+- deployable branches: `2.x`, `main`
+- default branch: `2.x`
+
+That means `1.x` keeps its local preview and publish-simulation support, but it is skipped from publication until it is added back to `release-registry.json`.
