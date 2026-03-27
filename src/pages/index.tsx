@@ -19,8 +19,12 @@ import styles from '@site/src/components/landing/landing.module.css';
 
 export default function Home(): React.JSX.Element {
   const {siteConfig} = useDocusaurusContext();
-  const docsUrl = useBaseUrl('/docs/overview/intro');
-  const getStartedUrl = useBaseUrl('/docs/getting-started/quick-start');
+  const {docsIntroPath, docsQuickStartPath} = siteConfig.customFields as {
+    docsIntroPath: string;
+    docsQuickStartPath: string;
+  };
+  const docsUrl = useBaseUrl(docsIntroPath);
+  const getStartedUrl = useBaseUrl(docsQuickStartPath);
 
   return (
     <Layout

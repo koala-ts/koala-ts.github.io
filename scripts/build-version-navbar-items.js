@@ -2,26 +2,29 @@
  * Purpose: build navbar version items with stable absolute version URLs per docs base.
  * Usage: imported by `docusaurus.config.js` to render the version dropdown items.
  */
-const {normalizeBasePath} = require('./normalize-base-path');
+const {
+  buildAbsoluteSiteUrl,
+  buildCanonicalDocsRootPath,
+} = require('./build-canonical-site-paths');
 
 const buildVersionNavbarItems = ({
+  defaultBranch,
   versions,
-  versionSlug,
   siteUrl,
-  baseUrl,
   docsSiteBase,
+  versionSlug,
 }) => {
   const uniqueVersions = [...new Set(versions.concat(versionSlug))];
-  const normalizedSiteUrl = siteUrl.replace(/\/+$/, '');
-  const normalizedDocsSiteBase = normalizeBasePath(docsSiteBase);
 
-  const createVersionTo = (version) => {
-    if (version === versionSlug) {
-      return `${normalizedSiteUrl}${baseUrl}`;
-    }
-
-    return `${normalizedSiteUrl}${normalizedDocsSiteBase}docs/${version}/`;
-  };
+  const createVersionTo = (version) =>
+    buildAbsoluteSiteUrl({
+      siteUrl,
+      path: buildCanonicalDocsRootPath({
+        docsSiteBase,
+        defaultBranch,
+        versionSlug: version,
+      }),
+    });
 
   return uniqueVersions.map((version) => ({
     label: version,

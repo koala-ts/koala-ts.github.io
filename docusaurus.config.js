@@ -9,14 +9,32 @@ const {
   siteUrl,
   baseUrl,
   docsSiteBase,
+  defaultBranch,
   versions,
 } = resolveDocsRuntime();
+const {
+  buildCanonicalHomePath,
+  buildCurrentDocsContentPath,
+} = require('./scripts/build-canonical-site-paths');
+const docsRouteBasePath = 'docs';
+
+const homePath = buildCanonicalHomePath({docsSiteBase});
+const docsIntroPath = buildCurrentDocsContentPath({
+  baseUrl,
+  docsRouteBasePath,
+  docPath: 'overview/intro',
+});
+const docsQuickStartPath = buildCurrentDocsContentPath({
+  baseUrl,
+  docsRouteBasePath,
+  docPath: 'getting-started/quick-start',
+});
 
 const versionItems = buildVersionNavbarItems({
+  defaultBranch,
   versions,
   versionSlug,
   siteUrl,
-  baseUrl,
   docsSiteBase,
 });
 
@@ -37,6 +55,11 @@ const config = {
     defaultLocale: 'en',
     locales: ['en'],
   },
+  customFields: {
+    homePath,
+    docsIntroPath,
+    docsQuickStartPath,
+  },
   themeConfig: {
     colorMode: {
       defaultMode: 'light',
@@ -48,11 +71,11 @@ const config = {
       logo: {
         alt: 'KoalaTs Logo',
         src: 'img/logo.png',
-        href: baseUrl,
+        href: homePath,
       },
       items: [
         {
-          to: '/docs/overview/intro',
+          to: docsIntroPath,
           position: 'left',
           label: 'Documentation',
         },
@@ -75,7 +98,7 @@ const config = {
       logo: {
         alt: 'KoalaTs Logo',
         src: 'img/logo.png',
-        href: baseUrl,
+        href: homePath,
         width: 32,
         height: 32,
       },
@@ -125,7 +148,7 @@ const config = {
       'classic',
       {
         docs: {
-          routeBasePath: 'docs',
+          routeBasePath: docsRouteBasePath,
           sidebarPath: require.resolve('./sidebars.js'),
         },
         blog: false,
@@ -142,7 +165,7 @@ const config = {
         indexDocs: true,
         indexBlog: false,
         indexPages: true,
-        docsRouteBasePath: '/docs',
+        docsRouteBasePath: `/${docsRouteBasePath}`,
         hashed: true,
         language: ['en'],
       },
