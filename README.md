@@ -58,10 +58,10 @@ By default, local development uses local preview mode, so the checked out branch
 To simulate published routing from the centralized release registry, use publish simulation mode:
 
 ```bash
-DOCS_RUNTIME_MODE=publish-simulation DOCS_DEFAULT_BRANCH=2.x npm run start
+DOCS_RUNTIME_MODE=publish-simulation DOCS_DEFAULT_BRANCH=<current-default-branch> npm run start
 ```
 
-That example keeps `2.x` canonical at `/docs`. For a non-default release branch such as `1.x`, publish simulation would serve the docs under `/docs/1.x`.
+That keeps the current default branch canonical at `/docs`. For a non-default release branch such as `1.x`, publish simulation would serve the docs under `/docs/1.x`.
 
 Build static files:
 
@@ -79,10 +79,10 @@ npm run validate
 
 Set GitHub Pages source to the `gh-pages` branch root.
 
-Docs publication is manual and controlled through bridge workflows on `2.x`.
+Docs publication is manual and controlled through bridge workflows on the current default branch.
 
 The centralized registry and deploy scripts still live on `gh-pages-control`.
-The dispatchable workflows on `2.x` load `release-registry.json` and the deploy scripts from `gh-pages-control`, then publish with these ownership rules:
+The dispatchable workflows on the current default branch load `release-registry.json` and the deploy scripts from `gh-pages-control`, then publish with these ownership rules:
 
 - `/` and `/docs` from the current default branch
 - `/docs/next` from `main`
@@ -91,7 +91,12 @@ The dispatchable workflows on `2.x` load `release-registry.json` and the deploy 
 
 When a branch is not the default branch, it publishes only its versioned docs subtree and does not overwrite the homepage.
 
-Available operator workflows on `2.x`:
+Current deployment state:
+
+- current default branch: `2.x`
+- current deployable branches: `1.x`, `2.x`, `main`
+
+Available operator workflows on the current default branch:
 
 - `🚀 Deploy Selected Docs Branch` publishes the selected workflow branch with no manual inputs
 - `🚀 Deploy All Deployable Docs Branches` republishes all deployable branches in registry order
