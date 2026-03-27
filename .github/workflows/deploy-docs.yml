@@ -46,9 +46,9 @@ jobs:
         id: version
         run: node scripts/resolve-version.js --github-output "$GITHUB_OUTPUT"
 
-      - name: Resolve default branch version
-        id: default_version
-        run: node scripts/resolve-version.js "${{ github.event.repository.default_branch }}" --github-output "$GITHUB_OUTPUT"
+      - name: Resolve configured default branch
+        id: default_branch
+        run: node scripts/resolve-default-branch.js --github-output "$GITHUB_OUTPUT"
 
       - name: Prepare gh-pages workspace
         env:
@@ -90,47 +90,60 @@ jobs:
             fi
           fi
 
+      - name: Resolve publish layout
+        id: layout
+        run: |
+          node scripts/resolve-publish-layout.js \
+            "${{ github.ref_name }}" \
+            "${{ steps.default_branch.outputs.default_branch }}" \
+            "${{ steps.site.outputs.site_base }}" \
+            "${{ steps.version.outputs.version_slug }}" \
+            --github-output "$GITHUB_OUTPUT"
+
       - name: Build Docusaurus site
         env:
+          DOCS_CURRENT_BRANCH: ${{ github.ref_name }}
+          DOCS_DEFAULT_BRANCH: ${{ steps.default_branch.outputs.default_branch }}
           DOCS_VERSION: ${{ steps.version.outputs.version_slug }}
           DOCS_VERSIONS: ${{ steps.catalog.outputs.version_csv }}
           DOCS_SITE_BASE: ${{ steps.site.outputs.site_base }}
-          DOCS_BASE_URL: ${{ steps.site.outputs.site_base }}docs/${{ steps.version.outputs.version_slug }}/
+          DOCS_BASE_URL: ${{ steps.layout.outputs.build_base_url }}
           SITE_URL: ${{ steps.site.outputs.site_url }}
         run: npm run build
 
-      - name: Publish version folder
+      - name: Publish default branch site ownership
+        if: steps.layout.outputs.is_default_branch == 'true'
         run: |
-          mkdir -p ".gh-pages/docs/${{ steps.version.outputs.version_slug }}"
-          rsync -a --delete build/ ".gh-pages/docs/${{ steps.version.outputs.version_slug }}/"
+          rm -rf "${{ steps.layout.outputs.versioned_docs_dir }}"
 
-      - name: Create index redirects
+          rsync -a --delete \
+            --exclude docs \
+            --exclude 'docs/***' \
+            --exclude CNAME \
+            build/ .gh-pages/
+
+          VERSION_EXCLUDES=$(printf '%s\n' "${{ steps.catalog.outputs.version_csv }}" | tr ',' '\n' | sed '/^$/d' | sed 's#^#--exclude=#')
+
+          mkdir -p .gh-pages/docs
+          rsync -a --delete \
+            --exclude=versions.json \
+            ${VERSION_EXCLUDES} \
+            build/docs/ .gh-pages/docs/
+
+      - name: Publish non-default branch docs
+        if: steps.layout.outputs.is_default_branch != 'true'
         run: |
-          ROOT_REDIRECT="./docs/${{ steps.default_version.outputs.version_slug }}/"
-          DOCS_REDIRECT="./${{ steps.default_version.outputs.version_slug }}/"
-
-          cat > .gh-pages/index.html <<EOF
-          <!doctype html>
-          <meta charset="utf-8">
-          <meta http-equiv="refresh" content="0; url=${ROOT_REDIRECT}">
-          <title>KoalaTs Docs</title>
-          <a href="${ROOT_REDIRECT}">Go to documentation</a>
-          EOF
-
-          cat > .gh-pages/docs/index.html <<EOF
-          <!doctype html>
-          <meta charset="utf-8">
-          <meta http-equiv="refresh" content="0; url=${DOCS_REDIRECT}">
-          <title>KoalaTs Docs</title>
-          <a href="${DOCS_REDIRECT}">Go to documentation</a>
-          EOF
+          mkdir -p "${{ steps.layout.outputs.publish_target_dir }}"
+          rsync -a --delete \
+            "${{ steps.layout.outputs.publish_source_dir }}/" \
+            "${{ steps.layout.outputs.publish_target_dir }}/"
 
       - name: Commit and push gh-pages
         working-directory: .gh-pages
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs index.html
+          git add .
           if git diff --cached --quiet; then
             echo "No changes to publish"
             exit 0
