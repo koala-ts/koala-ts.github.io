@@ -1,4 +1,4 @@
-name: Deploy Selected Docs Branch
+name: 🚀 Deploy Selected Docs Branch
 run-name: Deploy docs for ${{ github.ref_name }}
 
 on:

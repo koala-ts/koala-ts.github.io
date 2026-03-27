@@ -1,4 +1,4 @@
-name: Deploy All Deployable Docs Branches
+name: 🚀 Deploy All Deployable Docs Branches
 run-name: Deploy all deployable docs branches
 
 on:
@@ -63,7 +63,7 @@ jobs:
 
             run_id=""
 
-            for attempt in $(seq 1 30); do
+            for attempt in $(seq 1 10); do
               runs_json=$(gh run list \
                 --workflow publish-branch-internal.yml \
                 --event workflow_dispatch \
@@ -91,7 +91,7 @@ jobs:
                 break
               fi
 
-              sleep 2
+              sleep 5
             done
 
             if [ -z "${run_id}" ]; then

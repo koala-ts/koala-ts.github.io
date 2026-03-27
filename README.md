@@ -93,8 +93,8 @@ When a branch is not the default branch, it publishes only its versioned docs su
 
 Available operator workflows on `2.x`:
 
-- `Deploy Selected Docs Branch` publishes the selected workflow branch with no manual inputs
-- `Deploy All Deployable Docs Branches` republishes all deployable branches in registry order
+- `🚀 Deploy Selected Docs Branch` publishes the selected workflow branch with no manual inputs
+- `🚀 Deploy All Deployable Docs Branches` republishes all deployable branches in registry order
 
 Internal orchestration details such as `registry_json` stay hidden from manual workflow runs.
 
