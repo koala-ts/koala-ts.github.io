@@ -1,6 +1,6 @@
 # Http Request
 
-The `IScope` interface which is passed to the controller method provides access to the incoming request data.
+The `IScope` interface that is passed to a controller method provides access to the incoming request data.
 
 ## Input
 
@@ -19,17 +19,16 @@ export class UserController {
 
 ### File uploads
 
-If you need to allow file uploads on a specific route, you need to pass `multipart: true` in the route `options`.
+If you need to allow file uploads on a specific route, pass `multipart: true` in the route `options`.
 
 ```typescript
 export class UserController {
   @Route({method: 'POST', path: '/users', options: {multipart: true}})
-  store({request}: IScope) {
-    // assuming `avatar` is the name of the file input
+  store(scope: IScope) {
     const avatar = scope.request.files?.avatar as unknown as IUploadedFile;
   }
 }
-````
+```
 
 ## Request details
 
@@ -46,9 +45,9 @@ export class UserController {
 }
 ```
 
-### Request Parameters
+### Request parameters
 
-You can access the request parameters using the `params` property.
+You can access request parameters using the `params` property.
 
 ```typescript
 export class UserController {
@@ -62,7 +61,7 @@ export class UserController {
 
 ### Request headers
 
-You can access the request headers using the `headers` property.
+You can access request headers using the `headers` property.
 
 ```typescript
 export class UserController {

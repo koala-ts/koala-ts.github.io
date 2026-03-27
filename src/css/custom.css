@@ -1,0 +1,67 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&display=swap');
+
+:root {
+  --ifm-color-primary: #0f766e;
+  --ifm-color-primary-dark: #0d6962;
+  --ifm-color-primary-darker: #0c635c;
+  --ifm-color-primary-darkest: #0a524c;
+  --ifm-color-primary-light: #118378;
+  --ifm-color-primary-lighter: #12897d;
+  --ifm-color-primary-lightest: #16a092;
+  --ifm-link-color: #0c635c;
+  --ifm-menu-color-active: #0c635c;
+  --ifm-font-family-base: 'Manrope', sans-serif;
+  --ifm-heading-font-family: 'Manrope', sans-serif;
+  --ifm-font-family-monospace: 'Fira Code', monospace;
+  --ifm-background-color: #ffffff;
+  --ifm-background-surface-color: #f9fafb;
+  --ifm-navbar-background-color: #ffffff;
+  --ifm-footer-background-color: #f9fafb;
+  --ifm-font-color-base: #0b0f14;
+  --ifm-heading-color: #0b0f14;
+  --ifm-navbar-link-color: #0b0f14;
+  --ifm-navbar-link-hover-color: #0f766e;
+  --ifm-toc-link-color: #0b0f14;
+  --ifm-menu-color: #0b0f14;
+  --ifm-code-font-size: 95%;
+  --ifm-code-background: #f3f4f6;
+  --ifm-pre-background: #0b0f14;
+  --ifm-pre-color: #e5e7eb;
+}
+
+[data-theme='dark'] {
+  --ifm-color-primary: #2dd4bf;
+  --ifm-color-primary-dark: #18c3ae;
+  --ifm-color-primary-darker: #16b9a5;
+  --ifm-color-primary-darkest: #129887;
+  --ifm-color-primary-light: #44d9c6;
+  --ifm-color-primary-lighter: #51dccb;
+  --ifm-color-primary-lightest: #74e4d6;
+  --ifm-link-color: #2dd4bf;
+  --ifm-menu-color-active: #2dd4bf;
+  --ifm-font-color-base: #e5e7eb;
+  --ifm-heading-color: #f9fafb;
+}
+
+.footer {
+  --ifm-footer-background-color: #f9fafb;
+  color: #0b0f14;
+  border-top: 1px solid rgba(15, 118, 110, 0.1);
+}
+
+.navbar {
+  border-bottom: 1px solid rgba(15, 118, 110, 0.08);
+  box-shadow: none;
+}
+
+.navbar__brand,
+.footer a,
+.menu__link,
+.table-of-contents__link {
+  font-family: 'Manrope', sans-serif;
+}
+
+.footer__title {
+  color: #0b0f14;
+}

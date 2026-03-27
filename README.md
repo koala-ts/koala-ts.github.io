@@ -1,31 +1,49 @@
-# KoalaTs 🐨
+# KoalaTs Docs `1.x`
 
-Welcome to KoalaTs! KoalaTs is crafted for the laziest backend developers because nothing pairs better with clean APIs
-than a good nap.
+This branch contains the Docusaurus documentation site for KoalaTs `1.x`.
 
-## Getting Started
+## Canonical URL contract
 
-To get started, you can use the [KoalaTs CLI](https://www.npmjs.com/package/@koala-ts/cli) to generate a new project:
+This branch is a non-default release branch.
+
+- `/` is owned by the current default branch `2.x`
+- `/docs` is owned by the current default branch `2.x`
+- `/docs/next` is owned by `main`
+- `/docs/1.x` is owned by this branch
+
+## Local development
+
+Requirements:
+
+- Node.js 24.x
+- npm 11.x
+
+Install dependencies:
 
 ```bash
-npx @koala-ts/cli create my-app
-```
-
-The above command will generate a new project in the `my-app` directory.
-
-Then, navigate to the project directory and start the server:
-
-```bash
-cd my-app
 npm install
-npm run start
 ```
 
-## Next Steps
+To run this branch locally with its published route shape, provide the branch override explicitly:
 
-- Get started
-    + [Configuration](./get-started/configuration.md)
-- Basics
-    + [Routing](./basics/routing.md)
-    + [Request](./basics/request.md)
-    + [Response](./basics/response.md)
+```bash
+DOCS_CURRENT_BRANCH=1.x npm run start
+```
+
+That serves the docs under `/docs/1.x`.
+
+Run validation:
+
+```bash
+npm run validate
+```
+
+## Content structure
+
+The `1.x` docs preserve the legacy content taxonomy inside Docusaurus:
+
+- `docs/overview/intro.md`
+- `docs/get-started/configuration.md`
+- `docs/basics/routing.md`
+- `docs/basics/request.md`
+- `docs/basics/response.md`
