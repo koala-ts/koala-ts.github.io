@@ -1,0 +1,12 @@
+{
+  "2.x": [
+    "fundamentals/request",
+    "fundamentals/response",
+    "fundamentals/routing",
+    "getting-started/quick-start",
+    "guides/configuration",
+    "guides/static-files",
+    "overview/intro",
+    "utilities/request-scope-store"
+  ]
+}
