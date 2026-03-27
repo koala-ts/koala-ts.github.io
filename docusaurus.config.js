@@ -1,7 +1,5 @@
-const {
-  buildVersionNavbarItems,
-} = require('./scripts/build-version-navbar-items');
 const {resolveDocsRuntime} = require('./scripts/resolve-docs-runtime');
+const {versionFallbackDocPath} = require('./docs-site.config');
 const prismReact = require('prism-react-renderer');
 
 const {
@@ -30,14 +28,6 @@ const docsQuickStartPath = buildCurrentDocsContentPath({
   docPath: 'getting-started/quick-start',
 });
 
-const versionItems = buildVersionNavbarItems({
-  defaultBranch,
-  versions,
-  versionSlug,
-  siteUrl,
-  docsSiteBase,
-});
-
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'KoalaTs',
@@ -56,9 +46,12 @@ const config = {
     locales: ['en'],
   },
   customFields: {
+    defaultBranch,
     homePath,
+    docsSiteBase,
     docsIntroPath,
     docsQuickStartPath,
+    versionFallbackDocPath,
   },
   themeConfig: {
     colorMode: {
@@ -80,9 +73,10 @@ const config = {
           label: 'Documentation',
         },
         {
-          label: `Version: ${versionSlug}`,
+          type: 'custom-version-switcher',
+          currentVersion: versionSlug,
           position: 'right',
-          items: versionItems,
+          versions,
         },
         {
           href: 'https://github.com/koala-ts',

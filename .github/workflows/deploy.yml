@@ -75,6 +75,13 @@ jobs:
           VERSION_CSV=$(node scripts/build-version-catalog.js .gh-pages/docs/versions.json "${{ steps.version.outputs.version_slug }}")
           echo "version_csv=${VERSION_CSV}" >> "$GITHUB_OUTPUT"
 
+      - name: Build docs path manifest
+        run: |
+          node scripts/build-docs-path-manifest.js \
+            .gh-pages/docs/doc-paths.json \
+            docs \
+            "${{ steps.version.outputs.version_slug }}"
+
       - name: Resolve site base
         id: site
         run: |
@@ -143,6 +150,7 @@ jobs:
             --exclude .git \
             --exclude '.git/***' \
             --exclude=versions.json \
+            --exclude=doc-paths.json \
             ${VERSION_EXCLUDES} \
             build/docs/ .gh-pages/docs/
 
