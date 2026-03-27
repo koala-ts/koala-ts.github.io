@@ -48,6 +48,7 @@ const config = {
   customFields: {
     defaultBranch,
     homePath,
+    siteUrl,
     docsSiteBase,
     docsIntroPath,
     docsQuickStartPath,

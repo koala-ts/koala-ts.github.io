@@ -3,18 +3,20 @@ import {useLocation} from '@docusaurus/router';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 
+const {buildAbsoluteSiteUrl} = require('@site/scripts/build-canonical-site-paths');
 const {resolveVersionSwitchTarget} = require('@site/scripts/resolve-version-switch-target');
 
 type VersionPathsManifest = Record<string, string[]>;
 
 type SwitchTarget = {
+  href: string;
   label: string;
-  to: string;
 };
 
 type CustomFields = {
   defaultBranch: string;
   docsSiteBase: string;
+  siteUrl: string;
   versionFallbackDocPath: string;
 };
 
@@ -30,7 +32,7 @@ export const useVersionSwitchTargets = ({
   const {pathname} = useLocation();
   const manifestUrl = useBaseUrl('/docs/doc-paths.json');
   const {siteConfig} = useDocusaurusContext();
-  const {defaultBranch, docsSiteBase, versionFallbackDocPath} =
+  const {defaultBranch, docsSiteBase, siteUrl, versionFallbackDocPath} =
     siteConfig.customFields as CustomFields;
   const [manifest, setManifest] = useState<VersionPathsManifest>({});
 
@@ -56,14 +58,17 @@ export const useVersionSwitchTargets = ({
   }, [manifestUrl]);
 
   return versions.map((version) => ({
-    label: version,
-    to: resolveVersionSwitchTarget({
-      availableDocPathsByVersion: manifest,
-      currentPathname: pathname,
-      defaultBranch,
-      docsSiteBase,
-      fallbackDocPath: versionFallbackDocPath,
-      targetVersion: version,
+    href: buildAbsoluteSiteUrl({
+      siteUrl,
+      path: resolveVersionSwitchTarget({
+        availableDocPathsByVersion: manifest,
+        currentPathname: pathname,
+        defaultBranch,
+        docsSiteBase,
+        fallbackDocPath: versionFallbackDocPath,
+        targetVersion: version,
+      }),
     }),
+    label: version,
   }));
 };
