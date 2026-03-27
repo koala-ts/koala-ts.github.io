@@ -1,0 +1,15 @@
+name: Publish Branch Docs
+run-name: Publish ${{ github.ref_name }}
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    uses: ./.github/workflows/publish-branch-runner.yml
+    with:
+      target_branch: ${{ github.ref_name }}
+    secrets: inherit

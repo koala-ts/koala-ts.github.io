@@ -1,0 +1,103 @@
+name: Republish All Docs
+run-name: Republish all docs
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: write
+
+concurrency:
+  group: docs-pages-republish-all
+  cancel-in-progress: false
+
+jobs:
+  republish:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout workflow branch
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Checkout control branch
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          ref: gh-pages-control
+          path: control
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
+      - name: Resolve release registry snapshot
+        id: registry
+        working-directory: control
+        run: |
+          node scripts/resolve-release-registry-cli.js --github-output "$GITHUB_OUTPUT"
+
+      - name: Republish branches in declared order
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEPLOYABLE_BRANCHES: ${{ steps.registry.outputs.deployable_branches }}
+          REGISTRY_JSON: ${{ steps.registry.outputs.registry_json }}
+        run: |
+          mapfile -t BRANCHES < <(
+            node -e "for (const branch of JSON.parse(process.env.DEPLOYABLE_BRANCHES)) console.log(branch)"
+          )
+
+          for branch in "${BRANCHES[@]}"; do
+            run_name="Publish ${branch}"
+            dispatched_at=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+
+            gh workflow run publish-branch-internal.yml \
+              --ref 2.x \
+              -f target_branch="${branch}" \
+              -f registry_json="${REGISTRY_JSON}"
+
+            run_id=""
+
+            for attempt in $(seq 1 30); do
+              runs_json=$(gh run list \
+                --workflow publish-branch-internal.yml \
+                --event workflow_dispatch \
+                --json databaseId,displayTitle,createdAt)
+
+              run_id=$(
+                node -e '
+                  const runs = JSON.parse(process.argv[1]);
+                  const runName = process.argv[2];
+                  const dispatchedAt = Date.parse(process.argv[3]);
+                  const match = runs
+                    .filter((run) => run.displayTitle === runName)
+                    .filter((run) => Date.parse(run.createdAt) >= dispatchedAt)
+                    .sort((left, right) => Date.parse(right.createdAt) - Date.parse(left.createdAt))[0];
+                  if (match) {
+                    process.stdout.write(String(match.databaseId));
+                  }
+                ' \
+                "${runs_json}" \
+                "${run_name}" \
+                "${dispatched_at}"
+              )
+
+              if [ -n "${run_id}" ]; then
+                break
+              fi
+
+              sleep 2
+            done
+
+            if [ -z "${run_id}" ]; then
+              echo "Failed to find child publish run for ${branch}"
+              exit 1
+            fi
+
+            gh run watch "${run_id}" --exit-status
+          done

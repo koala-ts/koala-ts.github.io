@@ -15,7 +15,7 @@ The repository targets this public URL model:
 
 Only one branch owns `/` and `/docs` at a time: the current default branch.
 
-The default branch is configured in `docs-site.config.js`, and both local development and GitHub Pages publication resolve ownership from that same source of truth.
+The default branch is configured in `release-registry.json` on `gh-pages-control`.
 
 ## Version publishing model
 
@@ -53,15 +53,15 @@ Run the docs locally:
 npm run start
 ```
 
-By default, local development uses the configured default branch from `docs-site.config.js`, so the homepage is served at `/` and the docs are served at `/docs`.
+By default, local development uses local preview mode, so the checked out branch stays canonical locally and the docs are served at `/docs`.
 
-To simulate another branch locally, override the branch inputs explicitly:
+To simulate published routing from the centralized release registry, use publish simulation mode:
 
 ```bash
-DOCS_CURRENT_BRANCH=main npm run start
+DOCS_RUNTIME_MODE=publish-simulation DOCS_DEFAULT_BRANCH=2.x npm run start
 ```
 
-That example keeps the homepage at `/` and serves the docs at `/docs/next`.
+That example keeps `2.x` canonical at `/docs`. For a non-default release branch such as `1.x`, publish simulation would serve the docs under `/docs/1.x`.
 
 Build static files:
 
@@ -79,9 +79,10 @@ npm run validate
 
 Set GitHub Pages source to the `gh-pages` branch root.
 
-Docs publication is manual. Select the branch in GitHub's `Use workflow from` menu, then run `Deploy Docs` from that branch. Merging into `main` or `*.x` keeps the branch ready to publish, but does not update GitHub Pages until the workflow is run.
+Docs publication is manual and controlled through bridge workflows on `2.x`.
 
-The deploy workflow resolves the default branch from `docs-site.config.js` and publishes with these ownership rules:
+The centralized registry and deploy scripts still live on `gh-pages-control`.
+The dispatchable workflows on `2.x` load `release-registry.json` and the deploy scripts from `gh-pages-control`, then publish with these ownership rules:
 
 - `/` and `/docs` from the current default branch
 - `/docs/next` from `main`
@@ -89,3 +90,12 @@ The deploy workflow resolves the default branch from `docs-site.config.js` and p
 - `/docs/versions.json` for version navigation
 
 When a branch is not the default branch, it publishes only its versioned docs subtree and does not overwrite the homepage.
+
+Available operator workflows on `2.x`:
+
+- `Publish Branch Docs` publishes the selected workflow branch with no manual inputs
+- `Republish All Docs` republishes all deployable branches in registry order
+
+Internal orchestration details such as `registry_json` stay hidden from manual workflow runs.
+
+Missing deployable branches are skipped without failing a republish-all run.

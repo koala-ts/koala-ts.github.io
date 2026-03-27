@@ -1,0 +1,215 @@
+on:
+  workflow_call:
+    inputs:
+      target_branch:
+        required: true
+        type: string
+      registry_json:
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: docs-pages-publish-branch
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Publish ${{ inputs.target_branch }}
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout workflow branch
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Checkout control branch
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          ref: gh-pages-control
+          path: control
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
+      - name: Resolve central publish context
+        id: publish_context
+        working-directory: control
+        env:
+          RELEASE_REGISTRY_JSON: ${{ inputs.registry_json || 'release-registry.json' }}
+        run: |
+          node scripts/resolve-publish-context-cli.js \
+            "${{ inputs.target_branch }}" \
+            --github-output "$GITHUB_OUTPUT"
+
+      - name: Resolve branch availability
+        id: availability
+        working-directory: control
+        env:
+          TARGET_BRANCH: ${{ inputs.target_branch }}
+          RELEASE_REGISTRY_JSON: ${{ inputs.registry_json || 'release-registry.json' }}
+        run: |
+          REMOTE_BRANCHES=$(git ls-remote --heads origin | awk '{print $2}' | sed 's#refs/heads/##' | paste -sd ',' -)
+          REMOTE_BRANCHES="${REMOTE_BRANCHES}" \
+            node scripts/resolve-branch-availability-cli.js \
+            "${TARGET_BRANCH}" \
+            --github-output "$GITHUB_OUTPUT"
+
+      - name: Skip missing branch
+        if: steps.availability.outputs.should_skip == 'true'
+        run: |
+          echo "${{ steps.availability.outputs.skip_reason }}"
+
+      - name: Checkout source branch
+        if: steps.availability.outputs.should_skip != 'true'
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          ref: ${{ inputs.target_branch }}
+          path: source
+
+      - name: Setup source Node.js cache
+        if: steps.availability.outputs.should_skip != 'true'
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: source/package-lock.json
+
+      - name: Install source dependencies
+        if: steps.availability.outputs.should_skip != 'true'
+        working-directory: source
+        run: npm ci
+
+      - name: Prepare gh-pages workspace
+        if: steps.availability.outputs.should_skip != 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if git ls-remote --exit-code --heads origin gh-pages; then
+            git clone --depth 1 --branch gh-pages "https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git" .gh-pages
+          else
+            mkdir -p .gh-pages
+            cd .gh-pages
+            git init
+            git checkout --orphan gh-pages
+            git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git"
+          fi
+
+      - name: Build versions catalog
+        id: catalog
+        if: steps.availability.outputs.should_skip != 'true'
+        run: |
+          mkdir -p .gh-pages/docs
+          VERSION_CSV=$(node control/scripts/build-version-catalog.js .gh-pages/docs/versions.json "${{ steps.publish_context.outputs.version_slug }}")
+          echo "version_csv=${VERSION_CSV}" >> "$GITHUB_OUTPUT"
+
+      - name: Build docs path manifest
+        if: steps.availability.outputs.should_skip != 'true'
+        run: |
+          node control/scripts/build-docs-path-manifest.js \
+            .gh-pages/docs/doc-paths.json \
+            source/docs \
+            "${{ steps.publish_context.outputs.version_slug }}"
+
+      - name: Resolve site base
+        id: site
+        if: steps.availability.outputs.should_skip != 'true'
+        run: |
+          if [ -f .gh-pages/CNAME ]; then
+            DOMAIN=$(head -n 1 .gh-pages/CNAME | tr -d '[:space:]')
+            echo "site_url=https://${DOMAIN}" >> "$GITHUB_OUTPUT"
+            echo "site_base=/" >> "$GITHUB_OUTPUT"
+          else
+            OWNER_LC=$(echo "${GITHUB_REPOSITORY_OWNER}" | tr '[:upper:]' '[:lower:]')
+            REPO_NAME="${GITHUB_REPOSITORY#*/}"
+            REPO_LC=$(echo "${REPO_NAME}" | tr '[:upper:]' '[:lower:]')
+            echo "site_url=https://${GITHUB_REPOSITORY_OWNER}.github.io" >> "$GITHUB_OUTPUT"
+            if [ "${REPO_LC}" = "${OWNER_LC}.github.io" ]; then
+              echo "site_base=/" >> "$GITHUB_OUTPUT"
+            else
+              echo "site_base=/${REPO_NAME}/" >> "$GITHUB_OUTPUT"
+            fi
+          fi
+
+      - name: Resolve publish layout
+        id: layout
+        if: steps.availability.outputs.should_skip != 'true'
+        run: |
+          node control/scripts/resolve-publish-layout.js \
+            "${{ steps.publish_context.outputs.current_branch }}" \
+            "${{ steps.publish_context.outputs.default_branch }}" \
+            "${{ steps.site.outputs.site_base }}" \
+            "${{ steps.publish_context.outputs.version_slug }}" \
+            --github-output "$GITHUB_OUTPUT"
+
+      - name: Build Docusaurus site
+        if: steps.availability.outputs.should_skip != 'true'
+        working-directory: source
+        env:
+          DOCS_CURRENT_BRANCH: ${{ steps.publish_context.outputs.current_branch }}
+          DOCS_DEFAULT_BRANCH: ${{ steps.publish_context.outputs.default_branch }}
+          DOCS_VERSION: ${{ steps.publish_context.outputs.version_slug }}
+          DOCS_VERSIONS: ${{ steps.catalog.outputs.version_csv }}
+          DOCS_SITE_BASE: ${{ steps.site.outputs.site_base }}
+          DOCS_BASE_URL: ${{ steps.layout.outputs.build_base_url }}
+          DOCS_ROUTE_BASE_PATH: ${{ steps.layout.outputs.docs_route_base_path }}
+          SITE_URL: ${{ steps.site.outputs.site_url }}
+        run: npm run build
+
+      - name: Publish default branch site ownership
+        if: steps.availability.outputs.should_skip != 'true' && steps.layout.outputs.is_default_branch == 'true'
+        run: |
+          rm -rf "${{ steps.layout.outputs.versioned_docs_dir }}"
+
+          rsync -a --delete \
+            --exclude .git \
+            --exclude '.git/***' \
+            --exclude docs \
+            --exclude 'docs/***' \
+            --exclude CNAME \
+            source/build/ .gh-pages/
+
+          VERSION_EXCLUDES=$(printf '%s\n' "${{ steps.catalog.outputs.version_csv }}" | tr ',' '\n' | sed '/^$/d' | sed 's#^#--exclude=#')
+
+          mkdir -p .gh-pages/docs
+          rsync -a --delete \
+            --exclude .git \
+            --exclude '.git/***' \
+            --exclude=versions.json \
+            --exclude=doc-paths.json \
+            ${VERSION_EXCLUDES} \
+            source/build/docs/ .gh-pages/docs/
+
+      - name: Publish non-default branch docs
+        if: steps.availability.outputs.should_skip != 'true' && steps.layout.outputs.is_default_branch != 'true'
+        run: |
+          mkdir -p "${{ steps.layout.outputs.publish_target_dir }}"
+          rsync -a --delete \
+            --exclude .git \
+            --exclude '.git/***' \
+            "source/${{ steps.layout.outputs.publish_source_dir }}/" \
+            "${{ steps.layout.outputs.publish_target_dir }}/"
+
+      - name: Commit and push gh-pages
+        if: steps.availability.outputs.should_skip != 'true'
+        working-directory: .gh-pages
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .
+          if git diff --cached --quiet; then
+            echo "No changes to publish"
+            exit 0
+          fi
+          git commit -m "chore: publish docs ${{ steps.publish_context.outputs.version_slug }}"
+          git pull --rebase origin gh-pages || true
+          git push origin HEAD:gh-pages
