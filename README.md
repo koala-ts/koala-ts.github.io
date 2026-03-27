@@ -60,7 +60,7 @@ The `1.x` docs preserve the legacy content taxonomy inside Docusaurus:
 
 ## Publication
 
-Publication is centralized, but this branch is not currently deployable.
+Publication is centralized and this branch is deployable again.
 
 The live deployment control plane is split like this:
 
@@ -69,7 +69,12 @@ The live deployment control plane is split like this:
 
 Current registry state:
 
-- deployable branches: `2.x`, `main`
+- deployable branches: `1.x`, `2.x`, `main`
 - default branch: `2.x`
 
-That means `1.x` keeps its local preview and publish-simulation support, but it is skipped from publication until it is added back to `release-registry.json`.
+Manual operators should use these workflows on `2.x`:
+
+- `Deploy Selected Docs Branch`
+- `Deploy All Deployable Docs Branches`
+
+That means `1.x` keeps its local preview and publish-simulation support, and it can be published again through the centralized deployment model.
