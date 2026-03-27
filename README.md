@@ -15,9 +15,7 @@ The repository targets this public URL model:
 
 Only one branch owns `/` and `/docs` at a time: the current default branch.
 
-The actual default branch value must be provided by runtime configuration so local development and GitHub Pages publication resolve the same owner for `/` and `/docs`.
-
-This contract is the target state for the repository. Implementation slices align local development and GitHub Pages publication with this model.
+The default branch is configured in [docs-site.config.js](/Users/imdhemy/code/github/koala-ts/docs/docs-site.config.js), and both local development and GitHub Pages publication resolve ownership from that same source of truth.
 
 ## Version publishing model
 
@@ -55,6 +53,16 @@ Run the docs locally:
 npm run start
 ```
 
+By default, local development uses the configured default branch from `docs-site.config.js`, so the homepage is served at `/` and the docs are served at `/docs`.
+
+To simulate another branch locally, override the branch inputs explicitly:
+
+```bash
+DOCS_CURRENT_BRANCH=main npm run start
+```
+
+That example keeps the homepage at `/` and serves the docs at `/docs/next`.
+
 Build static files:
 
 ```bash
@@ -73,9 +81,11 @@ Set GitHub Pages source to the `gh-pages` branch root.
 
 Docs publication is manual. Select the branch in GitHub's `Use workflow from` menu, then run `Deploy Docs` from that branch. Merging into `main` or `*.x` keeps the branch ready to publish, but does not update GitHub Pages until the workflow is run.
 
-The deploy workflow target is:
+The deploy workflow resolves the default branch from `docs-site.config.js` and publishes with these ownership rules:
 
 - `/` and `/docs` from the current default branch
 - `/docs/next` from `main`
 - `/docs/<version>` from non-default release branches
 - `/docs/versions.json` for version navigation
+
+When a branch is not the default branch, it publishes only its versioned docs subtree and does not overwrite the homepage.

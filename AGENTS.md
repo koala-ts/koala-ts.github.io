@@ -3,13 +3,14 @@
 ## Version Strategy
 
 - The current default branch owns the canonical homepage at `/` and the canonical docs at `/docs`.
-- The actual default branch value must be resolved from code-level runtime configuration, not hardcoded in policy text.
+- The actual default branch value is configured in `docs-site.config.js`, not hardcoded in policy text.
 - `main` documents the upcoming next release published as `/docs/next`.
 - Non-default release branches publish docs at `/docs/<version>`.
 
 ## Routing Documentation Policy
 
 - Keep the public URL contract consistent between local development and GitHub Pages publication.
+- Local development must default to the configured default branch unless a branch override is explicitly provided.
 - Treat `/` as the canonical homepage and `/docs` as the canonical docs URL for the current default branch.
 - Treat `/docs/next` as the canonical docs URL for `main`.
 - Treat `/docs/<version>` as the canonical docs URL for non-default release branches.
