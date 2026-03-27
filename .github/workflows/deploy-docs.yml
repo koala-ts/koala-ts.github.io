@@ -46,9 +46,9 @@ jobs:
         id: version
         run: node scripts/resolve-version.js --github-output "$GITHUB_OUTPUT"
 
-      - name: Resolve default branch version
-        id: default_version
-        run: node scripts/resolve-version.js "${{ github.event.repository.default_branch }}" --github-output "$GITHUB_OUTPUT"
+      - name: Resolve configured default branch
+        id: default_branch
+        run: node scripts/resolve-default-branch.js --github-output "$GITHUB_OUTPUT"
 
       - name: Prepare gh-pages workspace
         env:
@@ -90,50 +90,112 @@ jobs:
             fi
           fi
 
+      - name: Resolve publish layout
+        id: layout
+        run: |
+          node scripts/resolve-publish-layout.js \
+            "${{ github.ref_name }}" \
+            "${{ steps.default_branch.outputs.default_branch }}" \
+            "${{ steps.site.outputs.site_base }}" \
+            "${{ steps.version.outputs.version_slug }}" \
+            --github-output "$GITHUB_OUTPUT"
+
       - name: Build Docusaurus site
         env:
+          DOCS_CURRENT_BRANCH: ${{ github.ref_name }}
+          DOCS_DEFAULT_BRANCH: ${{ steps.default_branch.outputs.default_branch }}
           DOCS_VERSION: ${{ steps.version.outputs.version_slug }}
           DOCS_VERSIONS: ${{ steps.catalog.outputs.version_csv }}
           DOCS_SITE_BASE: ${{ steps.site.outputs.site_base }}
-          DOCS_BASE_URL: ${{ steps.site.outputs.site_base }}docs/${{ steps.version.outputs.version_slug }}/
+          DOCS_BASE_URL: ${{ steps.layout.outputs.build_base_url }}
+          DOCS_ROUTE_BASE_PATH: ${{ steps.layout.outputs.docs_route_base_path }}
           SITE_URL: ${{ steps.site.outputs.site_url }}
         run: npm run build
 
-      - name: Publish version folder
+      - name: Publish default branch site ownership
+        if: steps.layout.outputs.is_default_branch == 'true'
         run: |
-          mkdir -p ".gh-pages/docs/${{ steps.version.outputs.version_slug }}"
-          rsync -a --delete build/ ".gh-pages/docs/${{ steps.version.outputs.version_slug }}/"
+          if [ ! -d .gh-pages/.git ]; then
+            echo "Expected .gh-pages to be an isolated git checkout"
+            exit 1
+          fi
 
-      - name: Create index redirects
+          rm -rf "${{ steps.layout.outputs.versioned_docs_dir }}"
+
+          rsync -a --delete \
+            --exclude .git \
+            --exclude '.git/***' \
+            --exclude docs \
+            --exclude 'docs/***' \
+            --exclude CNAME \
+            build/ .gh-pages/
+
+          VERSION_EXCLUDES=$(printf '%s\n' "${{ steps.catalog.outputs.version_csv }}" | tr ',' '\n' | sed '/^$/d' | sed 's#^#--exclude=#')
+
+          mkdir -p .gh-pages/docs
+          rsync -a --delete \
+            --exclude .git \
+            --exclude '.git/***' \
+            --exclude=versions.json \
+            ${VERSION_EXCLUDES} \
+            build/docs/ .gh-pages/docs/
+
+      - name: Publish non-default branch docs
+        if: steps.layout.outputs.is_default_branch != 'true'
         run: |
-          ROOT_REDIRECT="./docs/${{ steps.default_version.outputs.version_slug }}/"
-          DOCS_REDIRECT="./${{ steps.default_version.outputs.version_slug }}/"
+          if [ ! -d .gh-pages/.git ]; then
+            echo "Expected .gh-pages to be an isolated git checkout"
+            exit 1
+          fi
 
-          cat > .gh-pages/index.html <<EOF
-          <!doctype html>
-          <meta charset="utf-8">
-          <meta http-equiv="refresh" content="0; url=${ROOT_REDIRECT}">
-          <title>KoalaTs Docs</title>
-          <a href="${ROOT_REDIRECT}">Go to documentation</a>
-          EOF
-
-          cat > .gh-pages/docs/index.html <<EOF
-          <!doctype html>
-          <meta charset="utf-8">
-          <meta http-equiv="refresh" content="0; url=${DOCS_REDIRECT}">
-          <title>KoalaTs Docs</title>
-          <a href="${DOCS_REDIRECT}">Go to documentation</a>
-          EOF
+          mkdir -p "${{ steps.layout.outputs.publish_target_dir }}"
+          rsync -a --delete \
+            --exclude .git \
+            --exclude '.git/***' \
+            "${{ steps.layout.outputs.publish_source_dir }}/" \
+            "${{ steps.layout.outputs.publish_target_dir }}/"
 
       - name: Commit and push gh-pages
         working-directory: .gh-pages
         run: |
+          if [ ! -d .git ]; then
+            echo ".gh-pages git metadata is missing"
+            exit 1
+          fi
+
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs index.html
+          git add .
           if git diff --cached --quiet; then
             echo "No changes to publish"
             exit 0
           fi
           git commit -m "chore: publish docs ${{ steps.version.outputs.version_slug }}"
-          git push origin HEAD:gh-pages
+
+          if ! git ls-remote --exit-code --heads origin gh-pages >/dev/null 2>&1; then
+            git push origin HEAD:gh-pages
+            exit 0
+          fi
+
+          ATTEMPT=1
+          MAX_ATTEMPTS=3
+
+          while [ "${ATTEMPT}" -le "${MAX_ATTEMPTS}" ]; do
+            git fetch origin gh-pages
+
+            if ! git rebase origin/gh-pages; then
+              echo "Failed to rebase generated deploy commit onto origin/gh-pages"
+              git rebase --abort || true
+              exit 1
+            fi
+
+            if git push origin HEAD:gh-pages; then
+              exit 0
+            fi
+
+            echo "Push race detected for gh-pages (attempt ${ATTEMPT}/${MAX_ATTEMPTS})"
+            ATTEMPT=$((ATTEMPT + 1))
+          done
+
+          echo "Failed to push gh-pages after ${MAX_ATTEMPTS} attempts"
+          exit 1

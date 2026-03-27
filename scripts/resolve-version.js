@@ -3,6 +3,7 @@
  * Usage: used by deploy workflow to compute target version paths and default redirects.
  */
 const {appendFileSync} = require('node:fs');
+const {resolveVersionSlug} = require('./resolve-version-slug');
 
 const args = process.argv.slice(2);
 
@@ -24,14 +25,7 @@ const branchArg = args.find((arg, index) => {
 const branchName =
   branchArg || process.env.GITHUB_REF_NAME || process.env.BRANCH_NAME || 'main';
 
-const sanitize = (value) =>
-  value
-    .toLowerCase()
-    .replace(/[^a-z0-9._-]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-    .replace(/-+/g, '-');
-
-const versionSlug = branchName === 'main' ? 'next' : sanitize(branchName) || 'next';
+const versionSlug = resolveVersionSlug(branchName);
 
 if (githubOutputPath) {
   appendFileSync(

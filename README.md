@@ -4,6 +4,19 @@ This repository contains the documentation website for KoalaTs.
 
 The site is generated with Docusaurus and published to GitHub Pages with branch-based version paths.
 
+## Canonical URL contract
+
+The repository targets this public URL model:
+
+- `/` serves the homepage from the current default branch.
+- `/docs` serves the documentation from the current default branch.
+- `/docs/next` serves the documentation published from `main`.
+- `/docs/<version>` serves the documentation published from a non-default release branch such as `1.x` or `2.x`.
+
+Only one branch owns `/` and `/docs` at a time: the current default branch.
+
+The default branch is configured in `docs-site.config.js`, and both local development and GitHub Pages publication resolve ownership from that same source of truth.
+
 ## Version publishing model
 
 Only these branches are deployable:
@@ -13,9 +26,9 @@ Only these branches are deployable:
 
 Published paths:
 
+- the current default branch -> `/` and `/docs`
 - `main` -> `/docs/next`
-- `1.x` -> `/docs/1.x`
-- `2.x` -> `/docs/2.x`
+- any non-default `*.x` branch -> `/docs/<version>`
 
 Branches outside this policy cannot be published.
 
@@ -40,6 +53,16 @@ Run the docs locally:
 npm run start
 ```
 
+By default, local development uses the configured default branch from `docs-site.config.js`, so the homepage is served at `/` and the docs are served at `/docs`.
+
+To simulate another branch locally, override the branch inputs explicitly:
+
+```bash
+DOCS_CURRENT_BRANCH=main npm run start
+```
+
+That example keeps the homepage at `/` and serves the docs at `/docs/next`.
+
 Build static files:
 
 ```bash
@@ -58,8 +81,11 @@ Set GitHub Pages source to the `gh-pages` branch root.
 
 Docs publication is manual. Select the branch in GitHub's `Use workflow from` menu, then run `Deploy Docs` from that branch. Merging into `main` or `*.x` keeps the branch ready to publish, but does not update GitHub Pages until the workflow is run.
 
-The deploy workflow updates:
+The deploy workflow resolves the default branch from `docs-site.config.js` and publishes with these ownership rules:
 
-- `/docs/<version>/` for the current branch build
+- `/` and `/docs` from the current default branch
+- `/docs/next` from `main`
+- `/docs/<version>` from non-default release branches
 - `/docs/versions.json` for version navigation
-- root redirects to the default branch version
+
+When a branch is not the default branch, it publishes only its versioned docs subtree and does not overwrite the homepage.
