@@ -7,6 +7,7 @@ const {
   buildCanonicalDocsRootPath,
   buildCanonicalHomePath,
   buildCurrentDocsContentPath,
+  buildSharedDocsManifestPath,
 } = require('./build-canonical-site-paths');
 
 test('builds the canonical home path from the site base', () => {
@@ -66,5 +67,13 @@ test('builds absolute site urls from canonical paths', () => {
       path: '/docs/',
     }),
     'https://koala-ts.github.io/docs/',
+  );
+});
+
+test('builds the shared docs manifest path from the site base', () => {
+  assert.equal(buildSharedDocsManifestPath({docsSiteBase: '/'}), '/docs/doc-paths.json');
+  assert.equal(
+    buildSharedDocsManifestPath({docsSiteBase: '/preview'}),
+    '/preview/docs/doc-paths.json',
   );
 });

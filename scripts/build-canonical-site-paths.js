@@ -10,6 +10,12 @@ const trimLeadingSlash = (value) => value.replace(/^\/+/, '');
 const buildCanonicalHomePath = ({docsSiteBase = '/'}) =>
   normalizeBasePath(docsSiteBase);
 
+const buildSharedDocsManifestPath = ({docsSiteBase = '/'}) => {
+  const homePath = buildCanonicalHomePath({docsSiteBase});
+
+  return `${homePath}docs/doc-paths.json`;
+};
+
 const buildCurrentDocsContentPath = ({
   baseUrl = '/',
   docsRouteBasePath = 'docs',
@@ -62,4 +68,5 @@ module.exports = {
   buildCanonicalDocsRootPath,
   buildCanonicalHomePath,
   buildCurrentDocsContentPath,
+  buildSharedDocsManifestPath,
 };
