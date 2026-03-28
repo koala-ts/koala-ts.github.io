@@ -54,3 +54,16 @@ test('rejects a missing site base', () => {
 
   assert.throws(act, /value must be a string/);
 });
+
+test('rejects a version slug that does not match the current branch policy', () => {
+  const input = {
+    currentBranch: 'main',
+    defaultBranch: '2.x',
+    siteBase: '/',
+    versionSlug: '2.x',
+  };
+
+  const act = () => resolvePublishLayout(input);
+
+  assert.throws(act, /versionSlug must match the classified branch policy/);
+});

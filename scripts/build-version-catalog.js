@@ -17,7 +17,7 @@ const loaded = existsSync(catalogPath)
   : [];
 
 const isAllowedVersion = (version) =>
-  version === 'next' || /^[a-z0-9._-]+\.x$/.test(version);
+  version === 'next' || /^[0-9]+\.x$/.test(version);
 
 const merged = [...new Set([...loaded, currentVersion])]
   .filter(isAllowedVersion)

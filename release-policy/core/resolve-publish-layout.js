@@ -1,5 +1,8 @@
 const {normalizeBasePath, requireString} = require('./normalize-base-path');
-const {resolveVersionSlug} = require('./resolve-version-slug');
+const {
+  assertBranchVersionSlug,
+  classifyDocsBranch,
+} = require('./classify-docs-branch');
 
 const resolvePublishLayout = ({
   currentBranch,
@@ -10,14 +13,17 @@ const resolvePublishLayout = ({
   const normalizedCurrentBranch = requireString(currentBranch, 'currentBranch');
   const normalizedDefaultBranch = requireString(defaultBranch, 'defaultBranch');
   const normalizedSiteBase = normalizeBasePath(siteBase);
-  const normalizedVersionSlug = requireString(versionSlug, 'versionSlug');
-  const defaultVersionSlug = resolveVersionSlug(normalizedDefaultBranch);
+  const currentBranchClassification = assertBranchVersionSlug({
+    branchName: normalizedCurrentBranch,
+    versionSlug,
+  });
+  const defaultBranchClassification = classifyDocsBranch(normalizedDefaultBranch);
   const isDefaultBranch =
-    normalizedVersionSlug === defaultVersionSlug &&
+    currentBranchClassification.versionSlug === defaultBranchClassification.versionSlug &&
     normalizedCurrentBranch === normalizedDefaultBranch;
   const docsRouteBasePath = isDefaultBranch
     ? 'docs'
-    : `docs/${normalizedVersionSlug}`;
+    : currentBranchClassification.docsRouteBasePath;
 
   return {
     buildBaseUrl: normalizedSiteBase,
@@ -28,8 +34,8 @@ const resolvePublishLayout = ({
       : `build/${docsRouteBasePath}`,
     publishTargetDir: isDefaultBranch
       ? '.gh-pages'
-      : `.gh-pages/docs/${normalizedVersionSlug}`,
-    versionedDocsDir: `.gh-pages/docs/${normalizedVersionSlug}`,
+      : currentBranchClassification.publishTargetDir,
+    versionedDocsDir: currentBranchClassification.publishTargetDir,
   };
 };
 
