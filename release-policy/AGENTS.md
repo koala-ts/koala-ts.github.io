@@ -32,5 +32,6 @@
 
 - Preserve the incremental PR strategy recorded in [`WORKLOG.md`](./WORKLOG.md).
 - Prefer moving one coherent responsibility at a time.
+- Before creating a new PR branch, fetch the remote and create the branch from the latest state of the current default branch.
 - Update [`WORKLOG.md`](./WORKLOG.md) when a PR changes status, scope, history, or next steps.
 - Avoid mixing skeleton work, behavior moves, and workflow rewrites in the same PR unless the recorded work plan explicitly calls for it.

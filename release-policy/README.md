@@ -21,6 +21,7 @@ The delivery history and next steps are tracked in [`WORKLOG.md`](./WORKLOG.md).
 
 - This directory follows [`PLAN.md`](./PLAN.md) as the authoritative implementation plan.
 - This directory relies on [`WORKLOG.md`](./WORKLOG.md) for the incremental action plan, completed steps, and next work.
+- Start each new PR branch from a freshly fetched current default branch.
 - The first pull request creates structure only. No behavior should be moved here yet.
 - Future implementation must preserve the separation between pure policy and adapters.
 - Production logic must not be added to the adapters when it belongs in `core`.
