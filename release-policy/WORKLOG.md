@@ -14,7 +14,7 @@ Keep [`PLAN.md`](./PLAN.md) focused on stable architectural rules. Keep this fil
 ## Status
 
 - State: in progress
-- Active branch for PR 4: `release-policy-docusaurus-runtime`
+- Active branch for PR 5: `release-policy-github-pages-adapter`
 
 ## History
 
@@ -54,7 +54,7 @@ Keep [`PLAN.md`](./PLAN.md) focused on stable architectural rules. Keep this fil
 ### PR 4
 
 - Goal: move Docusaurus/runtime path and navigation policy behind `release-policy/docusaurus`.
-- Status: in progress
+- Status: merged
 - Scope:
   - extract docs runtime resolution into `release-policy/docusaurus`
   - extract canonical docs path builders into `release-policy/docusaurus`
@@ -62,11 +62,21 @@ Keep [`PLAN.md`](./PLAN.md) focused on stable architectural rules. Keep this fil
   - keep `scripts/*` as compatibility wrappers
   - maintain and update existing tests while adding colocated adapter tests
 
+### PR 5
+
+- Goal: move deployment helper logic behind `release-policy/github-pages` and make the `gh-pages-control` dependency explicitly transitional.
+- Status: in progress
+- Scope:
+  - extract publish-layout, version-catalog, and docs-path manifest helpers into `release-policy/github-pages`
+  - keep `scripts/*` as compatibility wrappers
+  - make `gh-pages-control` removal an explicit migration requirement in the local release-policy documents
+  - maintain and update existing tests while adding colocated adapter tests
+
 ## Next Steps
 
-- Finish and merge PR 4.
+- Finish and merge PR 5.
 - For every later PR, fetch the remote default branch first and create the branch from that updated base.
 - Move additional pure release-policy logic into `release-policy/core`.
-- Move deployment orchestration helpers behind `release-policy/github-pages`.
+- Remove workflow checkouts and script loading from `gh-pages-control`.
 - Remove separate-control-branch assumptions from the implementation without breaking the current working model.
 - Validate the extracted design through real usage before porting it to another repository.

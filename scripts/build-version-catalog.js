@@ -1,37 +1,9 @@
 /**
- * Purpose: maintain the shared published versions catalog used by navbar version navigation.
- * Usage: `node scripts/build-version-catalog.js <catalogPath> <currentVersion>`.
+ * Purpose: compatibility wrapper around the extracted GitHub Pages adapter.
+ * Usage: retained so existing CLI entrypoints keep working during extraction.
  */
-const {existsSync, readFileSync, writeFileSync} = require('node:fs');
+const {
+  buildVersionCatalogCli,
+} = require('../release-policy/github-pages/build-version-catalog');
 
-const [catalogPath, currentVersion] = process.argv.slice(2);
-
-if (!catalogPath || !currentVersion) {
-  throw new Error(
-    'Usage: node scripts/build-version-catalog.js <catalogPath> <currentVersion>',
-  );
-}
-
-const loaded = existsSync(catalogPath)
-  ? JSON.parse(readFileSync(catalogPath, 'utf8'))
-  : [];
-
-const isAllowedVersion = (version) =>
-  version === 'next' || /^[0-9]+\.x$/.test(version);
-
-const merged = [...new Set([...loaded, currentVersion])]
-  .filter(isAllowedVersion)
-  .sort((a, b) => {
-    if (a === 'next') {
-      return -1;
-    }
-
-    if (b === 'next') {
-      return 1;
-    }
-
-    return a.localeCompare(b, 'en');
-  });
-
-writeFileSync(catalogPath, `${JSON.stringify(merged, null, 2)}\n`);
-process.stdout.write(`${merged.join(',')}\n`);
+buildVersionCatalogCli(process.argv.slice(2));

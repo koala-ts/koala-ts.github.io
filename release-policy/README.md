@@ -32,4 +32,5 @@ The delivery history and next steps are tracked in [`WORKLOG.md`](./WORKLOG.md).
 - Unit tests in this module should be isolated, follow AAA, and stay compatible with the repository CI test command.
 - Unit tests in this module should target behavior-bearing files rather than barrels.
 - Update existing tests when policy changes. Do not treat the suite as append-only.
+- Treat any `gh-pages-control` workflow dependency as transitional. The completed migration must remove it and rely on local release-policy helpers on the default branch instead.
 - The existing workflow model must keep working until the extraction plan is finished.
