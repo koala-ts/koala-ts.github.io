@@ -30,13 +30,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Checkout control branch
-        uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
-          ref: gh-pages-control
-          path: control
-
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
@@ -44,7 +37,6 @@ jobs:
 
       - name: Resolve central publish context
         id: publish_context
-        working-directory: control
         env:
           RELEASE_REGISTRY_JSON: ${{ inputs.registry_json || 'release-registry.json' }}
         run: |
@@ -54,7 +46,6 @@ jobs:
 
       - name: Resolve branch availability
         id: availability
-        working-directory: control
         env:
           TARGET_BRANCH: ${{ inputs.target_branch }}
           RELEASE_REGISTRY_JSON: ${{ inputs.registry_json || 'release-registry.json' }}
@@ -111,13 +102,13 @@ jobs:
         if: steps.availability.outputs.should_skip != 'true'
         run: |
           mkdir -p .gh-pages/docs
-          VERSION_CSV=$(node control/scripts/build-version-catalog.js .gh-pages/docs/versions.json "${{ steps.publish_context.outputs.version_slug }}")
+          VERSION_CSV=$(node scripts/build-version-catalog.js .gh-pages/docs/versions.json "${{ steps.publish_context.outputs.version_slug }}")
           echo "version_csv=${VERSION_CSV}" >> "$GITHUB_OUTPUT"
 
       - name: Build docs path manifest
         if: steps.availability.outputs.should_skip != 'true'
         run: |
-          node control/scripts/build-docs-path-manifest.js \
+          node scripts/build-docs-path-manifest.js \
             .gh-pages/docs/doc-paths.json \
             source/docs \
             "${{ steps.publish_context.outputs.version_slug }}"
@@ -146,7 +137,7 @@ jobs:
         id: layout
         if: steps.availability.outputs.should_skip != 'true'
         run: |
-          node control/scripts/resolve-publish-layout.js \
+          node scripts/resolve-publish-layout.js \
             "${{ steps.publish_context.outputs.current_branch }}" \
             "${{ steps.publish_context.outputs.default_branch }}" \
             "${{ steps.site.outputs.site_base }}" \
