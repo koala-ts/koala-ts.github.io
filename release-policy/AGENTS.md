@@ -3,7 +3,6 @@
 ## Authority
 
 - [`PLAN.md`](./PLAN.md) is the authoritative plan for all work inside this directory.
-- [`WORKLOG.md`](./WORKLOG.md) is the execution log and incremental action plan for this directory.
 - If code and `PLAN.md` disagree, treat that as a design issue and reconcile them intentionally.
 
 ## Boundaries
@@ -59,9 +58,7 @@
 
 ## Incremental Delivery
 
-- Preserve the incremental PR strategy recorded in [`WORKLOG.md`](./WORKLOG.md).
 - Prefer moving one coherent responsibility at a time.
 - Before creating a new PR branch, fetch the remote and create the branch from the latest state of the current default branch.
-- Update [`WORKLOG.md`](./WORKLOG.md) when a PR changes status, scope, history, or next steps.
 - Avoid mixing skeleton work, behavior moves, and workflow rewrites in the same PR unless the recorded work plan explicitly calls for it.
-- Treat `release-policy/github-actions` as the canonical location for GitHub-specific runtime glue unless the worklog intentionally records a new migration.
+- Treat `release-policy/github-actions` as the canonical location for GitHub-specific runtime glue unless the architecture plan intentionally changes.

@@ -13,8 +13,7 @@ The target state is a clear separation between pure release-policy logic, Docusa
 - The current default branch is the single source of truth for release policy and deployment orchestration.
 - The current default branch owns the system design, the homepage, the shared navigation model, and all repository-wide publishing behavior.
 - [`../release-registry.json`](../release-registry.json) lives at the repository root and is authoritative.
-- No dedicated control branch such as `gh-pages-control` is allowed in the target architecture.
-- The `gh-pages-control` migration checkpoint is complete. Workflows and deploy helpers now run from the current default branch.
+- No dedicated control branch is allowed in this architecture.
 - The design must support a future major release becoming the new default branch and inheriting all default-branch responsibilities without redefining the architecture.
 
 ### Release Policy Module
@@ -79,24 +78,12 @@ The target state is a clear separation between pure release-policy logic, Docusa
 - The current workflow model must remain functional during the extraction. Transitional refactors must preserve the existing publishing behavior until the plan is complete.
 - Promoting a new default branch must transfer homepage ownership, canonical `/docs` ownership, shared navigation ownership, and deployment orchestration without changing the overall model.
 
-## Completed Workflow Simplification
+## Current Baseline
 
-The GitHub workflow simplification is complete:
-
-1. local action skeletons were added and the end state was documented
-2. single-branch deploy moved into `deploy-docs-branch`
-3. republish-all orchestration moved into `redeploy-all-docs`
-4. the internal reusable workflows were removed after both local actions were proven
-
-Further work should treat that boundary as the baseline architecture.
-
-## Completed GitHub Action Relocation
-
-The GitHub action relocation is complete:
-
-1. `release-policy/github-actions` skeletons were added and the relocation target was documented
-2. `deploy-docs-branch` moved under `release-policy/github-actions` and the selected-branch workflow was switched
-3. `redeploy-all-docs` and shared scripts moved under `release-policy/github-actions` and republish-all was switched
-4. the old `.github/actions` copies were removed after both workflow paths were proven
-
-Further work should treat `release-policy/github-actions` as the canonical home for GitHub-specific runtime glue.
+- The top-level workflow set is limited to:
+  - [`../.github/workflows/ci.yml`](../.github/workflows/ci.yml)
+  - [`../.github/workflows/publish-branch.yml`](../.github/workflows/publish-branch.yml)
+  - [`../.github/workflows/republish-all.yml`](../.github/workflows/republish-all.yml)
+- GitHub-specific runtime glue lives under [`github-actions`](./github-actions).
+- Internal reusable workflows and `.github/actions` copies are not part of the current architecture.
+- Further work should treat this structure as the baseline rather than as an active migration.
