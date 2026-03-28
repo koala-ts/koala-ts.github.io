@@ -1,23 +1,30 @@
 name: Deploy Docs Branch
-description: >
-  Transitional skeleton for the single-branch docs deployment action after it is
-  relocated under release-policy/github-actions.
+description: Deploy one docs branch to gh-pages using the local release policy.
 
 inputs:
   target_branch:
     description: Branch to deploy
-    required: false
+    required: true
   registry_json:
     description: Optional registry payload override for internal orchestration
     required: false
   github_token:
     description: Token used to clone and push the gh-pages branch
-    required: false
+    required: true
 
 runs:
   using: composite
   steps:
-    - shell: bash
-      run: |
-        echo "This is a relocation scaffold only."
-        echo "The active deploy action still lives under .github/actions."
+    - name: Setup Node.js
+      uses: actions/setup-node@v6
+      with:
+        node-version: 24
+
+    - name: Deploy docs branch
+      shell: bash
+      env:
+        RELEASE_REGISTRY_JSON: ${{ inputs.registry_json || 'release-registry.json' }}
+        TARGET_BRANCH: ${{ inputs.target_branch }}
+        GITHUB_TOKEN: ${{ inputs.github_token }}
+        WRITE_GITHUB_OUTPUT: 'true'
+      run: ./release-policy/github-actions/shared/deploy-docs-branch.sh
