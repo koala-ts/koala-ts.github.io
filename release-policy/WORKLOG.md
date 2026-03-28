@@ -14,7 +14,7 @@ Keep [`PLAN.md`](./PLAN.md) focused on stable architectural rules. Keep this fil
 ## Status
 
 - State: in progress
-- Active branch: `deploy-docs-branch-action`
+- Active branch: `redeploy-all-action`
 
 ## History
 
@@ -139,17 +139,22 @@ Keep [`PLAN.md`](./PLAN.md) focused on stable architectural rules. Keep this fil
 ### Single-Branch Deploy Action PR
 
 - Goal: migrate selected-branch deploy into the local deploy action.
-- Status: in progress
+- Status: merged
 - Scope:
   - move the single-branch deployment mechanics into [`../.github/actions/deploy-docs-branch`](../.github/actions/deploy-docs-branch)
   - make [`../.github/workflows/publish-branch.yml`](../.github/workflows/publish-branch.yml) call the local action directly
   - keep [`../.github/workflows/publish-branch-internal.yml`](../.github/workflows/publish-branch-internal.yml) working through the same action path during the transition
   - keep republish-all behavior unchanged for now
 
-### Planned Follow-up PR 3
+### Redeploy-All Action PR
 
 - Goal: migrate redeploy-all orchestration into the local republish action.
-- Status: planned
+- Status: in progress
+- Scope:
+  - move multi-branch orchestration into [`../.github/actions/redeploy-all-docs`](../.github/actions/redeploy-all-docs)
+  - stop dispatching child workflows and polling GitHub from [`../.github/workflows/republish-all.yml`](../.github/workflows/republish-all.yml)
+  - reuse the shared single-branch deploy mechanics from local action code
+  - keep the internal reusable workflows in place until the final cleanup PR
 
 ### Planned Follow-up PR 4
 
@@ -165,8 +170,7 @@ Keep [`PLAN.md`](./PLAN.md) focused on stable architectural rules. Keep this fil
 
 ## Next Steps
 
-- Finish and merge the single-branch deploy action PR.
-- Then migrate redeploy-all into `redeploy-all-docs`.
+- Finish and merge the redeploy-all action PR.
 - Then delete `publish-branch-runner.yml` and `publish-branch-internal.yml`.
 - For every later PR, fetch the remote default branch first and create the branch from that updated base.
 - Keep the repository limited to configuration, content, workflow YAML, and release data outside `release-policy`.

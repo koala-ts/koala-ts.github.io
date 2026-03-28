@@ -9,5 +9,6 @@ Target responsibility:
 - serve as the shared single-branch deployment implementation for:
   - [`../../workflows/publish-branch.yml`](../../workflows/publish-branch.yml)
   - [`../../workflows/publish-branch-runner.yml`](../../workflows/publish-branch-runner.yml) during the transition
+- reuse the shared shell entrypoint in [`../shared/deploy-docs-branch.sh`](../shared/deploy-docs-branch.sh)
 
 This action is the transition step that removes the deployment mechanics from the reusable runner workflow while keeping republish-all on its current path for now.
