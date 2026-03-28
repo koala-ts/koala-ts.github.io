@@ -51,10 +51,11 @@ The target state is a clear separation between pure release-policy logic, Docusa
   - [`../.github/workflows/ci.yml`](../.github/workflows/ci.yml)
   - [`../.github/workflows/publish-branch.yml`](../.github/workflows/publish-branch.yml)
   - [`../.github/workflows/republish-all.yml`](../.github/workflows/republish-all.yml)
-- GitHub-specific runtime glue belongs in local actions under [`../.github/actions`](../.github/actions).
-- The local actions are:
-  - [`../.github/actions/deploy-docs-branch`](../.github/actions/deploy-docs-branch)
-  - [`../.github/actions/redeploy-all-docs`](../.github/actions/redeploy-all-docs)
+- GitHub-specific runtime glue belongs with the release-policy tree under [`github-actions`](./github-actions).
+- The target local actions are:
+  - [`github-actions/deploy-docs-branch`](./github-actions/deploy-docs-branch)
+  - [`github-actions/redeploy-all-docs`](./github-actions/redeploy-all-docs)
+- During the relocation, `.github/actions` remains transitional implementation detail only until workflows are switched to the new paths.
 - Top-level workflow YAML should keep only triggers, permissions, concurrency, and thin configuration wiring.
 - Local actions should own GitHub runtime mechanics such as checkout sequencing, workspace preparation, build execution, publish copying, and commit/push behavior.
 - `release-policy/node.js` should remain responsible for deploy computation and policy decisions rather than GitHub metadata structure.
@@ -89,3 +90,14 @@ The GitHub workflow simplification is complete:
 4. the internal reusable workflows were removed after both local actions were proven
 
 Further work should treat that boundary as the baseline architecture.
+
+## Recorded GitHub Action Relocation Sequence
+
+The GitHub action relocation should land in four incremental PRs:
+
+1. add `release-policy/github-actions` skeletons and document the relocation target clearly
+2. move `deploy-docs-branch` to `release-policy/github-actions` and switch the selected-branch workflow
+3. move `redeploy-all-docs` and shared scripts to `release-policy/github-actions` and switch republish-all
+4. remove the old `.github/actions` copies once both workflow paths are proven
+
+Each step must start from the latest current default branch, preserve working deployments, and update the worklog and instructions to reflect the new state.

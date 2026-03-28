@@ -1,0 +1,20 @@
+name: Redeploy All Docs
+description: >
+  Transitional skeleton for the multi-branch docs redeploy action after it is
+  relocated under release-policy/github-actions.
+
+inputs:
+  registry_json:
+    description: Optional registry payload override for orchestration
+    required: false
+  github_token:
+    description: Token used to clone and push the gh-pages branch
+    required: false
+
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      run: |
+        echo "This is a relocation scaffold only."
+        echo "The active redeploy action still lives under .github/actions."
