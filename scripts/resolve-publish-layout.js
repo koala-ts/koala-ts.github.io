@@ -1,33 +1,11 @@
 /**
- * Purpose: resolve the build and publish layout for a docs branch on GitHub Pages.
- * Usage: used by the deploy workflow so default and non-default branches publish to the correct paths.
+ * Purpose: compatibility wrapper around the extracted release-policy core utility.
+ * Usage: retained so existing CLI and script imports keep working during extraction.
  */
 const {appendFileSync} = require('node:fs');
-const {normalizeBasePath} = require('./normalize-base-path');
-const {resolveVersionSlug} = require('./resolve-version-slug');
-
-const resolvePublishLayout = ({
-  currentBranch,
-  defaultBranch,
-  siteBase = '/',
-  versionSlug,
-}) => {
-  const normalizedSiteBase = normalizeBasePath(siteBase);
-  const defaultVersionSlug = resolveVersionSlug(defaultBranch);
-  const isDefaultBranch = versionSlug === defaultVersionSlug && currentBranch === defaultBranch;
-  const docsRouteBasePath = isDefaultBranch ? 'docs' : `docs/${versionSlug}`;
-
-  return {
-    buildBaseUrl: normalizedSiteBase,
-    docsRouteBasePath,
-    isDefaultBranch,
-    publishSourceDir: isDefaultBranch
-      ? 'build'
-      : `build/${docsRouteBasePath}`,
-    publishTargetDir: isDefaultBranch ? '.gh-pages' : `.gh-pages/docs/${versionSlug}`,
-    versionedDocsDir: `.gh-pages/docs/${versionSlug}`,
-  };
-};
+const {
+  resolvePublishLayout,
+} = require('../release-policy/core/resolve-publish-layout');
 
 if (require.main === module) {
   const args = process.argv.slice(2);

@@ -1,16 +1,11 @@
 /**
- * Purpose: map a branch name to a publishable docs version slug (`main` -> `next`).
- * Usage: shared by runtime and deployment helpers that need stable version-aware URLs.
+ * Purpose: compatibility wrapper around the extracted release-policy core utility.
+ * Usage: retained so existing script imports keep working during extraction.
  */
-const sanitizeBranchName = (value) =>
-  value
-    .toLowerCase()
-    .replace(/[^a-z0-9._-]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-    .replace(/-+/g, '-');
-
-const resolveVersionSlug = (branchName) =>
-  branchName === 'main' ? 'next' : sanitizeBranchName(branchName) || 'next';
+const {
+  resolveVersionSlug,
+  sanitizeBranchName,
+} = require('../release-policy/core/resolve-version-slug');
 
 module.exports = {
   resolveVersionSlug,

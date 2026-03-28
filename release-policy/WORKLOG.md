@@ -14,14 +14,14 @@ Keep [`PLAN.md`](./PLAN.md) focused on stable architectural rules. Keep this fil
 ## Status
 
 - State: in progress
-- Active branch for PR 1: `release-policy-skeleton`
+- Active branch for PR 2: `release-policy-core-foundation`
 
 ## History
 
 ### PR 1
 
 - Goal: create the release-policy skeleton without moving behavior.
-- Status: in progress
+- Status: merged
 - Scope:
   - add `release-policy/`
   - add `release-policy/PLAN.md`
@@ -29,10 +29,24 @@ Keep [`PLAN.md`](./PLAN.md) focused on stable architectural rules. Keep this fil
   - add root `release-registry.json`
   - avoid implementation moves in this PR
 
+### PR 2
+
+- Goal: extract the first pure release-policy functions into `release-policy/core` while preserving current behavior.
+- Status: in progress
+- Notes:
+  - this branch was rebased onto the latest `origin/2.x` after PR 1 merged so PR 2 does not carry a stale-base conflict
+- Scope:
+  - establish explicit-input rules for core policy functions
+  - move version slug, base path normalization, and publish layout logic into `release-policy/core`
+  - add colocated unit tests for each extracted core source file
+  - keep `scripts/*` as compatibility wrappers
+  - avoid Docusaurus adapter moves and workflow rewrites in this PR
+
 ## Next Steps
 
-- Finish and merge PR 1.
-- Move pure release-policy logic into `release-policy/core`.
+- Finish and merge PR 2.
+- For every later PR, fetch the remote default branch first and create the branch from that updated base.
+- Move additional pure release-policy logic into `release-policy/core`.
 - Move Docusaurus integration behind `release-policy/docusaurus`.
 - Move deployment orchestration helpers behind `release-policy/github-pages`.
 - Remove separate-control-branch assumptions from the implementation without breaking the current working model.
