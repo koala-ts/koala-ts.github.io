@@ -7,6 +7,8 @@ The delivery history and next steps are tracked in [`WORKLOG.md`](./WORKLOG.md).
 
 ## Boundaries
 
+- [`index.js`](./index.js) is the only intended public entrypoint of this module.
+- The only intended public operations are `deployBranch` and `redeployAll`.
 - [`core`](./core) will contain pure release-policy functions.
 - [`docusaurus`](./docusaurus) will contain the Docusaurus adapter.
 - [`github-pages`](./github-pages) will contain the GitHub Pages adapter.
@@ -23,6 +25,8 @@ The delivery history and next steps are tracked in [`WORKLOG.md`](./WORKLOG.md).
 - This directory relies on [`WORKLOG.md`](./WORKLOG.md) for the incremental action plan, completed steps, and next work.
 - Start each new PR branch from a freshly fetched current default branch.
 - The first pull request creates structure only. No behavior should be moved here yet.
+- The repository should consume this module through [`index.js`](./index.js), not by importing internal files directly.
+- The workflow entrypoint for release operations is [`index.js`](./index.js), not repo-level release wrapper scripts.
 - Future implementation must preserve the separation between pure policy and adapters.
 - Production logic must not be added to the adapters when it belongs in `core`.
 - Production logic must not be added directly to repo-level workflows or Docusaurus bootstrap code when it belongs in this module.

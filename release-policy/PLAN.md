@@ -19,6 +19,8 @@ The target state is a clear separation between pure release-policy logic, Docusa
 
 ### Release Policy Module
 
+- [`index.js`](./index.js) is the only intended public entrypoint of this module.
+- The only intended public operations are `deployBranch` and `redeployAll`.
 - [`core`](./core) will contain pure functions only.
 - Core logic must not depend on Docusaurus, GitHub Actions, shell scripts, the filesystem, or Git state.
 - Core logic must receive required inputs explicitly. Do not rely on hidden process state or convenience fallbacks unless a fallback is an intentional domain rule.
@@ -34,6 +36,7 @@ The target state is a clear separation between pure release-policy logic, Docusa
 ### GitHub Pages Adapter
 
 - [`github-pages`](./github-pages) will adapt the core policy to deployment orchestration.
+- Files under [`github-pages`](./github-pages) are internal implementation detail unless they are surfaced through [`index.js`](./index.js).
 - The default branch owns the operator workflows for deploying one selected branch or redeploying all declared branches.
 - Non-default branches provide buildable documentation content, but they do not own global deployment policy.
 - Workflows consume deployment helpers from this repository on the current default branch through local `scripts/*` entrypoints, which may delegate to `release-policy/github-pages`.

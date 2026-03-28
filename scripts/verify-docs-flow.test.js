@@ -1,46 +1,51 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 
-const {resolvePublishLayout} = require('./resolve-publish-layout');
-const {resolveDefaultBranch} = require('./resolve-default-branch');
+const {deployBranch} = require('../release-policy');
 
 test('default branch scenario publishes root site and /docs content', () => {
-  const defaultBranch = resolveDefaultBranch({
-    DOCS_CURRENT_BRANCH: '2.x',
-    DOCS_DEFAULT_BRANCH: '2.x',
+  const deployment = deployBranch({
+    currentBranch: '2.x',
+    existingBranches: ['1.x', '2.x', 'main'],
+    siteBase: '/',
+    loadedVersions: [],
+    loadedManifest: {},
+    docsPaths: [],
+    registry: {
+      defaultBranch: '2.x',
+      deployableBranches: ['1.x', '2.x', 'main'],
+    },
   });
 
   assert.deepEqual(
-    resolvePublishLayout({
-      currentBranch: defaultBranch,
-      defaultBranch,
-      siteBase: '/',
-      versionSlug: defaultBranch,
-    }),
+    deployment.layout,
     {
       buildBaseUrl: '/',
       docsRouteBasePath: 'docs',
       isDefaultBranch: true,
       publishSourceDir: 'build',
       publishTargetDir: '.gh-pages',
-      versionedDocsDir: `.gh-pages/docs/${defaultBranch}`,
+      versionedDocsDir: '.gh-pages/docs/2.x',
     },
   );
 });
 
 test('main scenario publishes only versioned docs under /docs/next', () => {
-  const defaultBranch = resolveDefaultBranch({
-    DOCS_CURRENT_BRANCH: '2.x',
-    DOCS_DEFAULT_BRANCH: '2.x',
+  const deployment = deployBranch({
+    currentBranch: 'main',
+    existingBranches: ['1.x', '2.x', 'main'],
+    siteBase: '/',
+    loadedVersions: [],
+    loadedManifest: {},
+    docsPaths: [],
+    registry: {
+      defaultBranch: '2.x',
+      deployableBranches: ['1.x', '2.x', 'main'],
+    },
   });
 
   assert.deepEqual(
-    resolvePublishLayout({
-      currentBranch: 'main',
-      defaultBranch,
-      siteBase: '/',
-      versionSlug: 'next',
-    }),
+    deployment.layout,
     {
       buildBaseUrl: '/docs/next/',
       docsRouteBasePath: '/',

@@ -29,7 +29,7 @@ const buildVersionCatalogCli = (args, {stdout = process.stdout} = {}) => {
 
   if (!catalogPath || !currentVersion) {
     throw new Error(
-      'Usage: node scripts/build-version-catalog.js <catalogPath> <currentVersion>',
+      'Usage: internal buildVersionCatalogCli(<catalogPath> <currentVersion>)',
     );
   }
 

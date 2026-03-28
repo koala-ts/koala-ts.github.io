@@ -8,6 +8,8 @@
 
 ## Boundaries
 
+- [`index.js`](./index.js) is the only intended public entrypoint for this module.
+- Only `deployBranch` and `redeployAll` should be treated as public API.
 - [`core`](./core) is reserved for pure release-policy functions.
 - [`docusaurus`](./docusaurus) is reserved for the Docusaurus adapter.
 - [`github-pages`](./github-pages) is reserved for the GitHub Pages adapter.
@@ -32,6 +34,8 @@
 - Keep the current default branch as the target single source of truth for release policy and deployment orchestration.
 - Keep [`../release-registry.json`](../release-registry.json) as the centralized release-policy data source.
 - Keep deployment helpers and operator workflows on the current default branch. Do not reintroduce `gh-pages-control` or any similar control branch.
+- Do not expose internal helpers under `core`, `docusaurus`, or `github-pages` as repo-facing public API when the same behavior can be reached through [`index.js`](./index.js).
+- Prefer migrating release workflows to [`index.js`](./index.js) and deleting repo-level release wrapper scripts once they become redundant.
 - Keep shared system design, homepage ownership, navigation behavior, and deployment orchestration on the default branch.
 - Limit a non-default docs branch to its versioned documentation and the minimum code needed for that version to run locally.
 - Preserve the existing working publish model until the extraction plan is complete. Do not break current behavior in the name of cleanup.

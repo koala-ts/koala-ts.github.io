@@ -14,7 +14,7 @@ Keep [`PLAN.md`](./PLAN.md) focused on stable architectural rules. Keep this fil
 ## Status
 
 - State: in progress
-- Active branch for docs alignment PR: `document-default-branch-release-policy`
+- Active branch for public API PR: `document-default-branch-release-policy`
 
 ## History
 
@@ -85,11 +85,23 @@ Keep [`PLAN.md`](./PLAN.md) focused on stable architectural rules. Keep this fil
 ### Docs Alignment PR
 
 - Goal: remove stale repository-level documentation about `gh-pages-control` and record the completed default-branch migration checkpoint.
-- Status: in progress
+- Status: merged
 - Scope:
   - align root `AGENTS.md` and `README.md` with the current default-branch deployment model
   - update release-policy docs to describe the completed control-branch removal
   - record the successful redeploy checkpoint and control-branch deletion
+
+### Public API PR
+
+- Goal: define a single public release-policy entrypoint with only `deployBranch` and `redeployAll` as public operations.
+- Status: in progress
+- Scope:
+  - add `release-policy/index.js` as the only intended public entrypoint
+  - keep `core`, `docusaurus`, and `github-pages` internal
+  - add tests for the new public operations
+  - migrate release workflows to the public entrypoint
+  - remove obsolete repo-level release wrapper scripts
+  - document the narrowed public API in the local release-policy docs
 
 ## Completed Checkpoint
 
@@ -100,7 +112,7 @@ Keep [`PLAN.md`](./PLAN.md) focused on stable architectural rules. Keep this fil
 
 ## Next Steps
 
-- Finish and merge the docs-alignment PR.
+- Finish and merge the public API PR.
 - For every later PR, fetch the remote default branch first and create the branch from that updated base.
 - Move additional pure release-policy logic into `release-policy/core`.
 - Keep repository-level docs aligned with the release-policy module when architecture checkpoints are completed.

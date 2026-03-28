@@ -25,7 +25,7 @@ const resolvePublishLayoutCli = (args, {stdout = process.stdout} = {}) => {
 
   if (!currentBranch || !defaultBranch || !siteBase || !versionSlug) {
     throw new Error(
-      'Usage: node scripts/resolve-publish-layout.js <currentBranch> <defaultBranch> <siteBase> <versionSlug> [--github-output <path>]',
+      'Usage: internal resolvePublishLayoutCli(<currentBranch> <defaultBranch> <siteBase> <versionSlug> [--github-output <path>])',
     );
   }
 
