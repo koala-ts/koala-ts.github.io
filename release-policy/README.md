@@ -40,7 +40,6 @@ The delivery history and next steps are tracked in [`WORKLOG.md`](./WORKLOG.md).
 - Move GitHub-specific runtime glue under this module in:
   - [`github-actions/deploy-docs-branch`](./github-actions/deploy-docs-branch)
   - [`github-actions/redeploy-all-docs`](./github-actions/redeploy-all-docs)
-- Treat `.github/actions` as transitional only until workflows are switched to the relocated paths.
 - Future implementation must preserve the separation between pure policy and adapters.
 - Production logic must not be added to the adapters when it belongs in `core`.
 - Production logic must not be added directly to repo-level workflows or Docusaurus bootstrap code when it belongs in this module.
@@ -57,13 +56,12 @@ The delivery history and next steps are tracked in [`WORKLOG.md`](./WORKLOG.md).
 - Keep repository code outside this module limited to configuration, content, workflow YAML, and release data.
 - The existing workflow model must keep working until the extraction plan is finished.
 
-## Current GitHub Action Relocation
+## Current GitHub Action State
 
-The next packaging-oriented step is to relocate local GitHub action wrappers into this module:
+GitHub-specific runtime glue now lives in:
 
-1. add `github-actions/` skeletons and document the end state
-2. move the single-branch deploy action under `github-actions/`
-3. move the redeploy-all action and shared scripts under `github-actions/`
-4. delete the old `.github/actions` copies once both workflow paths are proven
+- [`github-actions/deploy-docs-branch`](./github-actions/deploy-docs-branch)
+- [`github-actions/redeploy-all-docs`](./github-actions/redeploy-all-docs)
+- [`github-actions/shared`](./github-actions/shared)
 
-Follow [`WORKLOG.md`](./WORKLOG.md) for the active step.
+Follow [`WORKLOG.md`](./WORKLOG.md) for post-relocation follow-up work.
