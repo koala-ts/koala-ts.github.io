@@ -1,11 +1,12 @@
 /**
- * Purpose: resolve the configured default branch from the repo-owned docs site config.
- * Usage: used by runtime and deployment automation so local and CI share one source of truth.
+ * Purpose: resolve the injected default branch for compatibility with older callers.
+ * Usage: preserved for local/runtime callers, but deployment ownership is now controlled centrally.
  */
 const {appendFileSync} = require('node:fs');
-const {defaultBranch} = require('../docs-site.config');
+const {resolveBranchRuntime} = require('./resolve-branch-runtime');
 
-const resolveDefaultBranch = () => defaultBranch;
+const resolveDefaultBranch = (env = process.env) =>
+  resolveBranchRuntime(env).defaultBranch;
 
 if (require.main === module) {
   const args = process.argv.slice(2);

@@ -1,14 +1,16 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 
-const {
-  LOCAL_PREVIEW_MODE,
-  PUBLISH_SIMULATION_MODE,
-} = require('./resolve-branch-runtime');
 const {resolveDocsRuntime} = require('./resolve-docs-runtime');
 
+test('rejects missing branch inputs', () => {
+  const act = () => resolveDocsRuntime({});
+
+  assert.throws(act, /DOCS_CURRENT_BRANCH must be provided/);
+});
+
 test('includes resolved branch ownership and docs runtime inputs', () => {
-  const runtime = resolveDocsRuntime({
+  const env = {
     DOCS_CURRENT_BRANCH: '2.x',
     DOCS_DEFAULT_BRANCH: '2.x',
     DOCS_VERSION: '2.x',
@@ -16,7 +18,9 @@ test('includes resolved branch ownership and docs runtime inputs', () => {
     SITE_URL: 'https://koala-ts.github.io',
     DOCS_BASE_URL: '/docs/',
     DOCS_SITE_BASE: '/',
-  });
+  };
+
+  const runtime = resolveDocsRuntime(env);
 
   assert.deepEqual(runtime, {
     currentBranch: '2.x',
@@ -31,27 +35,14 @@ test('includes resolved branch ownership and docs runtime inputs', () => {
   });
 });
 
-test('defaults runtime values when docs environment is absent', () => {
-  const runtime = resolveDocsRuntime({});
-
-  assert.deepEqual(runtime, {
-    currentBranch: '2.x',
-    defaultBranch: '2.x',
-    isDefaultBranch: true,
-    versionSlug: '2.x',
-    siteUrl: 'http://localhost:3000',
-    baseUrl: '/',
-    docsSiteBase: '/',
-    docsRouteBasePath: 'docs',
-    versions: ['2.x'],
-  });
-});
-
 test('maps non-default branches to versioned docs route bases', () => {
-  const runtime = resolveDocsRuntime({
+  const env = {
     DOCS_CURRENT_BRANCH: 'main',
     DOCS_DEFAULT_BRANCH: '2.x',
-  });
+    DOCS_VERSIONS: '2.x,next',
+  };
+
+  const runtime = resolveDocsRuntime(env);
 
   assert.deepEqual(runtime, {
     currentBranch: 'main',
@@ -62,44 +53,6 @@ test('maps non-default branches to versioned docs route bases', () => {
     baseUrl: '/',
     docsSiteBase: '/',
     docsRouteBasePath: 'docs/next',
-    versions: ['next'],
-  });
-});
-
-test('uses the docs root in local preview mode for the checked out branch', () => {
-  const runtime = resolveDocsRuntime({
-    DOCS_RUNTIME_MODE: LOCAL_PREVIEW_MODE,
-    DOCS_DEFAULT_BRANCH: '3.x',
-  });
-
-  assert.deepEqual(runtime, {
-    currentBranch: '2.x',
-    defaultBranch: '2.x',
-    isDefaultBranch: true,
-    versionSlug: '2.x',
-    siteUrl: 'http://localhost:3000',
-    baseUrl: '/',
-    docsSiteBase: '/',
-    docsRouteBasePath: 'docs',
-    versions: ['2.x'],
-  });
-});
-
-test('uses the versioned docs path in publish simulation mode for a non-default branch', () => {
-  const runtime = resolveDocsRuntime({
-    DOCS_RUNTIME_MODE: PUBLISH_SIMULATION_MODE,
-    DOCS_DEFAULT_BRANCH: '3.x',
-  });
-
-  assert.deepEqual(runtime, {
-    currentBranch: '2.x',
-    defaultBranch: '3.x',
-    isDefaultBranch: false,
-    versionSlug: '2.x',
-    siteUrl: 'http://localhost:3000',
-    baseUrl: '/',
-    docsSiteBase: '/',
-    docsRouteBasePath: 'docs/2.x',
-    versions: ['2.x'],
+    versions: ['2.x', 'next'],
   });
 });

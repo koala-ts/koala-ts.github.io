@@ -33,6 +33,7 @@
 - The current default branch hosts the dispatchable bridge workflows required by GitHub Actions.
 - Deployable docs branches must not become the source of truth for global release ownership.
 - Branch-local scripts should stay limited to what is necessary for local development and branch builds.
+- Runtime helpers must require explicit branch inputs; branch discovery belongs only in the local bootstrap adapter or CI/workflow env injection.
 - Manual operators should use:
   - `🚀 Deploy Selected Docs Branch` on the current default branch
   - `🚀 Deploy All Deployable Docs Branches` on the current default branch
