@@ -21,14 +21,12 @@ json_value() {
 }
 
 resolve_site_base() {
-  if [ -n "${SITE_BASE:-}" ]; then
-    return
-  fi
-
   if [ -f .gh-pages/CNAME ]; then
     DOMAIN=$(head -n 1 .gh-pages/CNAME | tr -d '[:space:]')
     SITE_URL="https://${DOMAIN}"
-    SITE_BASE="/"
+    if [ -z "${SITE_BASE:-}" ]; then
+      SITE_BASE="/"
+    fi
     return
   fi
 
@@ -36,6 +34,10 @@ resolve_site_base() {
   REPO_NAME="${GITHUB_REPOSITORY#*/}"
   REPO_LC=$(echo "${REPO_NAME}" | tr '[:upper:]' '[:lower:]')
   SITE_URL="https://${GITHUB_REPOSITORY_OWNER}.github.io"
+
+  if [ -n "${SITE_BASE:-}" ]; then
+    return
+  fi
 
   if [ "${REPO_LC}" = "${OWNER_LC}.github.io" ]; then
     SITE_BASE="/"
