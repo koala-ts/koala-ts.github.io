@@ -14,7 +14,7 @@ Keep [`PLAN.md`](./PLAN.md) focused on stable architectural rules. Keep this fil
 ## Status
 
 - State: in progress
-- Active branch: `github-actions-local-skeleton`
+- Active branch: `deploy-docs-branch-action`
 
 ## History
 
@@ -129,17 +129,22 @@ Keep [`PLAN.md`](./PLAN.md) focused on stable architectural rules. Keep this fil
 ### GitHub Action Skeleton PR
 
 - Goal: document the full workflow simplification target and add local action skeletons without changing workflow behavior.
-- Status: in progress
+- Status: merged
 - Scope:
   - add local action skeletons under [`../.github/actions`](../.github/actions)
   - document the final top-level workflow set
   - document the planned removal of internal reusable workflows
   - record the four-PR migration sequence for the GitHub workflow simplification
 
-### Planned Follow-up PR 2
+### Single-Branch Deploy Action PR
 
 - Goal: migrate selected-branch deploy into the local deploy action.
-- Status: planned
+- Status: in progress
+- Scope:
+  - move the single-branch deployment mechanics into [`../.github/actions/deploy-docs-branch`](../.github/actions/deploy-docs-branch)
+  - make [`../.github/workflows/publish-branch.yml`](../.github/workflows/publish-branch.yml) call the local action directly
+  - keep [`../.github/workflows/publish-branch-internal.yml`](../.github/workflows/publish-branch-internal.yml) working through the same action path during the transition
+  - keep republish-all behavior unchanged for now
 
 ### Planned Follow-up PR 3
 
@@ -160,8 +165,7 @@ Keep [`PLAN.md`](./PLAN.md) focused on stable architectural rules. Keep this fil
 
 ## Next Steps
 
-- Finish and merge the GitHub Action Skeleton PR.
-- Then migrate single-branch deploy into `deploy-docs-branch`.
+- Finish and merge the single-branch deploy action PR.
 - Then migrate redeploy-all into `redeploy-all-docs`.
 - Then delete `publish-branch-runner.yml` and `publish-branch-internal.yml`.
 - For every later PR, fetch the remote default branch first and create the branch from that updated base.
