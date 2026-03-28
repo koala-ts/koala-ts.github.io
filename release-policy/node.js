@@ -20,7 +20,6 @@ const {
   resolveLocalDocsEnv,
   resolveRuntimeMode,
 } = require('./docusaurus/config');
-const {loadReleaseRegistry} = require('./github-pages/release-registry');
 const {
   resolvePublishContext,
 } = require('./github-pages/resolve-publish-context');
@@ -118,26 +117,17 @@ const parseArgs = (args) => {
 
 const resolveRegistry = ({
   registry,
-  registrySource,
   canonicalBranch,
   deployableBranches,
-  loadRegistry,
 }) => {
   if (registry) {
     return requireObject(registry, 'registry');
   }
 
-  if (
-    typeof canonicalBranch === 'string' &&
-    Array.isArray(deployableBranches)
-  ) {
-    return validateReleaseRegistry({
-      defaultBranch: canonicalBranch,
-      deployableBranches,
-    });
-  }
-
-  return loadRegistry(requireNonEmptyString(registrySource, 'registrySource'));
+  return validateReleaseRegistry({
+    defaultBranch: requireNonEmptyString(canonicalBranch, 'canonicalBranch'),
+    deployableBranches: requireArray(deployableBranches, 'deployableBranches'),
+  });
 };
 
 const buildDeployBranchResult = ({
@@ -184,12 +174,10 @@ const deployBranch = (
     loadedManifest,
     docsPaths,
     registry,
-    registrySource,
     canonicalBranch,
     deployableBranches,
   },
   {
-    loadRegistry = loadReleaseRegistry,
     resolveContext = resolvePublishContext,
     resolveAvailability = resolveBranchAvailability,
     resolveLayout = resolvePublishLayout,
@@ -207,10 +195,8 @@ const deployBranch = (
   );
   const resolvedRegistry = resolveRegistry({
     registry,
-    registrySource,
     canonicalBranch,
     deployableBranches,
-    loadRegistry,
   });
   const publishContext = resolveContext({
     currentBranch: normalizedCurrentBranch,
@@ -278,12 +264,10 @@ const redeployAll = (
     loadedManifest,
     docsPathsByBranch,
     registry,
-    registrySource,
     canonicalBranch,
     deployableBranches,
   },
   {
-    loadRegistry = loadReleaseRegistry,
     deploy = deployBranch,
   } = {},
 ) => {
@@ -293,10 +277,8 @@ const redeployAll = (
   );
   const resolvedRegistry = resolveRegistry({
     registry,
-    registrySource,
     canonicalBranch,
     deployableBranches,
-    loadRegistry,
   });
   let currentLoadedVersions = Array.isArray(loadedVersions)
     ? loadedVersions
@@ -323,7 +305,6 @@ const redeployAll = (
         registry: resolvedRegistry,
       },
       {
-        loadRegistry,
       },
     );
 
@@ -373,8 +354,7 @@ const writeRedeployAllOutput = (result, githubOutputPath) => {
 
   appendFileSync(
     githubOutputPath,
-    `registry_json=${JSON.stringify(result.registry)}\n` +
-      `deployable_branches=${JSON.stringify(deployableBranches)}\n` +
+    `deployable_branches=${JSON.stringify(deployableBranches)}\n` +
       `branch_csv=${deployableBranches.join(',')}\n`,
   );
 };
@@ -391,7 +371,7 @@ const deployBranchCli = (args, {stdout = process.stdout} = {}) => {
 
   if (!currentBranch) {
     throw new Error(
-      'Usage: node release-policy/node.js deploy-branch <currentBranch> (--canonical-branch <branch> --deployable-branches <csv>|--registry-source <path|json>) --existing-branches <csv> [--site-base <path>] [--catalog-path <path>] [--manifest-path <path>] [--docs-dir <path>] [--github-output <path>]',
+      'Usage: node release-policy/node.js deploy-branch <currentBranch> --canonical-branch <branch> --deployable-branches <csv> --existing-branches <csv> [--site-base <path>] [--catalog-path <path>] [--manifest-path <path>] [--docs-dir <path>] [--github-output <path>]',
     );
   }
 
@@ -400,7 +380,6 @@ const deployBranchCli = (args, {stdout = process.stdout} = {}) => {
     options['deployable-branches'],
     'deployable-branches',
   );
-  const registrySource = options['registry-source'];
   const existingBranches = parseOptionalArrayArgument(
     options['existing-branches'],
     'existing-branches',
@@ -429,7 +408,6 @@ const deployBranchCli = (args, {stdout = process.stdout} = {}) => {
       : undefined,
     canonicalBranch,
     deployableBranches,
-    registrySource,
   });
 
   if (shouldPrepareArtifacts && deployment.status === 'ready') {
@@ -461,7 +439,6 @@ const redeployAllCli = (args, {stdout = process.stdout} = {}) => {
     options['deployable-branches'],
     'deployable-branches',
   );
-  const registrySource = options['registry-source'];
   const existingBranches = parseOptionalArrayArgument(
     options['existing-branches'],
     'existing-branches',
@@ -475,7 +452,6 @@ const redeployAllCli = (args, {stdout = process.stdout} = {}) => {
     existingBranches,
     canonicalBranch,
     deployableBranches,
-    registrySource,
   });
 
   if (options['github-output']) {

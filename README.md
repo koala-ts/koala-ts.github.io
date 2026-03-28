@@ -55,7 +55,7 @@ npm run start
 
 Local development uses the checked out Git branch as both `DOCS_CURRENT_BRANCH` and `DOCS_DEFAULT_BRANCH`, so the current branch stays canonical locally and the docs are served at `/docs`.
 
-To simulate published routing from the centralized release registry, use publish simulation mode:
+To simulate published routing from the configured canonical branch, use publish simulation mode:
 
 ```bash
 DOCS_RUNTIME_MODE=publish-simulation DOCS_DEFAULT_BRANCH=<current-default-branch> npm run start
@@ -100,9 +100,9 @@ Current deployment state:
 Available operator workflows on the current default branch:
 
 - `🚀 Deploy Selected Docs Branch` publishes the selected workflow branch with no manual inputs
-- `🚀 Deploy All Deployable Docs Branches` republishes all deployable branches in registry order
+- `🚀 Deploy All Deployable Docs Branches` republishes all configured deployable branches in order
 
-Internal orchestration details such as the synthesized registry payload stay hidden from manual workflow runs.
+Internal orchestration details such as the normalized release-policy payload stay hidden from manual workflow runs.
 
 The target workflow structure keeps only these top-level workflows:
 

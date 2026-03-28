@@ -43,6 +43,7 @@ The target state is a clear separation between pure release-policy logic, Docusa
 - Non-default branches provide buildable documentation content, but they do not own global deployment policy.
 - Workflows consume deployment helpers from this repository on the current default branch through [`node.js`](./node.js).
 - Workflow configuration should pass release-policy inputs through `with` into local actions, and local actions should pass explicit values into [`node.js`](./node.js).
+- File-based release-policy lookup is not part of the target runtime contract.
 - The current configuration contract is:
   - `site_base`
   - `canonical_branch`
