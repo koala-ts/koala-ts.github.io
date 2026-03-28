@@ -3,7 +3,6 @@
 This directory is reserved for the reusable release-policy module that will be incubated in this repository before extraction to a shared repository.
 
 The architecture is defined in [`PLAN.md`](./PLAN.md).
-The delivery history and next steps are tracked in [`WORKLOG.md`](./WORKLOG.md).
 
 ## Boundaries
 
@@ -26,9 +25,7 @@ The delivery history and next steps are tracked in [`WORKLOG.md`](./WORKLOG.md).
 ## Delivery Rules
 
 - This directory follows [`PLAN.md`](./PLAN.md) as the authoritative implementation plan.
-- This directory relies on [`WORKLOG.md`](./WORKLOG.md) for the incremental action plan, completed steps, and next work.
 - Start each new PR branch from a freshly fetched current default branch.
-- The first pull request creates structure only. No behavior should be moved here yet.
 - Repository consumers should use only the documented external entrypoints and avoid importing private internal files directly.
 - The workflow entrypoint for release operations is [`node.js`](./node.js).
 - Docusaurus config/runtime wiring should consume [`node.js`](./node.js).
@@ -63,5 +60,3 @@ GitHub-specific runtime glue now lives in:
 - [`github-actions/deploy-docs-branch`](./github-actions/deploy-docs-branch)
 - [`github-actions/redeploy-all-docs`](./github-actions/redeploy-all-docs)
 - [`github-actions/shared`](./github-actions/shared)
-
-Follow [`WORKLOG.md`](./WORKLOG.md) for post-relocation follow-up work.
