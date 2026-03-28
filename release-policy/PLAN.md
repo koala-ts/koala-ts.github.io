@@ -36,7 +36,7 @@ The target state is a clear separation between pure release-policy logic, Docusa
 - [`github-pages`](./github-pages) will adapt the core policy to deployment orchestration.
 - The default branch owns the operator workflows for deploying one selected branch or redeploying all declared branches.
 - Non-default branches provide buildable documentation content, but they do not own global deployment policy.
-- Workflows consume deployment helpers from this repository on the current default branch through `release-policy/github-pages`.
+- Workflows consume deployment helpers from this repository on the current default branch through local `scripts/*` entrypoints, which may delegate to `release-policy/github-pages`.
 
 ### Branch Responsibility Model
 
