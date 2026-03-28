@@ -14,7 +14,7 @@ Keep [`PLAN.md`](./PLAN.md) focused on stable architectural rules. Keep this fil
 ## Status
 
 - State: in progress
-- Active branch: `relocate-redeploy-action`
+- Active branch: `remove-github-actions-dir`
 
 ## History
 
@@ -188,17 +188,21 @@ Keep [`PLAN.md`](./PLAN.md) focused on stable architectural rules. Keep this fil
 ### Redeploy Action Relocation PR
 
 - Goal: move the redeploy-all action and shared scripts under `release-policy/github-actions`.
-- Status: in progress
+- Status: merged
 - Scope:
   - activate [`github-actions/redeploy-all-docs`](./github-actions/redeploy-all-docs)
   - switch [`../.github/workflows/republish-all.yml`](../.github/workflows/republish-all.yml) to the relocated action path
   - reuse the relocated shared script under [`github-actions/shared`](./github-actions/shared)
   - leave `.github/actions` in place only for the final cleanup PR
 
-### Planned Follow-up PR 4
+### GitHub Actions Directory Removal PR
 
 - Goal: remove the transitional `.github/actions` copies after both workflow paths are proven.
-- Status: planned
+- Status: in progress
+- Scope:
+  - delete the old `.github/actions` copies
+  - update plans and instructions from transitional relocation wording to the final `release-policy/github-actions` location
+  - verify the remaining workflows still deploy correctly
 
 ## Completed Checkpoint
 
@@ -209,8 +213,7 @@ Keep [`PLAN.md`](./PLAN.md) focused on stable architectural rules. Keep this fil
 
 ## Next Steps
 
-- Finish and merge the redeploy action relocation PR.
-- Then delete `.github/actions`.
+- Finish and merge the GitHub Actions Directory Removal PR.
 - For every later PR, fetch the remote default branch first and create the branch from that updated base.
 - Keep the repository limited to configuration, content, workflow YAML, and release data outside `release-policy`.
 - Reduce the transitional external entrypoint surface deliberately later, after the workflow/action boundary is simplified and explicit.

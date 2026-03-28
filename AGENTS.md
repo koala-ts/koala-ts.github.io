@@ -39,7 +39,7 @@
   - [`ci.yml`](./.github/workflows/ci.yml)
   - [`publish-branch.yml`](./.github/workflows/publish-branch.yml)
   - [`republish-all.yml`](./.github/workflows/republish-all.yml)
-- GitHub-specific runtime glue is being relocated into [`release-policy/github-actions`](./release-policy/github-actions). Keep `.github/actions` transitional until the workflows are switched.
+- GitHub-specific runtime glue belongs in [`release-policy/github-actions`](./release-policy/github-actions).
 - Manual operators should use:
   - `🚀 Deploy Selected Docs Branch` on the current default branch
   - `🚀 Deploy All Deployable Docs Branches` on the current default branch
