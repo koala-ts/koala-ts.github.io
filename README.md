@@ -15,14 +15,14 @@ The repository targets this public URL model:
 
 Only one branch owns `/` and `/docs` at a time: the current default branch.
 
-The default branch is configured in `release-registry.json` on `gh-pages-control`.
+The default branch is configured in the repository-root `release-registry.json` on the current default branch.
 
 ## Version publishing model
 
 Only these branches are deployable:
 
 - `main`
-- `*.x` such as `1.x`, `2.x`, or `3.x`
+- `<number>.x` such as `1.x`, `2.x`, or `3.x`
 
 Published paths:
 
@@ -81,10 +81,9 @@ npm run validate
 
 Set GitHub Pages source to the `gh-pages` branch root.
 
-Docs publication is manual and controlled through bridge workflows on the current default branch.
+Docs publication is manual and controlled through operator workflows on the current default branch.
 
-The centralized registry and deploy scripts still live on `gh-pages-control`.
-The dispatchable workflows on the current default branch load `release-registry.json` and the deploy scripts from `gh-pages-control`, then publish with these ownership rules:
+The current default branch owns `release-registry.json`, the local deploy helpers, and the dispatchable workflows. Those workflows publish with these ownership rules:
 
 - `/` and `/docs` from the current default branch
 - `/docs/next` from `main`
@@ -106,3 +105,5 @@ Available operator workflows on the current default branch:
 Internal orchestration details such as `registry_json` stay hidden from manual workflow runs.
 
 Missing deployable branches are skipped without failing a republish-all run.
+
+The repository no longer uses or depends on a separate control branch for release policy or deployment scripts.

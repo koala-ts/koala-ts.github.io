@@ -14,7 +14,7 @@ Keep [`PLAN.md`](./PLAN.md) focused on stable architectural rules. Keep this fil
 ## Status
 
 - State: in progress
-- Active branch for fix PR: `fix-versioned-docs-base-url`
+- Active branch for docs alignment PR: `document-default-branch-release-policy`
 
 ## History
 
@@ -75,17 +75,33 @@ Keep [`PLAN.md`](./PLAN.md) focused on stable architectural rules. Keep this fil
 ### Fix PR: Versioned Docs Base URL
 
 - Goal: restore the deployed non-default branch contract so versioned docs load assets, search, and mobile navigation from their versioned publish root.
-- Status: in progress
+- Status: merged
 - Scope:
   - align `baseUrl`, `docsRouteBasePath`, and publish source/target rules for non-default branches
   - update existing tests for the versioned-build contract
   - add regression coverage for versioned branch publish paths
   - record the path-contract guardrails in the local release-policy documents
 
+### Docs Alignment PR
+
+- Goal: remove stale repository-level documentation about `gh-pages-control` and record the completed default-branch migration checkpoint.
+- Status: in progress
+- Scope:
+  - align root `AGENTS.md` and `README.md` with the current default-branch deployment model
+  - update release-policy docs to describe the completed control-branch removal
+  - record the successful redeploy checkpoint and control-branch deletion
+
+## Completed Checkpoint
+
+- PR `fix: restore versioned docs runtime` merged successfully.
+- Republish-all completed successfully after the fix.
+- `1.x`, `2.x`, and `main` redeployed successfully from the current default branch.
+- The remote `gh-pages-control` branch was deleted after the successful redeploy checkpoint.
+
 ## Next Steps
 
-- Finish and merge the versioned docs base-url fix PR.
+- Finish and merge the docs-alignment PR.
 - For every later PR, fetch the remote default branch first and create the branch from that updated base.
 - Move additional pure release-policy logic into `release-policy/core`.
-- Validate versioned branch deployments in production after path-policy changes before removing legacy checkpoints.
+- Keep repository-level docs aligned with the release-policy module when architecture checkpoints are completed.
 - Validate the extracted design through real usage before porting it to another repository.
