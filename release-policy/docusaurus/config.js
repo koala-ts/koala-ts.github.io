@@ -1,4 +1,3 @@
-const {buildVersionNavbarItems} = require('./build-version-navbar-items');
 const {
   buildAbsoluteSiteUrl,
   buildCanonicalDocsContentPath,
@@ -8,6 +7,7 @@ const {
   buildCurrentDocsRoutePath,
   buildSharedDocsManifestPath,
 } = require('./build-canonical-site-paths');
+const {buildVersionNavbarItems} = require('./build-version-navbar-items');
 const {parseDocsVersions} = require('./parse-docs-versions');
 const {
   LOCAL_PREVIEW_MODE,
@@ -19,10 +19,6 @@ const {
 } = require('./resolve-branch-runtime');
 const {resolveDocsRouteBasePath, resolveDocsRuntime} = require('./resolve-docs-runtime');
 const {resolveGitBranch, resolveLocalDocsEnv} = require('./resolve-local-docs-env');
-const {
-  parseCurrentDocPath,
-  resolveVersionSwitchTarget,
-} = require('./resolve-version-switch-target');
 
 module.exports = {
   buildAbsoluteSiteUrl,
@@ -35,7 +31,6 @@ module.exports = {
   buildVersionNavbarItems,
   LOCAL_PREVIEW_MODE,
   PUBLISH_SIMULATION_MODE,
-  parseCurrentDocPath,
   parseDocsVersions,
   requireEnvValue,
   resolveBranchRuntime,
@@ -45,5 +40,4 @@ module.exports = {
   resolveGitBranch,
   resolveLocalDocsEnv,
   resolveRuntimeMode,
-  resolveVersionSwitchTarget,
 };

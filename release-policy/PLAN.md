@@ -19,8 +19,11 @@ The target state is a clear separation between pure release-policy logic, Docusa
 
 ### Release Policy Module
 
-- [`index.js`](./index.js) is the only intended public entrypoint of this module.
-- The only intended public operations are `deployBranch` and `redeployAll`.
+- This module currently exposes a transitional external API for repository consumers.
+- The final long-term public API is intentionally deferred and must not be documented as settled.
+- Current external entrypoints are:
+  - [`node.js`](./node.js) for all Node-side external usage, including workflows and Docusaurus config/runtime wiring
+  - [`browser.js`](./browser.js) for browser-safe external usage
 - [`core`](./core) will contain pure functions only.
 - Core logic must not depend on Docusaurus, GitHub Actions, shell scripts, the filesystem, or Git state.
 - Core logic must receive required inputs explicitly. Do not rely on hidden process state or convenience fallbacks unless a fallback is an intentional domain rule.
@@ -30,18 +33,17 @@ The target state is a clear separation between pure release-policy logic, Docusa
 ### Docusaurus Adapter
 
 - [`docusaurus`](./docusaurus) will adapt the core policy to Docusaurus configuration and runtime needs.
-- [`docusaurus/index.js`](./docusaurus/index.js) is the internal integration entrypoint for repository Docusaurus wiring.
-- Files under [`docusaurus`](./docusaurus) are internal implementation detail unless they are surfaced through [`index.js`](./index.js).
+- Remaining files under [`docusaurus`](./docusaurus) are private implementation detail unless they are surfaced through [`../node.js`](./node.js) or [`../browser.js`](./browser.js).
 - This adapter may translate policy outputs into `baseUrl`, `routeBasePath`, navigation inputs, and local runtime inputs.
 - This adapter must not become a second source of release-policy truth.
 
 ### GitHub Pages Adapter
 
 - [`github-pages`](./github-pages) will adapt the core policy to deployment orchestration.
-- Files under [`github-pages`](./github-pages) are internal implementation detail unless they are surfaced through [`index.js`](./index.js).
+- Files under [`github-pages`](./github-pages) are private implementation detail unless they are surfaced through an explicit external entrypoint.
 - The default branch owns the operator workflows for deploying one selected branch or redeploying all declared branches.
 - Non-default branches provide buildable documentation content, but they do not own global deployment policy.
-- Workflows consume deployment helpers from this repository on the current default branch through [`index.js`](./index.js).
+- Workflows consume deployment helpers from this repository on the current default branch through [`node.js`](./node.js).
 
 ### Branch Responsibility Model
 

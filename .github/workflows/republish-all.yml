@@ -34,7 +34,7 @@ jobs:
         run: |
           REMOTE_BRANCHES=$(git ls-remote --heads origin | awk '{print $2}' | sed 's#refs/heads/##' | paste -sd ',' -)
 
-          node release-policy/index.js redeploy-all \
+          node release-policy/node.js redeploy-all \
             --registry-source "release-registry.json" \
             --existing-branches "${REMOTE_BRANCHES}" \
             --github-output "$GITHUB_OUTPUT"
