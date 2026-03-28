@@ -112,13 +112,15 @@ jobs:
       - name: Prepare branch deployment
         id: prepared
         if: steps.deploy.outputs.should_skip != 'true'
+        env:
+          RELEASE_REGISTRY_JSON: ${{ inputs.registry_json || 'release-registry.json' }}
         run: |
           mkdir -p .gh-pages/docs
           REMOTE_BRANCHES=$(git ls-remote --heads origin | awk '{print $2}' | sed 's#refs/heads/##' | paste -sd ',' -)
 
           node release-policy/index.js deploy-branch \
             "${{ inputs.target_branch }}" \
-            --registry-source "${{ inputs.registry_json || 'release-registry.json' }}" \
+            --registry-source "${RELEASE_REGISTRY_JSON}" \
             --existing-branches "${REMOTE_BRANCHES}" \
             --site-base "${{ steps.site.outputs.site_base }}" \
             --catalog-path ".gh-pages/docs/versions.json" \
