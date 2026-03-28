@@ -63,7 +63,7 @@ DOCS_RUNTIME_MODE=publish-simulation DOCS_DEFAULT_BRANCH=<current-default-branch
 
 That keeps the injected default branch canonical at `/docs`. For a non-default release branch such as `1.x`, publish simulation would serve the docs under `/docs/1.x`.
 
-Runtime helpers require explicit `DOCS_CURRENT_BRANCH` and `DOCS_DEFAULT_BRANCH` inputs. Local Docusaurus bootstrapping derives them from the checked out Git branch for regular local development, while CI and deployment workflows pass them explicitly.
+Runtime helpers require explicit `DOCS_CURRENT_BRANCH` and `DOCS_DEFAULT_BRANCH` inputs. The internal `release-policy/docusaurus` bootstrap adapter derives them from the checked out Git branch for regular local development, while CI and deployment workflows pass them explicitly.
 
 Build static files:
 
@@ -83,7 +83,7 @@ Set GitHub Pages source to the `gh-pages` branch root.
 
 Docs publication is manual and controlled through operator workflows on the current default branch.
 
-The current default branch owns `release-registry.json`, the local deploy helpers, and the dispatchable workflows. Those workflows publish with these ownership rules:
+The current default branch owns `release-registry.json`, the `release-policy` module, and the dispatchable workflows. Those workflows publish with these ownership rules:
 
 - `/` and `/docs` from the current default branch
 - `/docs/next` from `main`
@@ -107,3 +107,4 @@ Internal orchestration details such as `registry_json` stay hidden from manual w
 Missing deployable branches are skipped without failing a republish-all run.
 
 The repository no longer uses or depends on a separate control branch for release policy or deployment scripts.
+The release workflow entrypoint is [`release-policy/index.js`](./release-policy/index.js). Repository code outside `release-policy` should stay limited to configuration, content, workflow YAML, and release data.

@@ -30,6 +30,8 @@ The target state is a clear separation between pure release-policy logic, Docusa
 ### Docusaurus Adapter
 
 - [`docusaurus`](./docusaurus) will adapt the core policy to Docusaurus configuration and runtime needs.
+- [`docusaurus/index.js`](./docusaurus/index.js) is the internal integration entrypoint for repository Docusaurus wiring.
+- Files under [`docusaurus`](./docusaurus) are internal implementation detail unless they are surfaced through [`index.js`](./index.js).
 - This adapter may translate policy outputs into `baseUrl`, `routeBasePath`, navigation inputs, and local runtime inputs.
 - This adapter must not become a second source of release-policy truth.
 
@@ -39,7 +41,7 @@ The target state is a clear separation between pure release-policy logic, Docusa
 - Files under [`github-pages`](./github-pages) are internal implementation detail unless they are surfaced through [`index.js`](./index.js).
 - The default branch owns the operator workflows for deploying one selected branch or redeploying all declared branches.
 - Non-default branches provide buildable documentation content, but they do not own global deployment policy.
-- Workflows consume deployment helpers from this repository on the current default branch through local `scripts/*` entrypoints, which may delegate to `release-policy/github-pages`.
+- Workflows consume deployment helpers from this repository on the current default branch through [`index.js`](./index.js).
 
 ### Branch Responsibility Model
 

@@ -14,7 +14,7 @@ Keep [`PLAN.md`](./PLAN.md) focused on stable architectural rules. Keep this fil
 ## Status
 
 - State: in progress
-- Active branch for public API PR: `document-default-branch-release-policy`
+- Active branch: `remove-scripts-directory`
 
 ## History
 
@@ -94,7 +94,7 @@ Keep [`PLAN.md`](./PLAN.md) focused on stable architectural rules. Keep this fil
 ### Public API PR
 
 - Goal: define a single public release-policy entrypoint with only `deployBranch` and `redeployAll` as public operations.
-- Status: in progress
+- Status: merged
 - Scope:
   - add `release-policy/index.js` as the only intended public entrypoint
   - keep `core`, `docusaurus`, and `github-pages` internal
@@ -102,6 +102,17 @@ Keep [`PLAN.md`](./PLAN.md) focused on stable architectural rules. Keep this fil
   - migrate release workflows to the public entrypoint
   - remove obsolete repo-level release wrapper scripts
   - document the narrowed public API in the local release-policy docs
+
+### Remove Scripts Directory PR
+
+- Goal: move the remaining Docusaurus/runtime behavior into `release-policy`, align the docs with the merged state, and remove `scripts/` entirely.
+- Status: in progress
+- Scope:
+  - update stale release-policy and repository-level plans/instructions
+  - add an internal Docusaurus integration entrypoint under `release-policy/docusaurus`
+  - migrate Docusaurus/runtime consumers away from repo-level wrapper scripts
+  - relocate remaining behavior and tests from `scripts/` into `release-policy`
+  - remove the `scripts/` directory completely
 
 ## Completed Checkpoint
 
@@ -112,8 +123,8 @@ Keep [`PLAN.md`](./PLAN.md) focused on stable architectural rules. Keep this fil
 
 ## Next Steps
 
-- Finish and merge the public API PR.
+- Finish and merge the scripts-removal PR.
 - For every later PR, fetch the remote default branch first and create the branch from that updated base.
-- Move additional pure release-policy logic into `release-policy/core`.
+- Keep the repository limited to configuration, content, workflow YAML, and release data outside `release-policy`.
 - Keep repository-level docs aligned with the release-policy module when architecture checkpoints are completed.
 - Validate the extracted design through real usage before porting it to another repository.

@@ -1,11 +1,5 @@
-/**
- * Purpose: provide explicit branch inputs for local Docusaurus commands.
- * Usage: imported by the Docusaurus bootstrap so runtime helpers can stay strict.
- */
 const {execSync} = require('node:child_process');
-const {
-  PUBLISH_SIMULATION_MODE,
-} = require('./resolve-branch-runtime');
+const {PUBLISH_SIMULATION_MODE} = require('./resolve-branch-runtime');
 
 const resolveGitBranch = () => {
   try {

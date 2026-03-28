@@ -3,6 +3,12 @@ const assert = require('node:assert/strict');
 
 const {resolveDocsRuntime} = require('./resolve-docs-runtime');
 
+test('rejects missing branch inputs', () => {
+  const act = () => resolveDocsRuntime({});
+
+  assert.throws(act, /DOCS_CURRENT_BRANCH must be provided/);
+});
+
 test('includes resolved branch ownership and docs runtime inputs', () => {
   const env = {
     DOCS_CURRENT_BRANCH: '2.x',

@@ -8,7 +8,7 @@
     "build": "docusaurus build",
     "serve": "docusaurus serve",
     "clear": "docusaurus clear",
-    "test": "node --test \"scripts/**/*.test.js\" \"release-policy/**/*.test.js\"",
+    "test": "node --test \"release-policy/**/*.test.js\"",
     "lint": "markdownlint \"README.md\" \"docs/**/*.md\"",
     "validate": "npm run lint && npm run test && npm run build"
   },
