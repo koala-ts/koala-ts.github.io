@@ -3,7 +3,7 @@
 ## Version Strategy
 
 - The current default branch owns the canonical homepage at `/` and the canonical docs at `/docs`.
-- The actual default branch value is configured in `release-registry.json` on `gh-pages-control`, not in branch-local docs config.
+- The actual default branch value is configured in the repository-root `release-registry.json` on the current default branch, not in branch-local docs config.
 - `main` documents the upcoming next release published as `/docs/next`.
 - Non-default release branches publish docs at `/docs/<version>`.
 
@@ -29,8 +29,8 @@
 
 ## Deployment Model
 
-- `gh-pages-control` owns release policy, registry data, and deploy scripts.
-- The current default branch hosts the dispatchable bridge workflows required by GitHub Actions.
+- The current default branch owns release policy, registry data, deploy helpers, and the dispatchable workflows used by GitHub Actions.
+- `release-registry.json` at the repository root is the authoritative release-policy data source.
 - Deployable docs branches must not become the source of truth for global release ownership.
 - Branch-local scripts should stay limited to what is necessary for local development and branch builds.
 - Runtime helpers must require explicit branch inputs; branch discovery belongs only in the local bootstrap adapter or CI/workflow env injection.

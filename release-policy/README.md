@@ -34,5 +34,5 @@ The delivery history and next steps are tracked in [`WORKLOG.md`](./WORKLOG.md).
 - Unit tests in this module should target behavior-bearing files rather than barrels.
 - Update existing tests when policy changes. Do not treat the suite as append-only.
 - Path-policy changes must keep explicit regression coverage for both the default branch contract and at least one non-default versioned branch contract.
-- Treat any `gh-pages-control` workflow dependency as transitional. The completed migration must remove it and rely on local release-policy helpers on the default branch instead.
+- Keep release-policy helpers and deployment workflows on the current default branch. Do not reintroduce a separate control branch.
 - The existing workflow model must keep working until the extraction plan is finished.
