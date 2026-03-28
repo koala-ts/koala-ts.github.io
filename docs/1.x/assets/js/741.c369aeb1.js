@@ -1,1 +1,0 @@
-(self.webpackChunkkoala_ts_docs=self.webpackChunkkoala_ts_docs||[]).push([[741],{5741(){}}]);
