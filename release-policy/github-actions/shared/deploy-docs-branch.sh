@@ -46,27 +46,9 @@ resolve_site_base() {
   fi
 }
 
-build_release_registry_json() {
-  RELEASE_REGISTRY_JSON=$(
-    node -e '
-      const canonicalBranch = process.env.CANONICAL_BRANCH;
-      const deployableBranches = (process.env.DEPLOYABLE_BRANCHES || canonicalBranch)
-        .split(",")
-        .map((entry) => entry.trim())
-        .filter(Boolean);
-
-      process.stdout.write(
-        JSON.stringify({
-          defaultBranch: canonicalBranch,
-          deployableBranches,
-        }),
-      );
-    '
-  )
-}
-
 TARGET_BRANCH=${TARGET_BRANCH:?TARGET_BRANCH is required}
 CANONICAL_BRANCH=${CANONICAL_BRANCH:?CANONICAL_BRANCH is required}
+DEPLOYABLE_BRANCHES=${DEPLOYABLE_BRANCHES:-$CANONICAL_BRANCH}
 GITHUB_TOKEN=${GITHUB_TOKEN:?GITHUB_TOKEN is required}
 WRITE_GITHUB_OUTPUT=${WRITE_GITHUB_OUTPUT:-true}
 
@@ -76,14 +58,13 @@ if [ "${WRITE_GITHUB_OUTPUT}" = "true" ] && [ -n "${GITHUB_OUTPUT:-}" ]; then
   GITHUB_OUTPUT_ARGS=(--github-output "${GITHUB_OUTPUT}")
 fi
 
-build_release_registry_json
-
 REMOTE_BRANCHES=$(git ls-remote --heads origin | awk '{print $2}' | sed 's#refs/heads/##' | paste -sd ',' -)
 
 DEPLOYMENT_JSON=$(
   node release-policy/node.js deploy-branch \
     "${TARGET_BRANCH}" \
-    --registry-source "${RELEASE_REGISTRY_JSON}" \
+    --canonical-branch "${CANONICAL_BRANCH}" \
+    --deployable-branches "${DEPLOYABLE_BRANCHES}" \
     --existing-branches "${REMOTE_BRANCHES}" \
     "${GITHUB_OUTPUT_ARGS[@]}"
 )
@@ -123,7 +104,8 @@ mkdir -p .gh-pages/docs
 PREPARED_JSON=$(
   node release-policy/node.js deploy-branch \
     "${TARGET_BRANCH}" \
-    --registry-source "${RELEASE_REGISTRY_JSON}" \
+    --canonical-branch "${CANONICAL_BRANCH}" \
+    --deployable-branches "${DEPLOYABLE_BRANCHES}" \
     --existing-branches "${REMOTE_BRANCHES}" \
     --site-base "${SITE_BASE}" \
     --catalog-path ".gh-pages/docs/versions.json" \
