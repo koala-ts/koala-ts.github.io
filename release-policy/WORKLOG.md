@@ -14,7 +14,7 @@ Keep [`PLAN.md`](./PLAN.md) focused on stable architectural rules. Keep this fil
 ## Status
 
 - State: in progress
-- Active branch: `redeploy-all-action`
+- Active branch: `remove-internal-workflows`
 
 ## History
 
@@ -149,17 +149,22 @@ Keep [`PLAN.md`](./PLAN.md) focused on stable architectural rules. Keep this fil
 ### Redeploy-All Action PR
 
 - Goal: migrate redeploy-all orchestration into the local republish action.
-- Status: in progress
+- Status: merged
 - Scope:
   - move multi-branch orchestration into [`../.github/actions/redeploy-all-docs`](../.github/actions/redeploy-all-docs)
   - stop dispatching child workflows and polling GitHub from [`../.github/workflows/republish-all.yml`](../.github/workflows/republish-all.yml)
   - reuse the shared single-branch deploy mechanics from local action code
   - keep the internal reusable workflows in place until the final cleanup PR
 
-### Planned Follow-up PR 4
+### Internal Workflow Removal PR
 
 - Goal: remove the internal reusable workflows after both local actions are proven.
-- Status: planned
+- Status: in progress
+- Scope:
+  - delete [`../.github/workflows/publish-branch-runner.yml`](../.github/workflows/publish-branch-runner.yml)
+  - delete [`../.github/workflows/publish-branch-internal.yml`](../.github/workflows/publish-branch-internal.yml)
+  - update plans and instructions from transitional wording to the completed local-action boundary
+  - verify the remaining top-level workflows still deploy correctly
 
 ## Completed Checkpoint
 
@@ -170,8 +175,7 @@ Keep [`PLAN.md`](./PLAN.md) focused on stable architectural rules. Keep this fil
 
 ## Next Steps
 
-- Finish and merge the redeploy-all action PR.
-- Then delete `publish-branch-runner.yml` and `publish-branch-internal.yml`.
+- Finish and merge the internal workflow removal PR.
 - For every later PR, fetch the remote default branch first and create the branch from that updated base.
 - Keep the repository limited to configuration, content, workflow YAML, and release data outside `release-policy`.
 - Reduce the transitional external entrypoint surface deliberately later, after the workflow/action boundary is simplified and explicit.

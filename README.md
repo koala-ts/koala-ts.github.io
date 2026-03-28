@@ -110,7 +110,7 @@ The target workflow structure keeps only these top-level workflows:
 - [`publish-branch.yml`](./.github/workflows/publish-branch.yml)
 - [`republish-all.yml`](./.github/workflows/republish-all.yml)
 
-GitHub-specific runtime glue is being moved into local actions under [`.github/actions`](./.github/actions), while release-policy computation stays in [`release-policy/node.js`](./release-policy/node.js). The internal reusable workflows [`.github/workflows/publish-branch-runner.yml`](./.github/workflows/publish-branch-runner.yml) and [`.github/workflows/publish-branch-internal.yml`](./.github/workflows/publish-branch-internal.yml) are transitional and scheduled for removal in that migration.
+GitHub-specific runtime glue lives in local actions under [`.github/actions`](./.github/actions), while release-policy computation stays in [`release-policy/node.js`](./release-policy/node.js).
 
 Missing deployable branches are skipped without failing a republish-all run.
 

@@ -40,9 +40,6 @@ The delivery history and next steps are tracked in [`WORKLOG.md`](./WORKLOG.md).
 - Move GitHub-specific runtime glue into local actions:
   - [`../.github/actions/deploy-docs-branch`](../.github/actions/deploy-docs-branch)
   - [`../.github/actions/redeploy-all-docs`](../.github/actions/redeploy-all-docs)
-- Remove internal reusable workflows at the end of this migration:
-  - [`../.github/workflows/publish-branch-runner.yml`](../.github/workflows/publish-branch-runner.yml)
-  - [`../.github/workflows/publish-branch-internal.yml`](../.github/workflows/publish-branch-internal.yml)
 - Future implementation must preserve the separation between pure policy and adapters.
 - Production logic must not be added to the adapters when it belongs in `core`.
 - Production logic must not be added directly to repo-level workflows or Docusaurus bootstrap code when it belongs in this module.
@@ -59,13 +56,16 @@ The delivery history and next steps are tracked in [`WORKLOG.md`](./WORKLOG.md).
 - Keep repository code outside this module limited to configuration, content, workflow YAML, and release data.
 - The existing workflow model must keep working until the extraction plan is finished.
 
-## Current Workflow Migration
+## Current Workflow State
 
-The current GitHub workflow simplification is intentionally incremental:
+The GitHub workflow simplification is complete:
 
-1. add local action skeletons and document the end state
-2. migrate selected-branch deploy into the local deploy action
-3. migrate redeploy-all orchestration into the local republish action
-4. delete the internal reusable workflows once both local actions are proven
+- top-level workflows are limited to:
+  - [`../.github/workflows/ci.yml`](../.github/workflows/ci.yml)
+  - [`../.github/workflows/publish-branch.yml`](../.github/workflows/publish-branch.yml)
+  - [`../.github/workflows/republish-all.yml`](../.github/workflows/republish-all.yml)
+- GitHub-specific runtime glue lives in:
+  - [`../.github/actions/deploy-docs-branch`](../.github/actions/deploy-docs-branch)
+  - [`../.github/actions/redeploy-all-docs`](../.github/actions/redeploy-all-docs)
 
-Follow [`WORKLOG.md`](./WORKLOG.md) for the current active step.
+Follow [`WORKLOG.md`](./WORKLOG.md) for post-migration follow-up work.
