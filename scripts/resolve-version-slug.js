@@ -5,7 +5,7 @@
 const {
   resolveVersionSlug,
   sanitizeBranchName,
-} = require('../release-policy/core');
+} = require('../release-policy/core/resolve-version-slug');
 
 module.exports = {
   resolveVersionSlug,

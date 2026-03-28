@@ -3,7 +3,9 @@
  * Usage: retained so existing CLI and script imports keep working during extraction.
  */
 const {appendFileSync} = require('node:fs');
-const {resolvePublishLayout} = require('../release-policy/core');
+const {
+  resolvePublishLayout,
+} = require('../release-policy/core/resolve-publish-layout');
 
 if (require.main === module) {
   const args = process.argv.slice(2);
