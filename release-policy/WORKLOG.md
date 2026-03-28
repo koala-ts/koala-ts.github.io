@@ -14,7 +14,7 @@ Keep [`PLAN.md`](./PLAN.md) focused on stable architectural rules. Keep this fil
 ## Status
 
 - State: in progress
-- Active branch: `github-actions-relocation-skeleton`
+- Active branch: `relocate-deploy-action`
 
 ## History
 
@@ -169,16 +169,21 @@ Keep [`PLAN.md`](./PLAN.md) focused on stable architectural rules. Keep this fil
 ### GitHub Action Relocation Skeleton PR
 
 - Goal: document the relocation target and add `release-policy/github-actions` skeletons without changing workflow behavior.
-- Status: in progress
+- Status: merged
 - Scope:
   - add skeletons under [`github-actions`](./github-actions)
   - document the four-PR relocation sequence
   - keep `.github/actions` active during this first step
 
-### Planned Follow-up PR 2
+### Deploy Action Relocation PR
 
 - Goal: move the single-branch deploy action under `release-policy/github-actions`.
-- Status: planned
+- Status: in progress
+- Scope:
+  - activate [`github-actions/deploy-docs-branch`](./github-actions/deploy-docs-branch)
+  - move the shared selected-branch deploy script under [`github-actions/shared`](./github-actions/shared)
+  - switch [`../.github/workflows/publish-branch.yml`](../.github/workflows/publish-branch.yml) to the relocated action path
+  - keep republish-all on the old `.github/actions` path for one more PR
 
 ### Planned Follow-up PR 3
 
@@ -199,8 +204,7 @@ Keep [`PLAN.md`](./PLAN.md) focused on stable architectural rules. Keep this fil
 
 ## Next Steps
 
-- Finish and merge the GitHub Action Relocation Skeleton PR.
-- Then move `deploy-docs-branch` under `release-policy/github-actions`.
+- Finish and merge the deploy action relocation PR.
 - Then move `redeploy-all-docs` and the shared script under `release-policy/github-actions`.
 - Then delete `.github/actions`.
 - For every later PR, fetch the remote default branch first and create the branch from that updated base.

@@ -1,5 +1,8 @@
 # Shared GitHub Action Scripts
 
-This directory is reserved for shared GitHub Action scripts that will move with the relocated actions.
+This directory contains shared GitHub Action scripts that travel with the relocated action wrappers.
 
-The active shared deploy script still lives at [`.github/actions/shared/deploy-docs-branch.sh`](../../../.github/actions/shared/deploy-docs-branch.sh) during this first PR.
+During this PR:
+
+- [`deploy-docs-branch.sh`](./deploy-docs-branch.sh) is active for the selected-branch workflow through [`../deploy-docs-branch`](../deploy-docs-branch)
+- the old [`.github/actions/shared/deploy-docs-branch.sh`](../../../.github/actions/shared/deploy-docs-branch.sh) remains active for republish-all until the next PR
