@@ -28,6 +28,7 @@
 - Do not add implementation here that reintroduces a separate control branch model.
 - Keep the current default branch as the target single source of truth for release policy and deployment orchestration.
 - Keep [`../release-registry.json`](../release-registry.json) as the centralized release-policy data source.
+- Treat any remaining `gh-pages-control` dependency as migration debt. Remove it rather than extending it.
 - Keep shared system design, homepage ownership, navigation behavior, and deployment orchestration on the default branch.
 - Limit a non-default docs branch to its versioned documentation and the minimum code needed for that version to run locally.
 - Preserve the existing working publish model until the extraction plan is complete. Do not break current behavior in the name of cleanup.

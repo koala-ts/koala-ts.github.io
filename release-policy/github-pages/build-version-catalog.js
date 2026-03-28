@@ -1,0 +1,57 @@
+const {existsSync, readFileSync, writeFileSync} = require('node:fs');
+
+const isAllowedVersion = (version) =>
+  version === 'next' || /^[0-9]+\.x$/.test(version);
+
+const buildVersionCatalog = ({loadedVersions, currentVersion}) => {
+  const merged = [...new Set([...loadedVersions, currentVersion])]
+    .filter(isAllowedVersion)
+    .sort((a, b) => {
+      if (a === 'next') {
+        return -1;
+      }
+
+      if (b === 'next') {
+        return 1;
+      }
+
+      return a.localeCompare(b, 'en');
+    });
+
+  return {
+    merged,
+    versionCsv: merged.join(','),
+  };
+};
+
+const buildVersionCatalogCli = (args, {stdout = process.stdout} = {}) => {
+  const [catalogPath, currentVersion] = args;
+
+  if (!catalogPath || !currentVersion) {
+    throw new Error(
+      'Usage: node scripts/build-version-catalog.js <catalogPath> <currentVersion>',
+    );
+  }
+
+  const loadedVersions = existsSync(catalogPath)
+    ? JSON.parse(readFileSync(catalogPath, 'utf8'))
+    : [];
+  const {merged, versionCsv} = buildVersionCatalog({
+    loadedVersions,
+    currentVersion,
+  });
+
+  writeFileSync(catalogPath, `${JSON.stringify(merged, null, 2)}\n`);
+  stdout.write(`${versionCsv}\n`);
+
+  return {
+    merged,
+    versionCsv,
+  };
+};
+
+module.exports = {
+  buildVersionCatalog,
+  buildVersionCatalogCli,
+  isAllowedVersion,
+};

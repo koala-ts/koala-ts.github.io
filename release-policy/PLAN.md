@@ -14,6 +14,7 @@ The target state is a clear separation between pure release-policy logic, Docusa
 - The current default branch owns the system design, the homepage, the shared navigation model, and all repository-wide publishing behavior.
 - [`../release-registry.json`](../release-registry.json) lives at the repository root and is authoritative.
 - No dedicated control branch such as `gh-pages-control` is allowed in the target architecture.
+- Workflows still depend on `gh-pages-control` today for some deployment scripts, but that dependency is transitional and must be removed before the migration is considered complete.
 - The design must support a future major release becoming the new default branch and inheriting all default-branch responsibilities without redefining the architecture.
 
 ### Release Policy Module
@@ -35,6 +36,7 @@ The target state is a clear separation between pure release-policy logic, Docusa
 - [`github-pages`](./github-pages) will adapt the core policy to deployment orchestration.
 - The default branch owns the operator workflows for deploying one selected branch or redeploying all declared branches.
 - Non-default branches provide buildable documentation content, but they do not own global deployment policy.
+- The target state is that workflows consume deployment helpers from this repository on the current default branch through `release-policy/github-pages`, not from `gh-pages-control`.
 
 ### Branch Responsibility Model
 
