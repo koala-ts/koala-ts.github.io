@@ -32,17 +32,20 @@ jobs:
       - name: Resolve release registry snapshot
         id: registry
         run: |
-          node scripts/resolve-release-registry-cli.js --github-output "$GITHUB_OUTPUT"
+          REMOTE_BRANCHES=$(git ls-remote --heads origin | awk '{print $2}' | sed 's#refs/heads/##' | paste -sd ',' -)
+
+          node release-policy/index.js redeploy-all \
+            --registry-source "release-registry.json" \
+            --existing-branches "${REMOTE_BRANCHES}" \
+            --github-output "$GITHUB_OUTPUT"
 
       - name: Republish branches in declared order
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          DEPLOYABLE_BRANCHES: ${{ steps.registry.outputs.deployable_branches }}
+          DEPLOYABLE_BRANCH_CSV: ${{ steps.registry.outputs.branch_csv }}
           REGISTRY_JSON: ${{ steps.registry.outputs.registry_json }}
         run: |
-          mapfile -t BRANCHES < <(
-            node -e "for (const branch of JSON.parse(process.env.DEPLOYABLE_BRANCHES)) console.log(branch)"
-          )
+          IFS=',' read -r -a BRANCHES <<< "${DEPLOYABLE_BRANCH_CSV}"
 
           for branch in "${BRANCHES[@]}"; do
             run_name="Deploy docs for ${branch}"

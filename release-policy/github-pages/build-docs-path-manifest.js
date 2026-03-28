@@ -36,7 +36,7 @@ const buildDocsPathManifestCli = (args, {stdout = process.stdout} = {}) => {
 
   if (!manifestPath || !docsDir || !currentVersion) {
     throw new Error(
-      'Usage: node scripts/build-docs-path-manifest.js <manifestPath> <docsDir> <currentVersion>',
+      'Usage: internal buildDocsPathManifestCli(<manifestPath> <docsDir> <currentVersion>)',
     );
   }
 
