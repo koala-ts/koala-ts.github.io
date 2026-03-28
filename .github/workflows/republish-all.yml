@@ -21,6 +21,6 @@ jobs:
           fetch-depth: 0
 
       - name: Redeploy all docs branches
-        uses: ./.github/actions/redeploy-all-docs
+        uses: ./release-policy/github-actions/redeploy-all-docs
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
