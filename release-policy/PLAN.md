@@ -4,7 +4,7 @@
 
 Stabilize the documentation publishing model inside this repository before extracting it for reuse in other repositories.
 
-The target state is a clear separation between pure release-policy logic, Docusaurus integration, and GitHub Pages deployment orchestration.
+The target state is a clear separation between pure release-policy logic, Docusaurus integration, GitHub Pages deployment orchestration, and GitHub-specific runtime glue.
 
 ## Architectural Boundaries
 
@@ -45,6 +45,23 @@ The target state is a clear separation between pure release-policy logic, Docusa
 - Non-default branches provide buildable documentation content, but they do not own global deployment policy.
 - Workflows consume deployment helpers from this repository on the current default branch through [`node.js`](./node.js).
 
+### GitHub Actions Boundary
+
+- The final workflow set must contain only:
+  - [`../.github/workflows/ci.yml`](../.github/workflows/ci.yml)
+  - [`../.github/workflows/publish-branch.yml`](../.github/workflows/publish-branch.yml)
+  - [`../.github/workflows/republish-all.yml`](../.github/workflows/republish-all.yml)
+- GitHub-specific runtime glue belongs in local actions under [`../.github/actions`](../.github/actions).
+- The target local actions are:
+  - [`../.github/actions/deploy-docs-branch`](../.github/actions/deploy-docs-branch)
+  - [`../.github/actions/redeploy-all-docs`](../.github/actions/redeploy-all-docs)
+- Internal reusable workflows are transitional implementation detail and must be removed by the end of the migration:
+  - [`../.github/workflows/publish-branch-runner.yml`](../.github/workflows/publish-branch-runner.yml)
+  - [`../.github/workflows/publish-branch-internal.yml`](../.github/workflows/publish-branch-internal.yml)
+- Top-level workflow YAML should keep only triggers, permissions, concurrency, and thin configuration wiring.
+- Local actions should own GitHub runtime mechanics such as checkout sequencing, workspace preparation, build execution, publish copying, and commit/push behavior.
+- `release-policy/node.js` should remain responsible for deploy computation and policy decisions rather than GitHub metadata structure.
+
 ### Branch Responsibility Model
 
 - The default branch owns all repository-wide behavior: system design, homepage ownership, shared navigation, release policy, and deployment orchestration.
@@ -64,3 +81,14 @@ The target state is a clear separation between pure release-policy logic, Docusa
 - Operators must be able to deploy a selected branch and redeploy all deployable branches.
 - The current workflow model must remain functional during the extraction. Transitional refactors must preserve the existing publishing behavior until the plan is complete.
 - Promoting a new default branch must transfer homepage ownership, canonical `/docs` ownership, shared navigation ownership, and deployment orchestration without changing the overall model.
+
+## Recorded Migration Sequence
+
+The GitHub workflow simplification should land in four incremental PRs:
+
+1. add local action skeletons and document the final workflow/action boundary clearly
+2. migrate single-branch deploy from the reusable workflow runner into `deploy-docs-branch`
+3. migrate republish-all orchestration into `redeploy-all-docs`
+4. remove the internal reusable workflows once the local actions are proven
+
+Each step must start from the latest current default branch, preserve working deployments, and update the worklog and instructions to reflect the new state.

@@ -35,6 +35,12 @@
 - Repository code outside `release-policy` should stay limited to configuration, content, workflow YAML, and release data.
 - External consumers should go through [`release-policy/node.js`](./release-policy/node.js) or [`release-policy/browser.js`](./release-policy/browser.js), depending on the runtime they execute in.
 - Runtime helpers must require explicit branch inputs; branch discovery belongs only in the current Docusaurus config/runtime entrypoint under `release-policy/docusaurus` or CI/workflow env injection.
+- Keep the final top-level workflow set limited to:
+  - [`ci.yml`](./.github/workflows/ci.yml)
+  - [`publish-branch.yml`](./.github/workflows/publish-branch.yml)
+  - [`republish-all.yml`](./.github/workflows/republish-all.yml)
+- GitHub-specific runtime glue should move into local actions under [`.github/actions`](./.github/actions).
+- Treat [`.github/workflows/publish-branch-runner.yml`](./.github/workflows/publish-branch-runner.yml) and [`.github/workflows/publish-branch-internal.yml`](./.github/workflows/publish-branch-internal.yml) as transitional implementation detail that will be removed by the current migration plan.
 - Manual operators should use:
   - `🚀 Deploy Selected Docs Branch` on the current default branch
   - `🚀 Deploy All Deployable Docs Branches` on the current default branch

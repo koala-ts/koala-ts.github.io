@@ -1,0 +1,21 @@
+name: Deploy Docs Branch
+description: >
+  Transitional local action skeleton for the single-branch docs deployment flow.
+  This action will replace the reusable workflow runner during the workflow
+  simplification sequence.
+
+inputs:
+  target_branch:
+    description: Branch to deploy
+    required: false
+  registry_json:
+    description: Optional registry payload override for internal orchestration
+    required: false
+
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      run: |
+        echo "This is a scaffold action only."
+        echo "Single-branch deploy logic moves here in the next PR."
