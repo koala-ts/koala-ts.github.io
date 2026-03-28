@@ -32,10 +32,10 @@ test('publishes a non-default branch under its versioned docs path', () => {
   });
 
   assert.deepEqual(layout, {
-    buildBaseUrl: '/',
-    docsRouteBasePath: 'docs/next',
+    buildBaseUrl: '/docs/next/',
+    docsRouteBasePath: '/',
     isDefaultBranch: false,
-    publishSourceDir: 'build/docs/next',
+    publishSourceDir: 'build',
     publishTargetDir: '.gh-pages/docs/next',
     versionedDocsDir: '.gh-pages/docs/next',
   });

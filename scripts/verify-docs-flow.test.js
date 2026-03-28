@@ -42,10 +42,10 @@ test('main scenario publishes only versioned docs under /docs/next', () => {
       versionSlug: 'next',
     }),
     {
-      buildBaseUrl: '/',
-      docsRouteBasePath: 'docs/next',
+      buildBaseUrl: '/docs/next/',
+      docsRouteBasePath: '/',
       isDefaultBranch: false,
-      publishSourceDir: 'build/docs/next',
+      publishSourceDir: 'build',
       publishTargetDir: '.gh-pages/docs/next',
       versionedDocsDir: '.gh-pages/docs/next',
     },

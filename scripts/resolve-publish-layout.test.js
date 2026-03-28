@@ -31,10 +31,10 @@ test('publishes non-default branch docs under /docs/<version>', () => {
       versionSlug: 'next',
     }),
     {
-      buildBaseUrl: '/',
-      docsRouteBasePath: 'docs/next',
+      buildBaseUrl: '/docs/next/',
+      docsRouteBasePath: '/',
       isDefaultBranch: false,
-      publishSourceDir: 'build/docs/next',
+      publishSourceDir: 'build',
       publishTargetDir: '.gh-pages/docs/next',
       versionedDocsDir: '.gh-pages/docs/next',
     },
@@ -50,12 +50,31 @@ test('preserves non-root site bases when computing publish urls', () => {
       versionSlug: 'next',
     }),
     {
-      buildBaseUrl: '/koala-ts/',
-      docsRouteBasePath: 'docs/next',
+      buildBaseUrl: '/koala-ts/docs/next/',
+      docsRouteBasePath: '/',
       isDefaultBranch: false,
-      publishSourceDir: 'build/docs/next',
+      publishSourceDir: 'build',
       publishTargetDir: '.gh-pages/docs/next',
       versionedDocsDir: '.gh-pages/docs/next',
+    },
+  );
+});
+
+test('publishes numeric release branches from their versioned docs root', () => {
+  assert.deepEqual(
+    resolvePublishLayout({
+      currentBranch: '1.x',
+      defaultBranch: '2.x',
+      siteBase: '/',
+      versionSlug: '1.x',
+    }),
+    {
+      buildBaseUrl: '/docs/1.x/',
+      docsRouteBasePath: '/',
+      isDefaultBranch: false,
+      publishSourceDir: 'build',
+      publishTargetDir: '.gh-pages/docs/1.x',
+      versionedDocsDir: '.gh-pages/docs/1.x',
     },
   );
 });

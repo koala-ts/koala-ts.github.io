@@ -34,12 +34,32 @@ test('publishes a non-default branch under its versioned docs path', () => {
   const layout = resolvePublishLayout(input);
 
   assert.deepEqual(layout, {
-    buildBaseUrl: '/koala-ts/',
-    docsRouteBasePath: 'docs/next',
+    buildBaseUrl: '/koala-ts/docs/next/',
+    docsRouteBasePath: '/',
     isDefaultBranch: false,
-    publishSourceDir: 'build/docs/next',
+    publishSourceDir: 'build',
     publishTargetDir: '.gh-pages/docs/next',
     versionedDocsDir: '.gh-pages/docs/next',
+  });
+});
+
+test('publishes a release branch as a site rooted at its versioned docs path', () => {
+  const input = {
+    currentBranch: '1.x',
+    defaultBranch: '2.x',
+    siteBase: '/',
+    versionSlug: '1.x',
+  };
+
+  const layout = resolvePublishLayout(input);
+
+  assert.deepEqual(layout, {
+    buildBaseUrl: '/docs/1.x/',
+    docsRouteBasePath: '/',
+    isDefaultBranch: false,
+    publishSourceDir: 'build',
+    publishTargetDir: '.gh-pages/docs/1.x',
+    versionedDocsDir: '.gh-pages/docs/1.x',
   });
 });
 

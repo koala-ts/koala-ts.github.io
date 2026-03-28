@@ -14,24 +14,27 @@ const {
   docsSiteBase,
   docsRouteBasePath,
   defaultBranch,
+  isDefaultBranch,
   versions,
 } = resolveDocsRuntime(runtimeEnv);
 const {
+  buildAbsoluteSiteUrl,
   buildCanonicalHomePath,
-  buildCurrentDocsContentPath,
+  buildCurrentDocsRoutePath,
 } = require('./scripts/build-canonical-site-paths');
 
-const homePath = buildCanonicalHomePath({docsSiteBase});
-const docsIntroPath = buildCurrentDocsContentPath({
-  baseUrl,
+const homePath = isDefaultBranch ? buildCanonicalHomePath({docsSiteBase}) : baseUrl;
+const docsIntroPath = buildCurrentDocsRoutePath({
   docsRouteBasePath,
   docPath: 'overview/intro',
 });
-const docsQuickStartPath = buildCurrentDocsContentPath({
-  baseUrl,
+const docsQuickStartPath = buildCurrentDocsRoutePath({
   docsRouteBasePath,
   docPath: 'getting-started/quick-start',
 });
+const searchDocsRouteBasePath =
+  docsRouteBasePath === '/' ? '/' : `/${docsRouteBasePath}`;
+const homeHref = buildAbsoluteSiteUrl({siteUrl, path: homePath});
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
@@ -53,6 +56,7 @@ const config = {
   customFields: {
     defaultBranch,
     homePath,
+    homeHref,
     siteUrl,
     docsSiteBase,
     docsIntroPath,
@@ -70,7 +74,7 @@ const config = {
       logo: {
         alt: 'KoalaTs Logo',
         src: 'img/logo.png',
-        href: homePath,
+        href: homeHref,
       },
       items: [
         {
@@ -98,7 +102,7 @@ const config = {
       logo: {
         alt: 'KoalaTs Logo',
         src: 'img/logo.png',
-        href: homePath,
+        href: homeHref,
         width: 32,
         height: 32,
       },
@@ -165,7 +169,7 @@ const config = {
         indexDocs: true,
         indexBlog: false,
         indexPages: true,
-        docsRouteBasePath: `/${docsRouteBasePath}`,
+        docsRouteBasePath: searchDocsRouteBasePath,
         hashed: true,
         language: ['en'],
       },

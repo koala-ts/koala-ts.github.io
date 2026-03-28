@@ -7,6 +7,7 @@ const {
   buildCanonicalDocsRootPath,
   buildCanonicalHomePath,
   buildCurrentDocsContentPath,
+  buildCurrentDocsRoutePath,
   buildSharedDocsManifestPath,
 } = require('./build-canonical-site-paths');
 
@@ -57,6 +58,25 @@ test('builds current-build docs content paths from base url and route base path'
   });
 
   assert.equal(currentDocsContentPath, '/docs/overview/intro');
+});
+
+test('builds in-app docs route paths without re-applying the base url', () => {
+  const currentDocsRoutePath = buildCurrentDocsRoutePath({
+    docsRouteBasePath: '/',
+    docPath: 'overview/intro',
+  });
+
+  assert.equal(currentDocsRoutePath, '/overview/intro');
+});
+
+test('builds current-build docs paths for versioned branches rooted at their publish path', () => {
+  const currentDocsContentPath = buildCurrentDocsContentPath({
+    baseUrl: '/docs/1.x/',
+    docsRouteBasePath: '/',
+    docPath: 'overview/intro',
+  });
+
+  assert.equal(currentDocsContentPath, '/docs/1.x/overview/intro');
 });
 
 test('builds absolute site urls from canonical paths', () => {

@@ -10,7 +10,7 @@ const resolvePublishContext = ({currentBranch, registry}) => {
   const classification = classifyDocsBranch(currentBranch);
   const isDefaultBranch = currentBranch === defaultBranch;
   const isDeployableBranch = deployableBranches.includes(currentBranch);
-  const docsRouteBasePath = isDefaultBranch ? 'docs' : classification.docsRouteBasePath;
+  const docsRouteBasePath = isDefaultBranch ? 'docs' : '/';
 
   return {
     currentBranch,

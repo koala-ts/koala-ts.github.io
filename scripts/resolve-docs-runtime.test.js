@@ -56,3 +56,28 @@ test('maps non-default branches to versioned docs route bases', () => {
     versions: ['2.x', 'next'],
   });
 });
+
+test('preserves an explicit versioned publish root for non-default builds', () => {
+  const env = {
+    DOCS_CURRENT_BRANCH: '1.x',
+    DOCS_DEFAULT_BRANCH: '2.x',
+    DOCS_VERSION: '1.x',
+    DOCS_VERSIONS: '1.x,2.x,next',
+    DOCS_BASE_URL: '/docs/1.x/',
+    DOCS_ROUTE_BASE_PATH: '/',
+  };
+
+  const runtime = resolveDocsRuntime(env);
+
+  assert.deepEqual(runtime, {
+    currentBranch: '1.x',
+    defaultBranch: '2.x',
+    isDefaultBranch: false,
+    versionSlug: '1.x',
+    siteUrl: 'http://localhost:3000',
+    baseUrl: '/docs/1.x/',
+    docsSiteBase: '/',
+    docsRouteBasePath: '/',
+    versions: ['1.x', '2.x', 'next'],
+  });
+});

@@ -39,6 +39,6 @@ test('resolves publish context for main under /docs/next', () => {
     versionSlug: 'next',
     isDefaultBranch: false,
     isDeployableBranch: true,
-    docsRouteBasePath: 'docs/next',
+    docsRouteBasePath: '/',
   });
 });
