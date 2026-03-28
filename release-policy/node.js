@@ -37,6 +37,7 @@ const {
   buildDocsPathManifest,
   collectDocsPaths,
 } = require('./github-pages/build-docs-path-manifest');
+const {validateReleaseRegistry} = require('./core/validate-release-registry');
 
 const requireNonEmptyString = (value, name) => {
   if (typeof value !== 'string' || !value.trim()) {
@@ -118,10 +119,22 @@ const parseArgs = (args) => {
 const resolveRegistry = ({
   registry,
   registrySource,
+  canonicalBranch,
+  deployableBranches,
   loadRegistry,
 }) => {
   if (registry) {
     return requireObject(registry, 'registry');
+  }
+
+  if (
+    typeof canonicalBranch === 'string' &&
+    Array.isArray(deployableBranches)
+  ) {
+    return validateReleaseRegistry({
+      defaultBranch: canonicalBranch,
+      deployableBranches,
+    });
   }
 
   return loadRegistry(requireNonEmptyString(registrySource, 'registrySource'));
@@ -172,6 +185,8 @@ const deployBranch = (
     docsPaths,
     registry,
     registrySource,
+    canonicalBranch,
+    deployableBranches,
   },
   {
     loadRegistry = loadReleaseRegistry,
@@ -193,6 +208,8 @@ const deployBranch = (
   const resolvedRegistry = resolveRegistry({
     registry,
     registrySource,
+    canonicalBranch,
+    deployableBranches,
     loadRegistry,
   });
   const publishContext = resolveContext({
@@ -262,6 +279,8 @@ const redeployAll = (
     docsPathsByBranch,
     registry,
     registrySource,
+    canonicalBranch,
+    deployableBranches,
   },
   {
     loadRegistry = loadReleaseRegistry,
@@ -275,6 +294,8 @@ const redeployAll = (
   const resolvedRegistry = resolveRegistry({
     registry,
     registrySource,
+    canonicalBranch,
+    deployableBranches,
     loadRegistry,
   });
   let currentLoadedVersions = Array.isArray(loadedVersions)
@@ -370,14 +391,16 @@ const deployBranchCli = (args, {stdout = process.stdout} = {}) => {
 
   if (!currentBranch) {
     throw new Error(
-      'Usage: node release-policy/node.js deploy-branch <currentBranch> --registry-source <path|json> --existing-branches <csv> [--site-base <path>] [--catalog-path <path>] [--manifest-path <path>] [--docs-dir <path>] [--github-output <path>]',
+      'Usage: node release-policy/node.js deploy-branch <currentBranch> (--canonical-branch <branch> --deployable-branches <csv>|--registry-source <path|json>) --existing-branches <csv> [--site-base <path>] [--catalog-path <path>] [--manifest-path <path>] [--docs-dir <path>] [--github-output <path>]',
     );
   }
 
-  const registrySource = requireNonEmptyString(
-    options['registry-source'],
-    'registry-source',
+  const canonicalBranch = options['canonical-branch'];
+  const deployableBranches = parseOptionalArrayArgument(
+    options['deployable-branches'],
+    'deployable-branches',
   );
+  const registrySource = options['registry-source'];
   const existingBranches = parseOptionalArrayArgument(
     options['existing-branches'],
     'existing-branches',
@@ -404,6 +427,8 @@ const deployBranchCli = (args, {stdout = process.stdout} = {}) => {
     docsPaths: shouldPrepareArtifacts
       ? collectDocsPaths(options['docs-dir'])
       : undefined,
+    canonicalBranch,
+    deployableBranches,
     registrySource,
   });
 
@@ -431,10 +456,12 @@ const redeployAllCli = (args, {stdout = process.stdout} = {}) => {
   const {
     options,
   } = parseArgs(args);
-  const registrySource = requireNonEmptyString(
-    options['registry-source'],
-    'registry-source',
+  const canonicalBranch = options['canonical-branch'];
+  const deployableBranches = parseOptionalArrayArgument(
+    options['deployable-branches'],
+    'deployable-branches',
   );
+  const registrySource = options['registry-source'];
   const existingBranches = parseOptionalArrayArgument(
     options['existing-branches'],
     'existing-branches',
@@ -446,6 +473,8 @@ const redeployAllCli = (args, {stdout = process.stdout} = {}) => {
 
   const result = redeployAll({
     existingBranches,
+    canonicalBranch,
+    deployableBranches,
     registrySource,
   });
 

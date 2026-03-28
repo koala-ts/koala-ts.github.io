@@ -20,7 +20,6 @@ test('the node cli deploy-branch command updates deployment artifacts', () => {
   const docsDir = join(tempDir, 'docs');
   const catalogPath = join(tempDir, 'versions.json');
   const manifestPath = join(tempDir, 'doc-paths.json');
-  const registryPath = join(tempDir, 'release-registry.json');
 
   mkdirSync(join(docsDir, 'overview'), {recursive: true});
   writeFileSync(join(docsDir, 'overview', 'intro.md'), '# Intro\n');
@@ -29,13 +28,6 @@ test('the node cli deploy-branch command updates deployment artifacts', () => {
     manifestPath,
     `${JSON.stringify({'2.x': ['overview/intro']}, null, 2)}\n`,
   );
-  writeFileSync(
-    registryPath,
-    `${JSON.stringify({
-      defaultBranch: '2.x',
-      deployableBranches: ['1.x', '2.x', 'main'],
-    })}\n`,
-  );
 
   const output = execFileSync(
     process.execPath,
@@ -43,8 +35,10 @@ test('the node cli deploy-branch command updates deployment artifacts', () => {
       'release-policy/node.js',
       'deploy-branch',
       '1.x',
-      '--registry-source',
-      registryPath,
+      '--canonical-branch',
+      '2.x',
+      '--deployable-branches',
+      '1.x,2.x,main',
       '--existing-branches',
       '1.x,2.x,main',
       '--site-base',
@@ -76,24 +70,15 @@ test('the node cli deploy-branch command updates deployment artifacts', () => {
 });
 
 test('the node cli redeploy-all command returns configured branches in order', () => {
-  const tempDir = mkdtempSync(join(tmpdir(), 'release-policy-node-plan-'));
-  const registryPath = join(tempDir, 'release-registry.json');
-
-  writeFileSync(
-    registryPath,
-    `${JSON.stringify({
-      defaultBranch: '2.x',
-      deployableBranches: ['1.x', '2.x', 'main'],
-    })}\n`,
-  );
-
   const output = execFileSync(
     process.execPath,
     [
       'release-policy/node.js',
       'redeploy-all',
-      '--registry-source',
-      registryPath,
+      '--canonical-branch',
+      '2.x',
+      '--deployable-branches',
+      '1.x,2.x,main',
       '--existing-branches',
       '1.x,2.x,main',
     ],
