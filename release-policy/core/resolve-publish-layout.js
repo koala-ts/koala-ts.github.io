@@ -4,6 +4,9 @@ const {
   classifyDocsBranch,
 } = require('./classify-docs-branch');
 
+const buildVersionedBaseUrl = ({siteBase, docsRouteBasePath}) =>
+  normalizeBasePath(`${siteBase}${docsRouteBasePath}`);
+
 const resolvePublishLayout = ({
   currentBranch,
   defaultBranch,
@@ -21,17 +24,19 @@ const resolvePublishLayout = ({
   const isDefaultBranch =
     currentBranchClassification.versionSlug === defaultBranchClassification.versionSlug &&
     normalizedCurrentBranch === normalizedDefaultBranch;
-  const docsRouteBasePath = isDefaultBranch
-    ? 'docs'
-    : currentBranchClassification.docsRouteBasePath;
+  const docsRouteBasePath = isDefaultBranch ? 'docs' : '/';
+  const buildBaseUrl = isDefaultBranch
+    ? normalizedSiteBase
+    : buildVersionedBaseUrl({
+        siteBase: normalizedSiteBase,
+        docsRouteBasePath: currentBranchClassification.docsRouteBasePath,
+      });
 
   return {
-    buildBaseUrl: normalizedSiteBase,
+    buildBaseUrl,
     docsRouteBasePath,
     isDefaultBranch,
-    publishSourceDir: isDefaultBranch
-      ? 'build'
-      : `build/${docsRouteBasePath}`,
+    publishSourceDir: 'build',
     publishTargetDir: isDefaultBranch
       ? '.gh-pages'
       : currentBranchClassification.publishTargetDir,

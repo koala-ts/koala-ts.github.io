@@ -12,17 +12,28 @@ const buildSharedDocsManifestPath = ({docsSiteBase = '/'}) => {
   return `${homePath}docs/doc-paths.json`;
 };
 
+const buildCurrentDocsRoutePath = ({
+  docsRouteBasePath = 'docs',
+  docPath,
+}) => {
+  const normalizedDocsRouteBasePath = trimLeadingSlash(
+    normalizeBasePath(docsRouteBasePath),
+  );
+
+  return `/${normalizedDocsRouteBasePath}${trimLeadingSlash(docPath)}`;
+};
+
 const buildCurrentDocsContentPath = ({
   baseUrl = '/',
   docsRouteBasePath = 'docs',
   docPath,
 }) => {
   const normalizedBaseUrl = normalizeBasePath(baseUrl);
-  const normalizedDocsRouteBasePath = trimLeadingSlash(
-    normalizeBasePath(docsRouteBasePath),
+  const currentDocsRoutePath = trimLeadingSlash(
+    buildCurrentDocsRoutePath({docsRouteBasePath, docPath}),
   );
 
-  return `${normalizedBaseUrl}${normalizedDocsRouteBasePath}${trimLeadingSlash(docPath)}`;
+  return `${normalizedBaseUrl}${currentDocsRoutePath}`;
 };
 
 const buildCanonicalDocsRootPath = ({
@@ -64,5 +75,6 @@ module.exports = {
   buildCanonicalDocsRootPath,
   buildCanonicalHomePath,
   buildCurrentDocsContentPath,
+  buildCurrentDocsRoutePath,
   buildSharedDocsManifestPath,
 };

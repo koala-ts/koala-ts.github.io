@@ -8,6 +8,7 @@ const {
   buildCanonicalDocsRootPath,
   buildCanonicalHomePath,
   buildCurrentDocsContentPath,
+  buildCurrentDocsRoutePath,
   buildSharedDocsManifestPath,
 } = require('../release-policy/docusaurus/build-canonical-site-paths');
 
@@ -17,5 +18,6 @@ module.exports = {
   buildCanonicalDocsRootPath,
   buildCanonicalHomePath,
   buildCurrentDocsContentPath,
+  buildCurrentDocsRoutePath,
   buildSharedDocsManifestPath,
 };

@@ -51,6 +51,7 @@ The target state is a clear separation between pure release-policy logic, Docusa
 - `/docs` is the canonical docs URL of the current default branch.
 - `/docs/next` belongs to `main`.
 - `/docs/<version>` belongs to a non-default deployable release branch.
+- A non-default deployable branch must build as a site rooted at its published docs URL, so its `baseUrl` resolves to `/docs/<version>/` and its docs route base path resolves to `/`.
 - Deployable release branches must match `<number>.x`.
 - Deploying another branch always happens from workflows on the current default branch.
 - Operators must be able to deploy a selected branch and redeploy all deployable branches.

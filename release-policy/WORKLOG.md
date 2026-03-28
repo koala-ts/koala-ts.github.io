@@ -14,7 +14,7 @@ Keep [`PLAN.md`](./PLAN.md) focused on stable architectural rules. Keep this fil
 ## Status
 
 - State: in progress
-- Active branch for PR 5: `release-policy-github-pages-adapter`
+- Active branch for fix PR: `fix-versioned-docs-base-url`
 
 ## History
 
@@ -65,18 +65,27 @@ Keep [`PLAN.md`](./PLAN.md) focused on stable architectural rules. Keep this fil
 ### PR 5
 
 - Goal: move deployment helper logic behind `release-policy/github-pages` and make the `gh-pages-control` dependency explicitly transitional.
-- Status: in progress
+- Status: merged
 - Scope:
   - extract publish-layout, version-catalog, and docs-path manifest helpers into `release-policy/github-pages`
   - keep `scripts/*` as compatibility wrappers
   - make `gh-pages-control` removal an explicit migration requirement in the local release-policy documents
   - maintain and update existing tests while adding colocated adapter tests
 
+### Fix PR: Versioned Docs Base URL
+
+- Goal: restore the deployed non-default branch contract so versioned docs load assets, search, and mobile navigation from their versioned publish root.
+- Status: in progress
+- Scope:
+  - align `baseUrl`, `docsRouteBasePath`, and publish source/target rules for non-default branches
+  - update existing tests for the versioned-build contract
+  - add regression coverage for versioned branch publish paths
+  - record the path-contract guardrails in the local release-policy documents
+
 ## Next Steps
 
-- Finish and merge PR 5.
+- Finish and merge the versioned docs base-url fix PR.
 - For every later PR, fetch the remote default branch first and create the branch from that updated base.
 - Move additional pure release-policy logic into `release-policy/core`.
-- Remove workflow checkouts and script loading from `gh-pages-control`.
-- Remove separate-control-branch assumptions from the implementation without breaking the current working model.
+- Validate versioned branch deployments in production after path-policy changes before removing legacy checkpoints.
 - Validate the extracted design through real usage before porting it to another repository.
