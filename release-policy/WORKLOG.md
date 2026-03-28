@@ -14,7 +14,7 @@ Keep [`PLAN.md`](./PLAN.md) focused on stable architectural rules. Keep this fil
 ## Status
 
 - State: in progress
-- Active branch: `remove-scripts-directory`
+- Active branch: `release-policy-external-api`
 
 ## History
 
@@ -93,26 +93,38 @@ Keep [`PLAN.md`](./PLAN.md) focused on stable architectural rules. Keep this fil
 
 ### Public API PR
 
-- Goal: define a single public release-policy entrypoint with only `deployBranch` and `redeployAll` as public operations.
+- Goal: define an initial workflow-facing release-policy entrypoint for release operations.
 - Status: merged
 - Scope:
-  - add `release-policy/index.js` as the only intended public entrypoint
+  - add an initial workflow-facing release-policy entrypoint for release operations
   - keep `core`, `docusaurus`, and `github-pages` internal
   - add tests for the new public operations
   - migrate release workflows to the public entrypoint
   - remove obsolete repo-level release wrapper scripts
-  - document the narrowed public API in the local release-policy docs
+  - document the current release workflow entrypoint in the local release-policy docs
 
 ### Remove Scripts Directory PR
 
 - Goal: move the remaining Docusaurus/runtime behavior into `release-policy`, align the docs with the merged state, and remove `scripts/` entirely.
-- Status: in progress
+- Status: merged
 - Scope:
   - update stale release-policy and repository-level plans/instructions
   - add an internal Docusaurus integration entrypoint under `release-policy/docusaurus`
   - migrate Docusaurus/runtime consumers away from repo-level wrapper scripts
   - relocate remaining behavior and tests from `scripts/` into `release-policy`
   - remove the `scripts/` directory completely
+
+### External API Mapping PR
+
+- Goal: make the current externally used `release-policy` entrypoints explicit without changing responsibilities or deciding the final public API.
+- Status: in progress
+- Scope:
+  - introduce [`node.js`](./node.js) as the Node-side external entrypoint
+  - introduce [`browser.js`](./browser.js) as the browser-side external entrypoint
+  - route workflow and Docusaurus config/runtime consumers through [`node.js`](./node.js)
+  - route browser consumers through [`browser.js`](./browser.js)
+  - keep all other internal modules private
+  - update plans and instructions to distinguish current external entrypoints from private internals
 
 ## Completed Checkpoint
 
@@ -123,8 +135,9 @@ Keep [`PLAN.md`](./PLAN.md) focused on stable architectural rules. Keep this fil
 
 ## Next Steps
 
-- Finish and merge the scripts-removal PR.
+- Finish and merge the external API mapping PR.
 - For every later PR, fetch the remote default branch first and create the branch from that updated base.
 - Keep the repository limited to configuration, content, workflow YAML, and release data outside `release-policy`.
+- Reduce the transitional external entrypoint surface deliberately later, after the current dependency map is explicit.
 - Keep repository-level docs aligned with the release-policy module when architecture checkpoints are completed.
 - Validate the extracted design through real usage before porting it to another repository.

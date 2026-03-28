@@ -1,7 +1,26 @@
 const {appendFileSync, existsSync, readFileSync, writeFileSync} = require('node:fs');
 const {
-  loadReleaseRegistry,
-} = require('./github-pages/release-registry');
+  buildAbsoluteSiteUrl,
+  buildCanonicalDocsContentPath,
+  buildCanonicalDocsRootPath,
+  buildCanonicalHomePath,
+  buildCurrentDocsContentPath,
+  buildCurrentDocsRoutePath,
+  buildSharedDocsManifestPath,
+  buildVersionNavbarItems,
+  LOCAL_PREVIEW_MODE,
+  PUBLISH_SIMULATION_MODE,
+  parseDocsVersions,
+  requireEnvValue,
+  resolveBranchRuntime,
+  resolveCurrentBranch,
+  resolveDocsRouteBasePath,
+  resolveDocsRuntime,
+  resolveGitBranch,
+  resolveLocalDocsEnv,
+  resolveRuntimeMode,
+} = require('./docusaurus/config');
+const {loadReleaseRegistry} = require('./github-pages/release-registry');
 const {
   resolvePublishContext,
 } = require('./github-pages/resolve-publish-context');
@@ -65,14 +84,6 @@ const parseOptionalArrayArgument = (value, name) => {
   return value.trim().startsWith('[')
     ? requireArray(parseOptionalJson(value, name), name)
     : parseOptionalCsv(value);
-};
-
-const parseOptionalObjectArgument = (value, name) => {
-  if (typeof value !== 'string') {
-    return null;
-  }
-
-  return requireObject(parseOptionalJson(value, name), name);
 };
 
 const parseArgs = (args) => {
@@ -359,7 +370,7 @@ const deployBranchCli = (args, {stdout = process.stdout} = {}) => {
 
   if (!currentBranch) {
     throw new Error(
-      'Usage: node release-policy/index.js deploy-branch <currentBranch> --registry-source <path|json> --existing-branches <csv> [--site-base <path>] [--catalog-path <path>] [--manifest-path <path>] [--docs-dir <path>] [--github-output <path>]',
+      'Usage: node release-policy/node.js deploy-branch <currentBranch> --registry-source <path|json> --existing-branches <csv> [--site-base <path>] [--catalog-path <path>] [--manifest-path <path>] [--docs-dir <path>] [--github-output <path>]',
     );
   }
 
@@ -461,7 +472,7 @@ const runCli = (args) => {
   }
 
   throw new Error(
-    'Usage: node release-policy/index.js <deploy-branch|redeploy-all> ...',
+    'Usage: node release-policy/node.js <deploy-branch|redeploy-all> ...',
   );
 };
 
@@ -470,6 +481,26 @@ if (require.main === module) {
 }
 
 module.exports = {
+  buildAbsoluteSiteUrl,
+  buildCanonicalDocsContentPath,
+  buildCanonicalDocsRootPath,
+  buildCanonicalHomePath,
+  buildCurrentDocsContentPath,
+  buildCurrentDocsRoutePath,
+  buildSharedDocsManifestPath,
+  buildVersionNavbarItems,
+  LOCAL_PREVIEW_MODE,
+  PUBLISH_SIMULATION_MODE,
   deployBranch,
+  parseDocsVersions,
   redeployAll,
+  requireEnvValue,
+  resolveBranchRuntime,
+  resolveCurrentBranch,
+  resolveDocsRouteBasePath,
+  resolveDocsRuntime,
+  resolveGitBranch,
+  resolveLocalDocsEnv,
+  resolveRuntimeMode,
+  runCli,
 };

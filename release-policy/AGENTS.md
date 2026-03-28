@@ -8,12 +8,14 @@
 
 ## Boundaries
 
-- [`index.js`](./index.js) is the only intended public entrypoint for this module.
-- Only `deployBranch` and `redeployAll` should be treated as public API.
+- The final long-term public API is intentionally undecided at this stage.
+- Current repository-facing external entrypoints are:
+  - [`node.js`](./node.js)
+  - [`browser.js`](./browser.js)
 - [`core`](./core) is reserved for pure release-policy functions.
 - [`docusaurus`](./docusaurus) is reserved for the Docusaurus adapter.
 - [`github-pages`](./github-pages) is reserved for the GitHub Pages adapter.
-- [`docusaurus/index.js`](./docusaurus/index.js) is the internal integration entrypoint for repository Docusaurus wiring and must not be treated as public package API.
+- Any other file under this module is private implementation detail unless it is explicitly listed above.
 
 ## Drift Prevention
 
@@ -25,6 +27,7 @@
 - For a non-default release build, asset and search paths must resolve from the versioned docs root rather than from the site root.
 - Pass required policy inputs explicitly. Do not hide policy decisions behind implicit defaults unless the fallback is a deliberate domain rule.
 - Do not add barrels in this module unless there is a documented justification.
+- Transitional external entrypoint files may re-export behavior when they exist only to make current external dependencies explicit during extraction.
 - Every source code file in this module must have a colocated unit test file.
 - Unit tests in this module must be isolated, must follow AAA, and must remain compatible with the CI test command.
 - Do not add tests for barrels. Test behavior-bearing source files instead.
@@ -35,9 +38,10 @@
 - Keep the current default branch as the target single source of truth for release policy and deployment orchestration.
 - Keep [`../release-registry.json`](../release-registry.json) as the centralized release-policy data source.
 - Keep deployment helpers and operator workflows on the current default branch. Do not reintroduce `gh-pages-control` or any similar control branch.
-- Do not expose internal helpers under `core`, `docusaurus`, or `github-pages` as repo-facing public API when the same behavior can be reached through [`index.js`](./index.js).
-- Prefer migrating release workflows to [`index.js`](./index.js) and deleting repo-level release wrapper scripts once they become redundant.
-- Prefer migrating repository Docusaurus wiring to [`docusaurus/index.js`](./docusaurus/index.js) and deleting repo-level runtime wrapper scripts once they become redundant.
+- Do not expose additional helpers under `core`, `docusaurus`, or `github-pages` as repo-facing API unless the change explicitly documents a new transitional external entrypoint.
+- When a function is consumed from outside `release-policy`, expose it through [`node.js`](./node.js) or [`browser.js`](./browser.js) according to the runtime that consumes it.
+- Prefer migrating release workflows to documented external entrypoints and deleting repo-level wrapper scripts once they become redundant.
+- Prefer migrating repository Docusaurus wiring to documented external entrypoints and deleting repo-level runtime wrapper scripts once they become redundant.
 - Keep shared system design, homepage ownership, navigation behavior, and deployment orchestration on the default branch.
 - Limit a non-default docs branch to its versioned documentation and the minimum code needed for that version to run locally.
 - Keep repository code outside `release-policy` limited to configuration, content, workflow YAML, and release data.

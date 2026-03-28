@@ -33,7 +33,8 @@
 - `release-registry.json` at the repository root is the authoritative release-policy data source.
 - Deployable docs branches must not become the source of truth for global release ownership.
 - Repository code outside `release-policy` should stay limited to configuration, content, workflow YAML, and release data.
-- Runtime helpers must require explicit branch inputs; branch discovery belongs only in the internal `release-policy/docusaurus` bootstrap adapter or CI/workflow env injection.
+- External consumers should go through [`release-policy/node.js`](./release-policy/node.js) or [`release-policy/browser.js`](./release-policy/browser.js), depending on the runtime they execute in.
+- Runtime helpers must require explicit branch inputs; branch discovery belongs only in the current Docusaurus config/runtime entrypoint under `release-policy/docusaurus` or CI/workflow env injection.
 - Manual operators should use:
   - `🚀 Deploy Selected Docs Branch` on the current default branch
   - `🚀 Deploy All Deployable Docs Branches` on the current default branch

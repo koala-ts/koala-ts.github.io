@@ -42,7 +42,7 @@ jobs:
         run: |
           REMOTE_BRANCHES=$(git ls-remote --heads origin | awk '{print $2}' | sed 's#refs/heads/##' | paste -sd ',' -)
 
-          node release-policy/index.js deploy-branch \
+          node release-policy/node.js deploy-branch \
             "${{ inputs.target_branch }}" \
             --registry-source "${RELEASE_REGISTRY_JSON}" \
             --existing-branches "${REMOTE_BRANCHES}" \
@@ -118,7 +118,7 @@ jobs:
           mkdir -p .gh-pages/docs
           REMOTE_BRANCHES=$(git ls-remote --heads origin | awk '{print $2}' | sed 's#refs/heads/##' | paste -sd ',' -)
 
-          node release-policy/index.js deploy-branch \
+          node release-policy/node.js deploy-branch \
             "${{ inputs.target_branch }}" \
             --registry-source "${RELEASE_REGISTRY_JSON}" \
             --existing-branches "${REMOTE_BRANCHES}" \

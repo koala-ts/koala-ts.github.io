@@ -7,10 +7,13 @@ The delivery history and next steps are tracked in [`WORKLOG.md`](./WORKLOG.md).
 
 ## Boundaries
 
-- [`index.js`](./index.js) is the only intended public entrypoint of this module.
-- The only intended public operations are `deployBranch` and `redeployAll`.
+- This module currently exposes a transitional external API for repository consumers.
+- The final long-term public API is intentionally deferred.
+- Current external entrypoints are:
+  - [`node.js`](./node.js) for all Node-side external usage, including workflows and Docusaurus config/runtime wiring
+  - [`browser.js`](./browser.js) for browser-safe external usage
 - [`core`](./core) will contain pure release-policy functions.
-- [`docusaurus`](./docusaurus) will contain the Docusaurus adapter and its internal repository integration entrypoint.
+- [`docusaurus`](./docusaurus) will contain the Docusaurus adapter.
 - [`github-pages`](./github-pages) will contain the GitHub Pages adapter.
 
 ## Ownership Model
@@ -25,15 +28,17 @@ The delivery history and next steps are tracked in [`WORKLOG.md`](./WORKLOG.md).
 - This directory relies on [`WORKLOG.md`](./WORKLOG.md) for the incremental action plan, completed steps, and next work.
 - Start each new PR branch from a freshly fetched current default branch.
 - The first pull request creates structure only. No behavior should be moved here yet.
-- The repository should consume this module through [`index.js`](./index.js), not by importing internal files directly.
-- The workflow entrypoint for release operations is [`index.js`](./index.js), not repo-level release wrapper scripts.
-- Repository Docusaurus wiring should consume the internal adapter surface from [`docusaurus/index.js`](./docusaurus/index.js), not from repo-level wrapper scripts.
+- Repository consumers should use only the documented external entrypoints and avoid importing private internal files directly.
+- The workflow entrypoint for release operations is [`node.js`](./node.js).
+- Docusaurus config/runtime wiring should consume [`node.js`](./node.js).
+- Browser-safe Docusaurus integrations should consume [`browser.js`](./browser.js).
 - Future implementation must preserve the separation between pure policy and adapters.
 - Production logic must not be added to the adapters when it belongs in `core`.
 - Production logic must not be added directly to repo-level workflows or Docusaurus bootstrap code when it belongs in this module.
 - Keep each release-policy rule authoritative in one core implementation and compose from it instead of duplicating the same rule in multiple core files.
 - Treat the versioned publish contract as one unit: `baseUrl`, `docsRouteBasePath`, and the publish target path must stay aligned for non-default branches.
 - Avoid barrels in this module unless there is a clear documented justification.
+- Transitional external entrypoint files may re-export behavior when they exist only to make current external dependencies explicit during extraction.
 - Every source code file in this module should be introduced together with a colocated unit test file.
 - Unit tests in this module should be isolated, follow AAA, and stay compatible with the repository CI test command.
 - Unit tests in this module should target behavior-bearing files rather than barrels.

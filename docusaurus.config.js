@@ -4,7 +4,7 @@ const {
   buildCurrentDocsRoutePath,
   resolveDocsRuntime,
   resolveLocalDocsEnv,
-} = require('./release-policy/docusaurus');
+} = require('./release-policy/node');
 const {versionFallbackDocPath} = require('./docs-site.config');
 const prismReact = require('prism-react-renderer');
 

@@ -63,7 +63,7 @@ DOCS_RUNTIME_MODE=publish-simulation DOCS_DEFAULT_BRANCH=<current-default-branch
 
 That keeps the injected default branch canonical at `/docs`. For a non-default release branch such as `1.x`, publish simulation would serve the docs under `/docs/1.x`.
 
-Runtime helpers require explicit `DOCS_CURRENT_BRANCH` and `DOCS_DEFAULT_BRANCH` inputs. The internal `release-policy/docusaurus` bootstrap adapter derives them from the checked out Git branch for regular local development, while CI and deployment workflows pass them explicitly.
+Runtime helpers require explicit `DOCS_CURRENT_BRANCH` and `DOCS_DEFAULT_BRANCH` inputs. The current Node-side entrypoint is [`release-policy/node.js`](./release-policy/node.js), which derives them from the checked out Git branch for regular local development, while CI and deployment workflows pass them explicitly.
 
 Build static files:
 
@@ -107,4 +107,4 @@ Internal orchestration details such as `registry_json` stay hidden from manual w
 Missing deployable branches are skipped without failing a republish-all run.
 
 The repository no longer uses or depends on a separate control branch for release policy or deployment scripts.
-The release workflow entrypoint is [`release-policy/index.js`](./release-policy/index.js). Repository code outside `release-policy` should stay limited to configuration, content, workflow YAML, and release data.
+The current external entrypoints are [`release-policy/node.js`](./release-policy/node.js) for Node-side consumers and [`release-policy/browser.js`](./release-policy/browser.js) for browser-side consumers. Repository code outside `release-policy` should stay limited to configuration, content, workflow YAML, and release data.
