@@ -25,4 +25,6 @@ The delivery history and next steps are tracked in [`WORKLOG.md`](./WORKLOG.md).
 - Future implementation must preserve the separation between pure policy and adapters.
 - Production logic must not be added to the adapters when it belongs in `core`.
 - Production logic must not be added directly to repo-level workflows or Docusaurus bootstrap code when it belongs in this module.
+- Every source code file in this module should be introduced together with a colocated unit test file.
+- Unit tests in this module should be isolated, follow AAA, and stay compatible with the repository CI test command.
 - The existing workflow model must keep working until the extraction plan is finished.

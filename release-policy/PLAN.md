@@ -20,6 +20,7 @@ The target state is a clear separation between pure release-policy logic, Docusa
 
 - [`core`](./core) will contain pure functions only.
 - Core logic must not depend on Docusaurus, GitHub Actions, shell scripts, the filesystem, or Git state.
+- Core logic must receive required inputs explicitly. Do not rely on hidden process state or convenience fallbacks unless a fallback is an intentional domain rule.
 - Core logic will own branch deployability, version slug resolution, canonical URL policy, publish layout policy, and republish planning.
 
 ### Docusaurus Adapter

@@ -1,16 +1,8 @@
 /**
- * Purpose: normalize base paths to `/path/` format for safe URL concatenation.
- * Usage: shared utility for docs/version URL composition helpers.
+ * Purpose: compatibility wrapper around the extracted release-policy core utility.
+ * Usage: retained so existing script imports keep working during extraction.
  */
-const normalizeBasePath = (value) => {
-  const trimmed = value.trim();
-  const withLeadingSlash = trimmed.startsWith('/') ? trimmed : `/${trimmed}`;
-  const withTrailingSlash = withLeadingSlash.endsWith('/')
-    ? withLeadingSlash
-    : `${withLeadingSlash}/`;
-
-  return withTrailingSlash.replace(/\/{2,}/g, '/');
-};
+const {normalizeBasePath} = require('../release-policy/core');
 
 module.exports = {
   normalizeBasePath,
