@@ -6,6 +6,7 @@ Target responsibility:
 
 - own GitHub-specific runtime glue for ordered redeploy of configured branches
 - call [`../../node.js`](../../node.js) for republish planning
-- replace [`.github/actions/redeploy-all-docs`](../../../.github/actions/redeploy-all-docs) once the workflows are switched
+- provide the active republish-all workflow action path once [`republish-all.yml`](../../../.github/workflows/republish-all.yml) is switched
+- keep the old [`.github/actions/redeploy-all-docs`](../../../.github/actions/redeploy-all-docs) copy only as cleanup debt until the final PR
 
-This PR only establishes the target location. It must not change workflow behavior yet.
+This PR moves republish-all to this location and reuses the relocated shared deploy script.

@@ -14,7 +14,7 @@ Keep [`PLAN.md`](./PLAN.md) focused on stable architectural rules. Keep this fil
 ## Status
 
 - State: in progress
-- Active branch: `relocate-deploy-action`
+- Active branch: `relocate-redeploy-action`
 
 ## History
 
@@ -178,17 +178,22 @@ Keep [`PLAN.md`](./PLAN.md) focused on stable architectural rules. Keep this fil
 ### Deploy Action Relocation PR
 
 - Goal: move the single-branch deploy action under `release-policy/github-actions`.
-- Status: in progress
+- Status: merged
 - Scope:
   - activate [`github-actions/deploy-docs-branch`](./github-actions/deploy-docs-branch)
   - move the shared selected-branch deploy script under [`github-actions/shared`](./github-actions/shared)
   - switch [`../.github/workflows/publish-branch.yml`](../.github/workflows/publish-branch.yml) to the relocated action path
   - keep republish-all on the old `.github/actions` path for one more PR
 
-### Planned Follow-up PR 3
+### Redeploy Action Relocation PR
 
 - Goal: move the redeploy-all action and shared scripts under `release-policy/github-actions`.
-- Status: planned
+- Status: in progress
+- Scope:
+  - activate [`github-actions/redeploy-all-docs`](./github-actions/redeploy-all-docs)
+  - switch [`../.github/workflows/republish-all.yml`](../.github/workflows/republish-all.yml) to the relocated action path
+  - reuse the relocated shared script under [`github-actions/shared`](./github-actions/shared)
+  - leave `.github/actions` in place only for the final cleanup PR
 
 ### Planned Follow-up PR 4
 
@@ -204,8 +209,7 @@ Keep [`PLAN.md`](./PLAN.md) focused on stable architectural rules. Keep this fil
 
 ## Next Steps
 
-- Finish and merge the deploy action relocation PR.
-- Then move `redeploy-all-docs` and the shared script under `release-policy/github-actions`.
+- Finish and merge the redeploy action relocation PR.
 - Then delete `.github/actions`.
 - For every later PR, fetch the remote default branch first and create the branch from that updated base.
 - Keep the repository limited to configuration, content, workflow YAML, and release data outside `release-policy`.
