@@ -9,7 +9,10 @@ permissions:
 
 jobs:
   publish:
-    uses: ./.github/workflows/publish-branch-runner.yml
-    with:
-      target_branch: ${{ github.ref_name }}
-    secrets: inherit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy selected docs branch
+        uses: ./.github/actions/deploy-docs-branch
+        with:
+          target_branch: ${{ github.ref_name }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
