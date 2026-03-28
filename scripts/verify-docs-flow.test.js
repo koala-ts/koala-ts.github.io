@@ -5,7 +5,10 @@ const {resolvePublishLayout} = require('./resolve-publish-layout');
 const {resolveDefaultBranch} = require('./resolve-default-branch');
 
 test('default branch scenario publishes root site and /docs content', () => {
-  const defaultBranch = resolveDefaultBranch();
+  const defaultBranch = resolveDefaultBranch({
+    DOCS_CURRENT_BRANCH: '2.x',
+    DOCS_DEFAULT_BRANCH: '2.x',
+  });
 
   assert.deepEqual(
     resolvePublishLayout({
@@ -26,7 +29,10 @@ test('default branch scenario publishes root site and /docs content', () => {
 });
 
 test('main scenario publishes only versioned docs under /docs/next', () => {
-  const defaultBranch = resolveDefaultBranch();
+  const defaultBranch = resolveDefaultBranch({
+    DOCS_CURRENT_BRANCH: '2.x',
+    DOCS_DEFAULT_BRANCH: '2.x',
+  });
 
   assert.deepEqual(
     resolvePublishLayout({

@@ -53,7 +53,7 @@ Run the docs locally:
 npm run start
 ```
 
-By default, local development uses local preview mode, so the checked out branch stays canonical locally and the docs are served at `/docs`.
+Local development uses the checked out Git branch as both `DOCS_CURRENT_BRANCH` and `DOCS_DEFAULT_BRANCH`, so the current branch stays canonical locally and the docs are served at `/docs`.
 
 To simulate published routing from the centralized release registry, use publish simulation mode:
 
@@ -61,7 +61,9 @@ To simulate published routing from the centralized release registry, use publish
 DOCS_RUNTIME_MODE=publish-simulation DOCS_DEFAULT_BRANCH=<current-default-branch> npm run start
 ```
 
-That keeps the current default branch canonical at `/docs`. For a non-default release branch such as `1.x`, publish simulation would serve the docs under `/docs/1.x`.
+That keeps the injected default branch canonical at `/docs`. For a non-default release branch such as `1.x`, publish simulation would serve the docs under `/docs/1.x`.
+
+Runtime helpers require explicit `DOCS_CURRENT_BRANCH` and `DOCS_DEFAULT_BRANCH` inputs. Local Docusaurus bootstrapping derives them from the checked out Git branch for regular local development, while CI and deployment workflows pass them explicitly.
 
 Build static files:
 

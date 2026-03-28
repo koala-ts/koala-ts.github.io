@@ -10,7 +10,7 @@
     "clear": "docusaurus clear",
     "test": "node --test \"scripts/**/*.test.js\"",
     "lint": "markdownlint \"README.md\" \"docs/**/*.md\"",
-    "validate": "npm run lint && npm run build"
+    "validate": "npm run lint && npm run test && npm run build"
   },
   "dependencies": {
     "@docusaurus/core": "^3.9.2",
