@@ -1,0 +1,23 @@
+name: Deploy Docs Branch
+description: >
+  Transitional skeleton for the single-branch docs deployment action after it is
+  relocated under release-policy/github-actions.
+
+inputs:
+  target_branch:
+    description: Branch to deploy
+    required: false
+  registry_json:
+    description: Optional registry payload override for internal orchestration
+    required: false
+  github_token:
+    description: Token used to clone and push the gh-pages branch
+    required: false
+
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      run: |
+        echo "This is a relocation scaffold only."
+        echo "The active deploy action still lives under .github/actions."

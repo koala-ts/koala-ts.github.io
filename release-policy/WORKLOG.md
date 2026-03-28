@@ -14,7 +14,7 @@ Keep [`PLAN.md`](./PLAN.md) focused on stable architectural rules. Keep this fil
 ## Status
 
 - State: in progress
-- Active branch: `remove-internal-workflows`
+- Active branch: `github-actions-relocation-skeleton`
 
 ## History
 
@@ -159,12 +159,36 @@ Keep [`PLAN.md`](./PLAN.md) focused on stable architectural rules. Keep this fil
 ### Internal Workflow Removal PR
 
 - Goal: remove the internal reusable workflows after both local actions are proven.
-- Status: in progress
+- Status: merged
 - Scope:
   - delete [`../.github/workflows/publish-branch-runner.yml`](../.github/workflows/publish-branch-runner.yml)
   - delete [`../.github/workflows/publish-branch-internal.yml`](../.github/workflows/publish-branch-internal.yml)
   - update plans and instructions from transitional wording to the completed local-action boundary
   - verify the remaining top-level workflows still deploy correctly
+
+### GitHub Action Relocation Skeleton PR
+
+- Goal: document the relocation target and add `release-policy/github-actions` skeletons without changing workflow behavior.
+- Status: in progress
+- Scope:
+  - add skeletons under [`github-actions`](./github-actions)
+  - document the four-PR relocation sequence
+  - keep `.github/actions` active during this first step
+
+### Planned Follow-up PR 2
+
+- Goal: move the single-branch deploy action under `release-policy/github-actions`.
+- Status: planned
+
+### Planned Follow-up PR 3
+
+- Goal: move the redeploy-all action and shared scripts under `release-policy/github-actions`.
+- Status: planned
+
+### Planned Follow-up PR 4
+
+- Goal: remove the transitional `.github/actions` copies after both workflow paths are proven.
+- Status: planned
 
 ## Completed Checkpoint
 
@@ -175,7 +199,10 @@ Keep [`PLAN.md`](./PLAN.md) focused on stable architectural rules. Keep this fil
 
 ## Next Steps
 
-- Finish and merge the internal workflow removal PR.
+- Finish and merge the GitHub Action Relocation Skeleton PR.
+- Then move `deploy-docs-branch` under `release-policy/github-actions`.
+- Then move `redeploy-all-docs` and the shared script under `release-policy/github-actions`.
+- Then delete `.github/actions`.
 - For every later PR, fetch the remote default branch first and create the branch from that updated base.
 - Keep the repository limited to configuration, content, workflow YAML, and release data outside `release-policy`.
 - Reduce the transitional external entrypoint surface deliberately later, after the workflow/action boundary is simplified and explicit.

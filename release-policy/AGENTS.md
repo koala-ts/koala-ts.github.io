@@ -15,7 +15,7 @@
 - [`core`](./core) is reserved for pure release-policy functions.
 - [`docusaurus`](./docusaurus) is reserved for the Docusaurus adapter.
 - [`github-pages`](./github-pages) is reserved for the GitHub Pages adapter.
-- GitHub-specific runtime glue belongs in local actions under [`../.github/actions`](../.github/actions), not in this module.
+- [`github-actions`](./github-actions) is reserved for GitHub Actions-specific wrappers and shared scripts that travel with the release-policy tree.
 - Any other file under this module is private implementation detail unless it is explicitly listed above.
 
 ## Drift Prevention
@@ -45,9 +45,10 @@
   - [`../.github/workflows/ci.yml`](../.github/workflows/ci.yml)
   - [`../.github/workflows/publish-branch.yml`](../.github/workflows/publish-branch.yml)
   - [`../.github/workflows/republish-all.yml`](../.github/workflows/republish-all.yml)
-- Use local actions for GitHub runtime mechanics:
-  - [`../.github/actions/deploy-docs-branch`](../.github/actions/deploy-docs-branch)
-  - [`../.github/actions/redeploy-all-docs`](../.github/actions/redeploy-all-docs)
+- Use local actions for GitHub runtime mechanics under:
+  - [`github-actions/deploy-docs-branch`](./github-actions/deploy-docs-branch)
+  - [`github-actions/redeploy-all-docs`](./github-actions/redeploy-all-docs)
+- During the relocation, keep `.github/actions` as transitional packaging only and remove it once workflows point at the new paths.
 - Keep workflow YAML thin. Put triggers, permissions, concurrency, and top-level wiring there; keep checkout/build/publish mechanics in local actions.
 - Prefer migrating release workflows to documented external entrypoints and deleting repo-level wrapper scripts once they become redundant.
 - Prefer migrating repository Docusaurus wiring to documented external entrypoints and deleting repo-level runtime wrapper scripts once they become redundant.
@@ -64,4 +65,4 @@
 - Before creating a new PR branch, fetch the remote and create the branch from the latest state of the current default branch.
 - Update [`WORKLOG.md`](./WORKLOG.md) when a PR changes status, scope, history, or next steps.
 - Avoid mixing skeleton work, behavior moves, and workflow rewrites in the same PR unless the recorded work plan explicitly calls for it.
-- Treat the local-action workflow boundary as complete unless the worklog intentionally records a new migration.
+- For the current GitHub action relocation, follow the recorded four-PR sequence exactly unless the worklog is intentionally revised first.
