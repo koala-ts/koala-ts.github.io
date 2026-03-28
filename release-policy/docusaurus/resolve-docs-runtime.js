@@ -1,7 +1,7 @@
 const {classifyDocsBranch} = require('../core/classify-docs-branch');
-const {parseDocsVersions} = require('../../scripts/parse-docs-versions');
-const {resolveBranchRuntime} = require('../../scripts/resolve-branch-runtime');
-const {resolveVersionSlug} = require('../../scripts/resolve-version-slug');
+const {resolveVersionSlug} = require('../core/resolve-version-slug');
+const {parseDocsVersions} = require('./parse-docs-versions');
+const {resolveBranchRuntime} = require('./resolve-branch-runtime');
 
 const resolveDocsRouteBasePath = ({
   currentBranch,

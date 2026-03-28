@@ -32,8 +32,8 @@
 - The current default branch owns release policy, registry data, deploy helpers, and the dispatchable workflows used by GitHub Actions.
 - `release-registry.json` at the repository root is the authoritative release-policy data source.
 - Deployable docs branches must not become the source of truth for global release ownership.
-- Branch-local scripts should stay limited to what is necessary for local development and branch builds.
-- Runtime helpers must require explicit branch inputs; branch discovery belongs only in the local bootstrap adapter or CI/workflow env injection.
+- Repository code outside `release-policy` should stay limited to configuration, content, workflow YAML, and release data.
+- Runtime helpers must require explicit branch inputs; branch discovery belongs only in the internal `release-policy/docusaurus` bootstrap adapter or CI/workflow env injection.
 - Manual operators should use:
   - `🚀 Deploy Selected Docs Branch` on the current default branch
   - `🚀 Deploy All Deployable Docs Branches` on the current default branch

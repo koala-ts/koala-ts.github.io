@@ -1,7 +1,3 @@
-/**
- * Purpose: resolve the current branch and default branch from runtime inputs.
- * Usage: imported by docs/runtime helpers so local and CI builds share one branch model.
- */
 const LOCAL_PREVIEW_MODE = 'local-preview';
 const PUBLISH_SIMULATION_MODE = 'publish-simulation';
 

@@ -1,9 +1,7 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 
-const {
-  PUBLISH_SIMULATION_MODE,
-} = require('./resolve-branch-runtime');
+const {PUBLISH_SIMULATION_MODE} = require('./resolve-branch-runtime');
 const {resolveLocalDocsEnv} = require('./resolve-local-docs-env');
 
 test('uses the configured default branch when provided', () => {

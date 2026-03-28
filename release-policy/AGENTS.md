@@ -13,6 +13,7 @@
 - [`core`](./core) is reserved for pure release-policy functions.
 - [`docusaurus`](./docusaurus) is reserved for the Docusaurus adapter.
 - [`github-pages`](./github-pages) is reserved for the GitHub Pages adapter.
+- [`docusaurus/index.js`](./docusaurus/index.js) is the internal integration entrypoint for repository Docusaurus wiring and must not be treated as public package API.
 
 ## Drift Prevention
 
@@ -36,8 +37,10 @@
 - Keep deployment helpers and operator workflows on the current default branch. Do not reintroduce `gh-pages-control` or any similar control branch.
 - Do not expose internal helpers under `core`, `docusaurus`, or `github-pages` as repo-facing public API when the same behavior can be reached through [`index.js`](./index.js).
 - Prefer migrating release workflows to [`index.js`](./index.js) and deleting repo-level release wrapper scripts once they become redundant.
+- Prefer migrating repository Docusaurus wiring to [`docusaurus/index.js`](./docusaurus/index.js) and deleting repo-level runtime wrapper scripts once they become redundant.
 - Keep shared system design, homepage ownership, navigation behavior, and deployment orchestration on the default branch.
 - Limit a non-default docs branch to its versioned documentation and the minimum code needed for that version to run locally.
+- Keep repository code outside `release-policy` limited to configuration, content, workflow YAML, and release data.
 - Preserve the existing working publish model until the extraction plan is complete. Do not break current behavior in the name of cleanup.
 - Keep the design compatible with a future major release branch taking over as the default branch and inheriting the same shared responsibilities.
 

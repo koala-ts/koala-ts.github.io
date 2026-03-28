@@ -1,5 +1,10 @@
-const {resolveDocsRuntime} = require('./scripts/resolve-docs-runtime');
-const {resolveLocalDocsEnv} = require('./scripts/resolve-local-docs-env');
+const {
+  buildAbsoluteSiteUrl,
+  buildCanonicalHomePath,
+  buildCurrentDocsRoutePath,
+  resolveDocsRuntime,
+  resolveLocalDocsEnv,
+} = require('./release-policy/docusaurus');
 const {versionFallbackDocPath} = require('./docs-site.config');
 const prismReact = require('prism-react-renderer');
 
@@ -17,12 +22,6 @@ const {
   isDefaultBranch,
   versions,
 } = resolveDocsRuntime(runtimeEnv);
-const {
-  buildAbsoluteSiteUrl,
-  buildCanonicalHomePath,
-  buildCurrentDocsRoutePath,
-} = require('./scripts/build-canonical-site-paths');
-
 const homePath = isDefaultBranch ? buildCanonicalHomePath({docsSiteBase}) : baseUrl;
 const docsIntroPath = buildCurrentDocsRoutePath({
   docsRouteBasePath,
