@@ -36,10 +36,15 @@
 - Release branches in this module must follow `<number>.x`.
 - Do not add implementation here that reintroduces a separate control branch model.
 - Keep the current default branch as the target single source of truth for release policy and deployment orchestration.
-- Keep [`../release-registry.json`](../release-registry.json) as the centralized release-policy data source.
+- Prefer explicit workflow -> action -> JS inputs for release-policy configuration over filesystem config discovery.
 - Keep deployment helpers and operator workflows on the current default branch. Do not reintroduce `gh-pages-control` or any similar control branch.
 - Do not expose additional helpers under `core`, `docusaurus`, or `github-pages` as repo-facing API unless the change explicitly documents a new transitional external entrypoint.
 - When a function is consumed from outside `release-policy`, expose it through [`node.js`](./node.js) or [`browser.js`](./browser.js) according to the runtime that consumes it.
+- For GitHub release operations, prefer this explicit config contract:
+  - `site_base`
+  - `canonical_branch`
+  - `deployable_branches`
+  - `target_branch` for single-branch deploy
 - Keep the final top-level workflow set limited to:
   - [`../.github/workflows/ci.yml`](../.github/workflows/ci.yml)
   - [`../.github/workflows/publish-branch.yml`](../.github/workflows/publish-branch.yml)

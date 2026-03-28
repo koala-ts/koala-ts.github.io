@@ -21,6 +21,10 @@ json_value() {
 }
 
 resolve_site_base() {
+  if [ -n "${SITE_BASE:-}" ]; then
+    return
+  fi
+
   if [ -f .gh-pages/CNAME ]; then
     DOMAIN=$(head -n 1 .gh-pages/CNAME | tr -d '[:space:]')
     SITE_URL="https://${DOMAIN}"
@@ -40,8 +44,27 @@ resolve_site_base() {
   fi
 }
 
+build_release_registry_json() {
+  RELEASE_REGISTRY_JSON=$(
+    node -e '
+      const canonicalBranch = process.env.CANONICAL_BRANCH;
+      const deployableBranches = (process.env.DEPLOYABLE_BRANCHES || canonicalBranch)
+        .split(",")
+        .map((entry) => entry.trim())
+        .filter(Boolean);
+
+      process.stdout.write(
+        JSON.stringify({
+          defaultBranch: canonicalBranch,
+          deployableBranches,
+        }),
+      );
+    '
+  )
+}
+
 TARGET_BRANCH=${TARGET_BRANCH:?TARGET_BRANCH is required}
-RELEASE_REGISTRY_JSON=${RELEASE_REGISTRY_JSON:-release-registry.json}
+CANONICAL_BRANCH=${CANONICAL_BRANCH:?CANONICAL_BRANCH is required}
 GITHUB_TOKEN=${GITHUB_TOKEN:?GITHUB_TOKEN is required}
 WRITE_GITHUB_OUTPUT=${WRITE_GITHUB_OUTPUT:-true}
 
@@ -50,6 +73,8 @@ GITHUB_OUTPUT_ARGS=()
 if [ "${WRITE_GITHUB_OUTPUT}" = "true" ] && [ -n "${GITHUB_OUTPUT:-}" ]; then
   GITHUB_OUTPUT_ARGS=(--github-output "${GITHUB_OUTPUT}")
 fi
+
+build_release_registry_json
 
 REMOTE_BRANCHES=$(git ls-remote --heads origin | awk '{print $2}' | sed 's#refs/heads/##' | paste -sd ',' -)
 

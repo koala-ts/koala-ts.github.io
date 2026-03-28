@@ -28,6 +28,11 @@ The architecture is defined in [`PLAN.md`](./PLAN.md).
 - Start each new PR branch from a freshly fetched current default branch.
 - Repository consumers should use only the documented external entrypoints and avoid importing private internal files directly.
 - The workflow entrypoint for release operations is [`node.js`](./node.js).
+- Current workflow-to-action release-policy config is passed explicitly as:
+  - `site_base`
+  - `canonical_branch`
+  - `deployable_branches`
+  - `target_branch` for single-branch deploy
 - Docusaurus config/runtime wiring should consume [`node.js`](./node.js).
 - Browser-safe Docusaurus integrations should consume [`browser.js`](./browser.js).
 - Keep the top-level workflow set limited to:

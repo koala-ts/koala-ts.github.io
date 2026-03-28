@@ -2,12 +2,18 @@ name: Deploy Docs Branch
 description: Deploy one docs branch to gh-pages using the local release policy.
 
 inputs:
+  site_base:
+    description: GitHub Pages site base path
+    required: false
+  canonical_branch:
+    description: Branch that owns the canonical homepage and docs URLs
+    required: false
+  deployable_branches:
+    description: Comma-separated deployable branches in publish order
+    required: false
   target_branch:
     description: Branch to deploy
     required: true
-  registry_json:
-    description: Optional registry payload override for internal orchestration
-    required: false
   github_token:
     description: Token used to clone and push the gh-pages branch
     required: true
@@ -23,7 +29,9 @@ runs:
     - name: Deploy docs branch
       shell: bash
       env:
-        RELEASE_REGISTRY_JSON: ${{ inputs.registry_json || 'release-registry.json' }}
+        SITE_BASE: ${{ inputs.site_base || '/' }}
+        CANONICAL_BRANCH: ${{ inputs.canonical_branch || github.event.repository.default_branch }}
+        DEPLOYABLE_BRANCHES: ${{ inputs.deployable_branches || inputs.canonical_branch || github.event.repository.default_branch }}
         TARGET_BRANCH: ${{ inputs.target_branch }}
         GITHUB_TOKEN: ${{ inputs.github_token }}
         WRITE_GITHUB_OUTPUT: 'true'
