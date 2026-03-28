@@ -11,6 +11,11 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout workflow branch
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
       - name: Deploy selected docs branch
         uses: ./.github/actions/deploy-docs-branch
         with:
