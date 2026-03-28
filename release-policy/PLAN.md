@@ -52,12 +52,9 @@ The target state is a clear separation between pure release-policy logic, Docusa
   - [`../.github/workflows/publish-branch.yml`](../.github/workflows/publish-branch.yml)
   - [`../.github/workflows/republish-all.yml`](../.github/workflows/republish-all.yml)
 - GitHub-specific runtime glue belongs in local actions under [`../.github/actions`](../.github/actions).
-- The target local actions are:
+- The local actions are:
   - [`../.github/actions/deploy-docs-branch`](../.github/actions/deploy-docs-branch)
   - [`../.github/actions/redeploy-all-docs`](../.github/actions/redeploy-all-docs)
-- Internal reusable workflows are transitional implementation detail and must be removed by the end of the migration:
-  - [`../.github/workflows/publish-branch-runner.yml`](../.github/workflows/publish-branch-runner.yml)
-  - [`../.github/workflows/publish-branch-internal.yml`](../.github/workflows/publish-branch-internal.yml)
 - Top-level workflow YAML should keep only triggers, permissions, concurrency, and thin configuration wiring.
 - Local actions should own GitHub runtime mechanics such as checkout sequencing, workspace preparation, build execution, publish copying, and commit/push behavior.
 - `release-policy/node.js` should remain responsible for deploy computation and policy decisions rather than GitHub metadata structure.
@@ -82,13 +79,13 @@ The target state is a clear separation between pure release-policy logic, Docusa
 - The current workflow model must remain functional during the extraction. Transitional refactors must preserve the existing publishing behavior until the plan is complete.
 - Promoting a new default branch must transfer homepage ownership, canonical `/docs` ownership, shared navigation ownership, and deployment orchestration without changing the overall model.
 
-## Recorded Migration Sequence
+## Completed Workflow Simplification
 
-The GitHub workflow simplification should land in four incremental PRs:
+The GitHub workflow simplification is complete:
 
-1. add local action skeletons and document the final workflow/action boundary clearly
-2. migrate single-branch deploy from the reusable workflow runner into `deploy-docs-branch`
-3. migrate republish-all orchestration into `redeploy-all-docs`
-4. remove the internal reusable workflows once the local actions are proven
+1. local action skeletons were added and the end state was documented
+2. single-branch deploy moved into `deploy-docs-branch`
+3. republish-all orchestration moved into `redeploy-all-docs`
+4. the internal reusable workflows were removed after both local actions were proven
 
-Each step must start from the latest current default branch, preserve working deployments, and update the worklog and instructions to reflect the new state.
+Further work should treat that boundary as the baseline architecture.

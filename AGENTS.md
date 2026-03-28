@@ -39,8 +39,7 @@
   - [`ci.yml`](./.github/workflows/ci.yml)
   - [`publish-branch.yml`](./.github/workflows/publish-branch.yml)
   - [`republish-all.yml`](./.github/workflows/republish-all.yml)
-- GitHub-specific runtime glue should move into local actions under [`.github/actions`](./.github/actions).
-- Treat [`.github/workflows/publish-branch-runner.yml`](./.github/workflows/publish-branch-runner.yml) and [`.github/workflows/publish-branch-internal.yml`](./.github/workflows/publish-branch-internal.yml) as transitional implementation detail that will be removed by the current migration plan.
+- GitHub-specific runtime glue belongs in local actions under [`.github/actions`](./.github/actions).
 - Manual operators should use:
   - `🚀 Deploy Selected Docs Branch` on the current default branch
   - `🚀 Deploy All Deployable Docs Branches` on the current default branch

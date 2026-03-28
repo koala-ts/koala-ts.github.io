@@ -45,9 +45,6 @@
   - [`../.github/workflows/ci.yml`](../.github/workflows/ci.yml)
   - [`../.github/workflows/publish-branch.yml`](../.github/workflows/publish-branch.yml)
   - [`../.github/workflows/republish-all.yml`](../.github/workflows/republish-all.yml)
-- Treat internal reusable workflows as transitional implementation detail scheduled for removal:
-  - [`../.github/workflows/publish-branch-runner.yml`](../.github/workflows/publish-branch-runner.yml)
-  - [`../.github/workflows/publish-branch-internal.yml`](../.github/workflows/publish-branch-internal.yml)
 - Use local actions for GitHub runtime mechanics:
   - [`../.github/actions/deploy-docs-branch`](../.github/actions/deploy-docs-branch)
   - [`../.github/actions/redeploy-all-docs`](../.github/actions/redeploy-all-docs)
@@ -67,4 +64,4 @@
 - Before creating a new PR branch, fetch the remote and create the branch from the latest state of the current default branch.
 - Update [`WORKLOG.md`](./WORKLOG.md) when a PR changes status, scope, history, or next steps.
 - Avoid mixing skeleton work, behavior moves, and workflow rewrites in the same PR unless the recorded work plan explicitly calls for it.
-- For the current GitHub workflow simplification, follow the recorded four-PR sequence exactly unless the worklog is intentionally revised first.
+- Treat the local-action workflow boundary as complete unless the worklog intentionally records a new migration.
