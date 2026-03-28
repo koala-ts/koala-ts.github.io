@@ -14,7 +14,7 @@ Keep [`PLAN.md`](./PLAN.md) focused on stable architectural rules. Keep this fil
 ## Status
 
 - State: in progress
-- Active branch: `release-policy-external-api`
+- Active branch: `github-actions-local-skeleton`
 
 ## History
 
@@ -117,7 +117,7 @@ Keep [`PLAN.md`](./PLAN.md) focused on stable architectural rules. Keep this fil
 ### External API Mapping PR
 
 - Goal: make the current externally used `release-policy` entrypoints explicit without changing responsibilities or deciding the final public API.
-- Status: in progress
+- Status: merged
 - Scope:
   - introduce [`node.js`](./node.js) as the Node-side external entrypoint
   - introduce [`browser.js`](./browser.js) as the browser-side external entrypoint
@@ -125,6 +125,31 @@ Keep [`PLAN.md`](./PLAN.md) focused on stable architectural rules. Keep this fil
   - route browser consumers through [`browser.js`](./browser.js)
   - keep all other internal modules private
   - update plans and instructions to distinguish current external entrypoints from private internals
+
+### GitHub Action Skeleton PR
+
+- Goal: document the full workflow simplification target and add local action skeletons without changing workflow behavior.
+- Status: in progress
+- Scope:
+  - add local action skeletons under [`../.github/actions`](../.github/actions)
+  - document the final top-level workflow set
+  - document the planned removal of internal reusable workflows
+  - record the four-PR migration sequence for the GitHub workflow simplification
+
+### Planned Follow-up PR 2
+
+- Goal: migrate selected-branch deploy into the local deploy action.
+- Status: planned
+
+### Planned Follow-up PR 3
+
+- Goal: migrate redeploy-all orchestration into the local republish action.
+- Status: planned
+
+### Planned Follow-up PR 4
+
+- Goal: remove the internal reusable workflows after both local actions are proven.
+- Status: planned
 
 ## Completed Checkpoint
 
@@ -135,9 +160,12 @@ Keep [`PLAN.md`](./PLAN.md) focused on stable architectural rules. Keep this fil
 
 ## Next Steps
 
-- Finish and merge the external API mapping PR.
+- Finish and merge the GitHub Action Skeleton PR.
+- Then migrate single-branch deploy into `deploy-docs-branch`.
+- Then migrate redeploy-all into `redeploy-all-docs`.
+- Then delete `publish-branch-runner.yml` and `publish-branch-internal.yml`.
 - For every later PR, fetch the remote default branch first and create the branch from that updated base.
 - Keep the repository limited to configuration, content, workflow YAML, and release data outside `release-policy`.
-- Reduce the transitional external entrypoint surface deliberately later, after the current dependency map is explicit.
+- Reduce the transitional external entrypoint surface deliberately later, after the workflow/action boundary is simplified and explicit.
 - Keep repository-level docs aligned with the release-policy module when architecture checkpoints are completed.
 - Validate the extracted design through real usage before porting it to another repository.
