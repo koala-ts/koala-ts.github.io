@@ -14,7 +14,7 @@ Keep [`PLAN.md`](./PLAN.md) focused on stable architectural rules. Keep this fil
 ## Status
 
 - State: in progress
-- Active branch for PR 3: `release-policy-branch-policy`
+- Active branch for PR 4: `release-policy-docusaurus-runtime`
 
 ## History
 
@@ -45,18 +45,28 @@ Keep [`PLAN.md`](./PLAN.md) focused on stable architectural rules. Keep this fil
 ### PR 3
 
 - Goal: introduce explicit branch classification and deployability rules in `release-policy/core`.
-- Status: in progress
+- Status: merged
 - Scope:
   - classify `main`, `<number>.x`, and non-deployable branches
   - validate release-registry branch names against the new policy
   - maintain and update existing tests as policy changes, rather than only adding new ones
 
+### PR 4
+
+- Goal: move Docusaurus/runtime path and navigation policy behind `release-policy/docusaurus`.
+- Status: in progress
+- Scope:
+  - extract docs runtime resolution into `release-policy/docusaurus`
+  - extract canonical docs path builders into `release-policy/docusaurus`
+  - extract version navbar and version-switch helpers into `release-policy/docusaurus`
+  - keep `scripts/*` as compatibility wrappers
+  - maintain and update existing tests while adding colocated adapter tests
+
 ## Next Steps
 
-- Finish and merge PR 3.
+- Finish and merge PR 4.
 - For every later PR, fetch the remote default branch first and create the branch from that updated base.
 - Move additional pure release-policy logic into `release-policy/core`.
-- Move Docusaurus integration behind `release-policy/docusaurus`.
 - Move deployment orchestration helpers behind `release-policy/github-pages`.
 - Remove separate-control-branch assumptions from the implementation without breaking the current working model.
 - Validate the extracted design through real usage before porting it to another repository.
