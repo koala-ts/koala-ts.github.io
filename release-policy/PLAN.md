@@ -22,6 +22,7 @@ The target state is a clear separation between pure release-policy logic, Docusa
 - Core logic must not depend on Docusaurus, GitHub Actions, shell scripts, the filesystem, or Git state.
 - Core logic must receive required inputs explicitly. Do not rely on hidden process state or convenience fallbacks unless a fallback is an intentional domain rule.
 - Core logic will own branch deployability, version slug resolution, canonical URL policy, publish layout policy, and republish planning.
+- Core logic will classify branches explicitly: `main`, `<number>.x`, and non-deployable branches.
 
 ### Docusaurus Adapter
 
@@ -48,6 +49,7 @@ The target state is a clear separation between pure release-policy logic, Docusa
 - `/docs` is the canonical docs URL of the current default branch.
 - `/docs/next` belongs to `main`.
 - `/docs/<version>` belongs to a non-default deployable release branch.
+- Deployable release branches must match `<number>.x`.
 - Deploying another branch always happens from workflows on the current default branch.
 - Operators must be able to deploy a selected branch and redeploy all deployable branches.
 - The current workflow model must remain functional during the extraction. Transitional refactors must preserve the existing publishing behavior until the plan is complete.

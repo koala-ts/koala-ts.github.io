@@ -17,11 +17,14 @@
 - Do not place Docusaurus-specific logic in `core`.
 - Do not place GitHub Actions, shell, Git, or filesystem concerns in `core`.
 - Do not duplicate release-policy rules across adapters.
+- For each policy concept, keep one authoritative implementation in `core` and make other core functions consume it instead of re-deriving the same rule.
 - Pass required policy inputs explicitly. Do not hide policy decisions behind implicit defaults unless the fallback is a deliberate domain rule.
 - Do not add barrels in this module unless there is a documented justification.
 - Every source code file in this module must have a colocated unit test file.
 - Unit tests in this module must be isolated, must follow AAA, and must remain compatible with the CI test command.
 - Do not add tests for barrels. Test behavior-bearing source files instead.
+- Maintain existing tests when behavior changes. Update them when necessary instead of only appending new tests.
+- Release branches in this module must follow `<number>.x`.
 - Do not add implementation here that reintroduces a separate control branch model.
 - Keep the current default branch as the target single source of truth for release policy and deployment orchestration.
 - Keep [`../release-registry.json`](../release-registry.json) as the centralized release-policy data source.
