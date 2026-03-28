@@ -19,5 +19,8 @@ jobs:
       - name: Deploy selected docs branch
         uses: ./release-policy/github-actions/deploy-docs-branch
         with:
+          site_base: /
+          canonical_branch: ${{ github.event.repository.default_branch }}
+          deployable_branches: 1.x,2.x,main
           target_branch: ${{ github.ref_name }}
           github_token: ${{ secrets.GITHUB_TOKEN }}

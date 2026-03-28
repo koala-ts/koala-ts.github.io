@@ -15,7 +15,7 @@ The repository targets this public URL model:
 
 Only one branch owns `/` and `/docs` at a time: the current default branch.
 
-The default branch is configured in the repository-root `release-registry.json` on the current default branch.
+The canonical branch is currently provided to release actions through workflow configuration.
 
 ## Version publishing model
 
@@ -83,7 +83,7 @@ Set GitHub Pages source to the `gh-pages` branch root.
 
 Docs publication is manual and controlled through operator workflows on the current default branch.
 
-The current default branch owns `release-registry.json`, the `release-policy` module, and the dispatchable workflows. Those workflows publish with these ownership rules:
+The current default branch owns the `release-policy` module and the dispatchable workflows. Those workflows publish with these ownership rules:
 
 - `/` and `/docs` from the current default branch
 - `/docs/next` from `main`
@@ -102,7 +102,7 @@ Available operator workflows on the current default branch:
 - `🚀 Deploy Selected Docs Branch` publishes the selected workflow branch with no manual inputs
 - `🚀 Deploy All Deployable Docs Branches` republishes all deployable branches in registry order
 
-Internal orchestration details such as `registry_json` stay hidden from manual workflow runs.
+Internal orchestration details such as the synthesized registry payload stay hidden from manual workflow runs.
 
 The target workflow structure keeps only these top-level workflows:
 
@@ -111,6 +111,13 @@ The target workflow structure keeps only these top-level workflows:
 - [`republish-all.yml`](./.github/workflows/republish-all.yml)
 
 GitHub-specific runtime glue lives under [`release-policy/github-actions`](./release-policy/github-actions), while release-policy computation stays in [`release-policy/node.js`](./release-policy/node.js).
+
+The workflow-to-action release-policy contract currently passes:
+
+- `site_base`
+- `canonical_branch`
+- `deployable_branches`
+- `target_branch` for single-branch deploy
 
 Missing deployable branches are skipped without failing a republish-all run.
 

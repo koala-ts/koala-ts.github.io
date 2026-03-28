@@ -12,7 +12,6 @@ The target state is a clear separation between pure release-policy logic, Docusa
 
 - The current default branch is the single source of truth for release policy and deployment orchestration.
 - The current default branch owns the system design, the homepage, the shared navigation model, and all repository-wide publishing behavior.
-- [`../release-registry.json`](../release-registry.json) lives at the repository root and is authoritative.
 - No dedicated control branch is allowed in this architecture.
 - The design must support a future major release becoming the new default branch and inheriting all default-branch responsibilities without redefining the architecture.
 
@@ -43,6 +42,12 @@ The target state is a clear separation between pure release-policy logic, Docusa
 - The default branch owns the operator workflows for deploying one selected branch or redeploying all declared branches.
 - Non-default branches provide buildable documentation content, but they do not own global deployment policy.
 - Workflows consume deployment helpers from this repository on the current default branch through [`node.js`](./node.js).
+- Workflow configuration should pass release-policy inputs through `with` into local actions, and local actions should pass explicit values into [`node.js`](./node.js).
+- The current configuration contract is:
+  - `site_base`
+  - `canonical_branch`
+  - `deployable_branches`
+  - `target_branch` for single-branch deploy
 
 ### GitHub Actions Boundary
 
