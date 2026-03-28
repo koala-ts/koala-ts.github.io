@@ -24,13 +24,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Checkout control branch
-        uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
-          ref: gh-pages-control
-          path: control
-
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
@@ -38,7 +31,6 @@ jobs:
 
       - name: Resolve release registry snapshot
         id: registry
-        working-directory: control
         run: |
           node scripts/resolve-release-registry-cli.js --github-output "$GITHUB_OUTPUT"
 
@@ -57,7 +49,7 @@ jobs:
             dispatched_at=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 
             gh workflow run publish-branch-internal.yml \
-              --ref 2.x \
+              --ref "${GITHUB_REF_NAME}" \
               -f target_branch="${branch}" \
               -f registry_json="${REGISTRY_JSON}"
 
