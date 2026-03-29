@@ -11,7 +11,7 @@ This branch is a non-default release branch.
 - `/docs/next` is owned by `main`
 - `/docs/1.x` is owned by this branch
 
-Release ownership is centralized on the current default branch through the `release-policy` workflows and GitHub actions.
+Release ownership is centralized on the current default branch through its workflows and GitHub actions.
 
 ## Local development
 
@@ -34,10 +34,10 @@ npm run start
 
 That keeps the checked out branch canonical locally and serves the docs under `/docs`.
 
-To simulate published routing from the centralized canonical-branch config, run with publish simulation inputs:
+To simulate published routing from the centralized canonical-branch config, inject the canonical branch explicitly:
 
 ```bash
-DOCS_RUNTIME_MODE=publish-simulation DOCS_DEFAULT_BRANCH=<current-default-branch> npm run start
+DOCS_DEFAULT_BRANCH=<current-default-branch> npm run start
 ```
 
 That serves this branch under `/docs/1.x`.
@@ -65,7 +65,7 @@ Publication is centralized and this branch remains deployable.
 The live deployment control plane is owned by the current default branch:
 
 - the current default branch owns the release-policy module and deploy workflows
-- this `1.x` branch owns only its versioned docs content and branch-local runtime/config
+- this `1.x` branch owns only its versioned docs content and explicit branch-local Docusaurus runtime/config
 
 Current deployment state:
 

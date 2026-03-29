@@ -12,7 +12,7 @@
 - Keep the public URL contract consistent between local development and GitHub Pages publication.
 - Local development supports two explicit modes:
   - local preview keeps the checked out branch canonical locally
-  - publish simulation uses an injected centralized default branch
+  - publish simulation uses an injected centralized default branch value
 - Treat `/` as the canonical homepage and `/docs` as the canonical docs URL for the current default branch.
 - Treat `/docs/next` as the canonical docs URL for `main`.
 - Treat `/docs/<version>` as the canonical docs URL for non-default release branches.
@@ -31,7 +31,7 @@
 
 - The current default branch owns release policy, deploy helpers, and the dispatchable workflows used by GitHub Actions.
 - Deployable docs branches must not become the source of truth for global release ownership.
-- Branch-local runtime code should stay limited to what is necessary for local development and branch builds.
+- Branch-local runtime code should stay limited to what is necessary for local development and branch builds, and it should prefer explicit branch-owned values over unnecessary dynamic helper layers.
 - Manual operators should use:
   - `🚀 Deploy Selected Docs Branch` on the current default branch
   - `🚀 Deploy All Deployable Docs Branches` on the current default branch
