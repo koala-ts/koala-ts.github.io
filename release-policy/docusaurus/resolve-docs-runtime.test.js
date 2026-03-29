@@ -1,11 +1,18 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
+const {execSync} = require('node:child_process');
 
 const {
   LOCAL_PREVIEW_MODE,
   PUBLISH_SIMULATION_MODE,
 } = require('./resolve-branch-runtime');
 const {resolveDocsRuntime} = require('./resolve-docs-runtime');
+
+const readCheckedOutBranch = () =>
+  execSync('git branch --show-current', {
+    encoding: 'utf8',
+    stdio: ['ignore', 'pipe', 'ignore'],
+  }).trim();
 
 test('includes resolved branch ownership and docs runtime inputs', () => {
   const runtime = resolveDocsRuntime({
@@ -32,18 +39,20 @@ test('includes resolved branch ownership and docs runtime inputs', () => {
 });
 
 test('defaults runtime values when docs environment is absent', () => {
+  const checkedOutBranch = readCheckedOutBranch();
+
   const runtime = resolveDocsRuntime({});
 
   assert.deepEqual(runtime, {
-    currentBranch: '1.x',
-    defaultBranch: '1.x',
+    currentBranch: checkedOutBranch,
+    defaultBranch: checkedOutBranch,
     isDefaultBranch: true,
-    versionSlug: '1.x',
+    versionSlug: checkedOutBranch,
     siteUrl: 'http://localhost:3000',
     baseUrl: '/',
     docsSiteBase: '/',
     docsRouteBasePath: 'docs',
-    versions: ['1.x'],
+    versions: [checkedOutBranch],
   });
 });
 
@@ -67,39 +76,43 @@ test('maps non-default branches to versioned docs route bases', () => {
 });
 
 test('uses the docs root in local preview mode for the checked out branch', () => {
+  const checkedOutBranch = readCheckedOutBranch();
+
   const runtime = resolveDocsRuntime({
     DOCS_RUNTIME_MODE: LOCAL_PREVIEW_MODE,
     DOCS_DEFAULT_BRANCH: '3.x',
   });
 
   assert.deepEqual(runtime, {
-    currentBranch: '1.x',
-    defaultBranch: '1.x',
+    currentBranch: checkedOutBranch,
+    defaultBranch: checkedOutBranch,
     isDefaultBranch: true,
-    versionSlug: '1.x',
+    versionSlug: checkedOutBranch,
     siteUrl: 'http://localhost:3000',
     baseUrl: '/',
     docsSiteBase: '/',
     docsRouteBasePath: 'docs',
-    versions: ['1.x'],
+    versions: [checkedOutBranch],
   });
 });
 
 test('uses the versioned docs path in publish simulation mode for a non-default branch', () => {
+  const checkedOutBranch = readCheckedOutBranch();
+
   const runtime = resolveDocsRuntime({
     DOCS_RUNTIME_MODE: PUBLISH_SIMULATION_MODE,
     DOCS_DEFAULT_BRANCH: '3.x',
   });
 
   assert.deepEqual(runtime, {
-    currentBranch: '1.x',
+    currentBranch: checkedOutBranch,
     defaultBranch: '3.x',
     isDefaultBranch: false,
-    versionSlug: '1.x',
+    versionSlug: checkedOutBranch,
     siteUrl: 'http://localhost:3000',
     baseUrl: '/',
     docsSiteBase: '/',
-    docsRouteBasePath: 'docs/1.x',
-    versions: ['1.x'],
+    docsRouteBasePath: `docs/${checkedOutBranch}`,
+    versions: [checkedOutBranch],
   });
 });

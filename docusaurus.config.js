@@ -1,4 +1,8 @@
-const {resolveDocsRuntime} = require('./scripts/resolve-docs-runtime');
+const {
+  buildCanonicalHomePath,
+  buildCurrentDocsContentPath,
+  resolveDocsRuntime,
+} = require('./release-policy/node');
 const prismReact = require('prism-react-renderer');
 
 const versionFallbackDocPath = 'overview/intro';
@@ -12,11 +16,6 @@ const {
   defaultBranch,
   versions,
 } = resolveDocsRuntime();
-const {
-  buildCanonicalHomePath,
-  buildCurrentDocsContentPath,
-} = require('./scripts/build-canonical-site-paths');
-
 const homePath = buildCanonicalHomePath({docsSiteBase});
 const docsIntroPath = buildCurrentDocsContentPath({
   baseUrl,
