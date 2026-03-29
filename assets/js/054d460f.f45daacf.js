@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkkoala_ts_docs=self.webpackChunkkoala_ts_docs||[]).push([[574],{701(s,t,e){e.r(t),e.d(t,{default:()=>c});var o=e(6540),a=e(4586);function c(){var s=(0,a.A)().siteConfig.customFields.docsIntroPath;return(0,o.useEffect)(function(){window.location.replace(s)},[s]),null}}}]);
