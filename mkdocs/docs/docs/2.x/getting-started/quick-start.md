@@ -1,7 +1,46 @@
-# KoalaTs 2.x Quick Start
+This is the shortest path to a running KoalaTs application.
 
-The full `2.x` quick-start content will be migrated into the MkDocs platform in the next slice.
+## Create a project
 
-This placeholder keeps the shared landing page wired to the future stable docs path:
+Use the [KoalaTs CLI](https://www.npmjs.com/package/@koala-ts/cli) to generate a new project:
 
-- `/docs/2.x/getting-started/quick-start/`
+```bash
+npx @koala-ts/cli create my-app
+```
+
+This command creates a new project in the `my-app` directory.
+
+## Install and run
+
+Move into the project, install dependencies, and start the server:
+
+```bash
+cd my-app
+npm install
+npm run start
+```
+
+## First endpoint
+
+KoalaTs now prefers function-first route declarations through `@koala-ts/framework/routing`.
+
+```ts
+import { create, type HttpScope } from '@koala-ts/framework';
+import { Get } from '@koala-ts/framework/routing';
+
+const helloRoute = Get('/', async (scope: HttpScope) => {
+  scope.response.body = { message: 'Hello KoalaTs' };
+});
+
+const app = create({
+  routes: [helloRoute],
+});
+
+app.listen(3000);
+```
+
+## What to read next
+
+- [Routing](../fundamentals/routing.md) to define your first endpoints
+- [Request](../fundamentals/request.md) and [Response](../fundamentals/response.md) to understand the HTTP programming model
+- [Configuration](../guides/configuration.md) when you need to tune the app for different environments

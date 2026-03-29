@@ -29,5 +29,17 @@ extra_css:
 nav:
   - Home: index.md
   - Docs:
-      - "2.x Overview": docs/2.x/overview/intro.md
-      - "2.x Quick Start": docs/2.x/getting-started/quick-start.md
+      - "2.x":
+          - Overview:
+              - Introduction: docs/2.x/overview/intro.md
+          - Getting Started:
+              - Quick Start: docs/2.x/getting-started/quick-start.md
+          - Fundamentals:
+              - Routing: docs/2.x/fundamentals/routing.md
+              - Request: docs/2.x/fundamentals/request.md
+              - Response: docs/2.x/fundamentals/response.md
+          - Guides:
+              - Configuration: docs/2.x/guides/configuration.md
+              - Serving Static Files: docs/2.x/guides/static-files.md
+          - Utilities:
+              - Request Scope Store: docs/2.x/utilities/request-scope-store.md
