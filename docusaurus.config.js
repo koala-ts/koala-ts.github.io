@@ -1,31 +1,20 @@
 const prismReact = require('prism-react-renderer');
+const {buildVersionConfigs} = require('./release-policy/docusaurus');
 
-const BRANCH_VERSION = '2.x';
-const versionFallbackDocPath = 'overview/intro';
-
-const versionSlug = process.env.DOCS_VERSION ?? BRANCH_VERSION;
-const defaultBranch = process.env.DOCS_DEFAULT_BRANCH ?? BRANCH_VERSION;
-const versions = process.env.DOCS_VERSIONS
-  ? process.env.DOCS_VERSIONS.split(',').map((value) => value.trim()).filter(Boolean)
-  : [BRANCH_VERSION];
-const siteUrl = process.env.SITE_URL ?? 'http://localhost:3000';
-const baseUrl = process.env.DOCS_BASE_URL ?? '/';
-const docsSiteBase = process.env.DOCS_SITE_BASE ?? '/';
-const docsRouteBasePath = process.env.DOCS_ROUTE_BASE_PATH ?? 'docs';
-const homePath = process.env.DOCS_HOME_PATH ?? '/';
-const docsIntroPath =
-  process.env.DOCS_INTRO_PATH ??
-  (docsRouteBasePath === '/'
-    ? `${baseUrl}overview/intro`
-    : `${baseUrl}${docsRouteBasePath}/overview/intro`);
-const docsQuickStartPath =
-  process.env.DOCS_QUICK_START_PATH ??
-  (docsRouteBasePath === '/'
-    ? `${baseUrl}getting-started/quick-start`
-    : `${baseUrl}${docsRouteBasePath}/getting-started/quick-start`);
-const searchDocsRouteBasePath =
-  process.env.DOCS_SEARCH_ROUTE_BASE_PATH ??
-  (docsRouteBasePath === '/' ? '/' : `/${docsRouteBasePath}`);
+const {
+  baseUrl,
+  siteUrl,
+  homePath,
+  docsIntroPath,
+  versionSlug,
+  versions,
+  docsRouteBasePath,
+  searchDocsRouteBasePath,
+  customFields,
+} = buildVersionConfigs({
+  branch: '2.x',
+  docsFallbackPath: 'overview/intro',
+});
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
@@ -45,13 +34,7 @@ const config = {
     locales: ['en'],
   },
   customFields: {
-    defaultBranch,
-    homePath,
-    siteUrl,
-    docsSiteBase,
-    docsIntroPath,
-    docsQuickStartPath,
-    versionFallbackDocPath,
+    ...customFields,
   },
   themeConfig: {
     colorMode: {
