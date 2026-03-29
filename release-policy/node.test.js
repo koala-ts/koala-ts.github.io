@@ -1,4 +1,7 @@
-const {describe, test} = require('node:test');
+const {
+  describe,
+  test,
+} = require('node:test');
 const assert = require('node:assert/strict');
 const {execFileSync} = require('node:child_process');
 const {
@@ -39,10 +42,18 @@ const createDeployBranchFixture = () => {
   writeJsonFile(versionsPath, ['2.x']);
   writeJsonFile(docPathsPath, {'2.x': ['overview/intro']});
 
-  return {docsDir, versionsPath, docPathsPath};
+  return {
+    docsDir,
+    versionsPath,
+    docPathsPath,
+  };
 };
 
-const buildDeployBranchArgs = ({docsDir, versionsPath, docPathsPath}) => [
+const buildDeployBranchCommandArgs = ({
+  docsDir,
+  versionsPath,
+  docPathsPath,
+}) => [
   'deploy-branch',
   '1.x',
   '--canonical-branch',
@@ -61,7 +72,7 @@ const buildDeployBranchArgs = ({docsDir, versionsPath, docPathsPath}) => [
   docsDir,
 ];
 
-const buildRedeployAllArgs = () => [
+const buildRedeployAllCommandArgs = () => [
   'redeploy-all',
   '--canonical-branch',
   '2.x',
@@ -72,29 +83,32 @@ const buildRedeployAllArgs = () => [
 ];
 
 describe('release-policy node CLI', () => {
-  test('deploy-branch persists artifacts and returns deployment metadata', () => {
-    const fixture = createDeployBranchFixture();
+  test('deploys a branch and updates the published docs artifacts',
+      () => {
+        const fixture = createDeployBranchFixture();
+        const commandArgs = buildDeployBranchCommandArgs(fixture);
 
-    const deployment = runCliJson(buildDeployBranchArgs(fixture));
+        const deployment = runCliJson(commandArgs);
 
-    const persistedVersions = readJsonFile(fixture.versionsPath);
-    const persistedDocPaths = readJsonFile(fixture.docPathsPath);
-    assert.equal(deployment.layout.buildBaseUrl, '/docs/1.x/');
-    assert.equal(deployment.versionCatalog.versionCsv, '1.x,2.x');
-    assert.deepEqual(persistedVersions, ['1.x', '2.x']);
-    assert.deepEqual(persistedDocPaths, {
-      '2.x': ['overview/intro'],
-      '1.x': ['overview/intro'],
-    });
-  });
+        const persistedVersions = readJsonFile(fixture.versionsPath);
+        const persistedDocPaths = readJsonFile(fixture.docPathsPath);
+        assert.equal(deployment.layout.buildBaseUrl, '/docs/1.x/');
+        assert.equal(deployment.versionCatalog.versionCsv, '1.x,2.x');
+        assert.deepEqual(persistedVersions, ['1.x', '2.x']);
+        assert.deepEqual(persistedDocPaths, {
+          '2.x': ['overview/intro'],
+          '1.x': ['overview/intro'],
+        });
+      });
 
-  test('redeploy-all returns deployable branches in configured order', () => {
-    const redeployResult = runCliJson(buildRedeployAllArgs());
+  test('redeploys branches in the configured order', () => {
+    const commandArgs = buildRedeployAllCommandArgs();
+
+    const redeployResult = runCliJson(commandArgs);
 
     const currentBranches = redeployResult.deployments.map(
         (deployment) => deployment.currentBranch,
     );
-
     assert.deepEqual(currentBranches, ['1.x', '2.x', 'main']);
   });
 });
