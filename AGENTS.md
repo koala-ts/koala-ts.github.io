@@ -32,7 +32,16 @@
 - The current default branch owns release policy, deploy helpers, and the dispatchable workflows used by GitHub Actions.
 - Deployable docs branches must not become the source of truth for global release ownership.
 - Branch-local docs runtime should stay limited to what is necessary for local development and branch builds, and it should prefer explicit branch-owned values over unnecessary dynamic helper layers.
-- `docusaurus.config.js` in this branch must stay release-policy-agnostic. It may read explicit injected runtime values, but it must not import or depend on `release-policy`.
+- `docusaurus.config.js` in this branch may depend on the standalone Docusaurus adapter at [`release-policy/docusaurus.js`](./release-policy/docusaurus.js), but it must not import or depend on release-policy deploy logic.
+- The standalone Docusaurus adapter currently reads:
+  - `DOCS_VERSION`
+  - `DOCS_DEFAULT_BRANCH`
+  - `DOCS_BASE_URL`
+  - `DOCS_SITE_BASE`
+  - `DOCS_ROUTE_BASE_PATH`
+  - `DOCS_VERSIONS`
+  - `DOCS_SEARCH_ROUTE_BASE_PATH`
+- `SITE_URL` is branch-local and should be consumed only by `docusaurus.config.js`, not by the adapter.
 - Manual operators should use:
   - `🚀 Deploy Selected Docs Branch` on the current default branch
   - `🚀 Deploy All Deployable Docs Branches` on the current default branch

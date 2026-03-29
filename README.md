@@ -42,7 +42,7 @@ DOCS_DEFAULT_BRANCH=<current-default-branch> npm run start
 
 That serves this branch under `/docs/1.x`.
 
-This branch-local Docusaurus config is intentionally self-contained and does not import or depend on `release-policy`.
+This branch-local Docusaurus config may use the standalone Docusaurus adapter at [`release-policy/docusaurus.js`](./release-policy/docusaurus.js), but it does not depend on release-policy deploy logic.
 
 Run validation:
 
@@ -80,3 +80,17 @@ Manual operators should use these workflows on the current default branch:
 - `🚀 Deploy All Deployable Docs Branches`
 
 That means `1.x` keeps its local preview and publish-simulation support, while the current default branch remains the only deployment control plane.
+
+## Runtime env variables
+
+The standalone Docusaurus adapter in [`release-policy/docusaurus.js`](./release-policy/docusaurus.js) currently reads:
+
+- `DOCS_VERSION`
+- `DOCS_DEFAULT_BRANCH`
+- `DOCS_BASE_URL`
+- `DOCS_SITE_BASE`
+- `DOCS_ROUTE_BASE_PATH`
+- `DOCS_VERSIONS`
+- `DOCS_SEARCH_ROUTE_BASE_PATH`
+
+`SITE_URL` is intentionally branch-local. It is read only in [`docusaurus.config.js`](./docusaurus.config.js), not by the adapter.
