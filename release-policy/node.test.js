@@ -79,10 +79,8 @@ describe('release-policy node CLI', () => {
 
     const persistedVersions = readJsonFile(fixture.versionsPath);
     const persistedDocPaths = readJsonFile(fixture.docPathsPath);
-
     assert.equal(deployment.layout.buildBaseUrl, '/docs/1.x/');
     assert.equal(deployment.versionCatalog.versionCsv, '1.x,2.x');
-
     assert.deepEqual(persistedVersions, ['1.x', '2.x']);
     assert.deepEqual(persistedDocPaths, {
       '2.x': ['overview/intro'],
