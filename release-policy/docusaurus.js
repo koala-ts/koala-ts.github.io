@@ -12,9 +12,33 @@ function resolveSearchDocsRouteBasePath(docsRouteBasePath) {
   return docsRouteBasePath === '/' ? '/' : `/${trimSlashes(docsRouteBasePath)}`;
 }
 
+function joinPath(basePath, childPath) {
+  const normalizedBasePath = basePath.replace(/\/+$/, '');
+  const normalizedChildPath = childPath.replace(/^\/+/, '');
+
+  if (!normalizedBasePath) {
+    return `/${normalizedChildPath}`;
+  }
+
+  return `${normalizedBasePath}/${normalizedChildPath}`;
+}
+
+function resolveDocsBasePath({baseUrl, docsRouteBasePath}) {
+  return docsRouteBasePath === '/'
+    ? baseUrl.replace(/\/+$/, '')
+    : joinPath(baseUrl, docsRouteBasePath);
+}
+
+function buildAbsoluteSiteUrl({siteUrl, path}) {
+  return `${siteUrl.replace(/\/+$/, '')}${path}`;
+}
+
 function createDocusaurusReleaseConfig({
   branch,
   fallbackDocPath,
+  introDocPath,
+  quickStartDocPath,
+  siteUrl,
   env = process.env,
 }) {
   const versionSlug = env.DOCS_VERSION ?? branch;
@@ -24,6 +48,9 @@ function createDocusaurusReleaseConfig({
   const docsRouteBasePath = env.DOCS_ROUTE_BASE_PATH ??
       (versionSlug === resolvedDefaultBranch ? 'docs' : `docs/${versionSlug}`);
   const versions = parseVersions(env.DOCS_VERSIONS, versionSlug);
+  const docsBasePath = resolveDocsBasePath({baseUrl, docsRouteBasePath});
+  const resolvedDocsIntroPath = joinPath(docsBasePath, introDocPath);
+  const resolvedDocsQuickStartPath = joinPath(docsBasePath, quickStartDocPath);
 
   return {
     site: {
@@ -37,11 +64,21 @@ function createDocusaurusReleaseConfig({
     },
     docs: {
       routeBasePath: docsRouteBasePath,
+      introPath: resolvedDocsIntroPath,
+      quickStartPath: resolvedDocsQuickStartPath,
       presetConfig: {
         routeBasePath: docsRouteBasePath,
       },
     },
     navbar: {
+      docsItem: {
+        href: buildAbsoluteSiteUrl({
+          siteUrl,
+          path: resolvedDocsIntroPath,
+        }),
+        position: 'left',
+        label: 'Documentation',
+      },
       versionSwitcherItem: {
         type: 'custom-version-switcher',
         currentVersion: versionSlug,
@@ -56,6 +93,8 @@ function createDocusaurusReleaseConfig({
     customFields: {
       defaultBranch: resolvedDefaultBranch,
       docsSiteBase,
+      docsIntroPath: resolvedDocsIntroPath,
+      docsQuickStartPath: resolvedDocsQuickStartPath,
       versionFallbackDocPath: fallbackDocPath,
     },
   };

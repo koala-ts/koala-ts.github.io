@@ -1,13 +1,14 @@
 const prismReact = require('prism-react-renderer');
 const {createDocusaurusReleaseConfig} = require('./release-policy/docusaurus');
 
+const siteUrl = process.env.SITE_URL ?? 'https://koala-ts.github.io';
 const releasePolicy = createDocusaurusReleaseConfig({
   branch: '2.x',
   fallbackDocPath: 'overview/intro',
+  introDocPath: 'overview/intro',
+  quickStartDocPath: 'getting-started/quick-start',
+  siteUrl,
 });
-
-const siteUrl = process.env.SITE_URL ?? 'https://koala-ts.github.io';
-const docsIntroPath = '/docs/overview/intro';
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
@@ -28,7 +29,6 @@ const config = {
   },
   customFields: {
     ...releasePolicy.customFields,
-    docsIntroPath,
   },
   themeConfig: {
     colorMode: {
@@ -44,11 +44,7 @@ const config = {
         href: '/',
       },
       items: [
-        {
-          to: docsIntroPath,
-          position: 'left',
-          label: 'Documentation',
-        },
+        releasePolicy.navbar.docsItem,
         releasePolicy.navbar.versionSwitcherItem,
         {
           href: 'https://github.com/koala-ts',
