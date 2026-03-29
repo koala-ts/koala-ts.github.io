@@ -43,3 +43,12 @@ nav:
               - Serving Static Files: docs/2.x/guides/static-files.md
           - Utilities:
               - Request Scope Store: docs/2.x/utilities/request-scope-store.md
+      - "1.x":
+          - Overview:
+              - Introduction: docs/1.x/overview/intro.md
+          - Getting Started:
+              - Configuration: docs/1.x/get-started/configuration.md
+          - Basics:
+              - Routing: docs/1.x/basics/routing.md
+              - Request: docs/1.x/basics/request.md
+              - Response: docs/1.x/basics/response.md
