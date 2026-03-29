@@ -1,28 +1,13 @@
 const prismReact = require('prism-react-renderer');
+const {createDocusaurusReleaseConfig} = require('./release-policy/docusaurus');
 
-const BRANCH_VERSION = '1.x';
-const versionFallbackDocPath = 'overview/intro';
+const releasePolicy = createDocusaurusReleaseConfig({
+  branch: '1.x',
+  fallbackDocPath: 'overview/intro',
+});
 
-const versionSlug = process.env.DOCS_VERSION ?? BRANCH_VERSION;
-const defaultBranch = process.env.DOCS_DEFAULT_BRANCH ?? BRANCH_VERSION;
-const versions = process.env.DOCS_VERSIONS
-  ? process.env.DOCS_VERSIONS.split(',').map((value) => value.trim()).filter(Boolean)
-  : [BRANCH_VERSION];
-const siteUrl = process.env.SITE_URL ?? 'http://localhost:3000';
-const baseUrl = process.env.DOCS_BASE_URL ?? '/';
-const docsSiteBase = process.env.DOCS_SITE_BASE ?? '/';
-const docsRouteBasePath = process.env.DOCS_ROUTE_BASE_PATH ?? 'docs';
-const homePath = process.env.DOCS_HOME_PATH ?? '/';
-const docsIntroPath =
-  process.env.DOCS_INTRO_PATH ??
-  (docsRouteBasePath === '/'
-    ? `${baseUrl}overview/intro`
-    : `${baseUrl}${docsRouteBasePath}/overview/intro`);
-const docsQuickStartPath =
-  process.env.DOCS_QUICK_START_PATH ??
-  (docsRouteBasePath === '/'
-    ? `${baseUrl}get-started/configuration`
-    : `${baseUrl}${docsRouteBasePath}/get-started/configuration`);
+const siteUrl = process.env.SITE_URL ?? 'https://koala-ts.github.io';
+const docsIntroPath = '/docs/overview/intro';
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
@@ -30,7 +15,7 @@ const config = {
   tagline: 'TypeScript framework documentation',
   favicon: 'favicon.ico',
   url: siteUrl,
-  baseUrl,
+  baseUrl: releasePolicy.site.baseUrl,
   onBrokenLinks: 'throw',
   markdown: {
     hooks: {
@@ -42,13 +27,8 @@ const config = {
     locales: ['en'],
   },
   customFields: {
-    defaultBranch,
-    homePath,
-    siteUrl,
-    docsSiteBase,
     docsIntroPath,
-    docsQuickStartPath,
-    versionFallbackDocPath,
+    ...releasePolicy.customFields,
   },
   themeConfig: {
     colorMode: {
@@ -61,7 +41,7 @@ const config = {
       logo: {
         alt: 'KoalaTs Logo',
         src: 'img/logo.png',
-        href: homePath,
+        href: '/',
       },
       items: [
         {
@@ -69,12 +49,7 @@ const config = {
           position: 'left',
           label: 'Documentation',
         },
-        {
-          type: 'custom-version-switcher',
-          currentVersion: versionSlug,
-          position: 'right',
-          versions,
-        },
+        releasePolicy.navbar.versionSwitcherItem,
         {
           href: 'https://github.com/koala-ts',
           label: 'GitHub',
@@ -89,7 +64,7 @@ const config = {
       logo: {
         alt: 'KoalaTs Logo',
         src: 'img/logo.png',
-        href: homePath,
+        href: '/',
         width: 32,
         height: 32,
       },
@@ -105,7 +80,7 @@ const config = {
       attributes: {
         rel: 'apple-touch-icon',
         sizes: '180x180',
-        href: `${baseUrl}favicon/apple-touch-icon.png`,
+        href: `${releasePolicy.site.baseUrl}favicon/apple-touch-icon.png`,
       },
     },
     {
@@ -114,7 +89,7 @@ const config = {
         rel: 'icon',
         type: 'image/png',
         sizes: '32x32',
-        href: `${baseUrl}favicon/favicon-32x32.png`,
+        href: `${releasePolicy.site.baseUrl}favicon/favicon-32x32.png`,
       },
     },
     {
@@ -123,14 +98,14 @@ const config = {
         rel: 'icon',
         type: 'image/png',
         sizes: '16x16',
-        href: `${baseUrl}favicon/favicon-16x16.png`,
+        href: `${releasePolicy.site.baseUrl}favicon/favicon-16x16.png`,
       },
     },
     {
       tagName: 'link',
       attributes: {
         rel: 'manifest',
-        href: `${baseUrl}site.webmanifest`,
+        href: `${releasePolicy.site.baseUrl}site.webmanifest`,
       },
     },
   ],
@@ -139,7 +114,7 @@ const config = {
       'classic',
       {
         docs: {
-          routeBasePath: docsRouteBasePath,
+          ...releasePolicy.docs.presetConfig,
           sidebarPath: require.resolve('./sidebars.js'),
         },
         blog: false,
@@ -156,9 +131,7 @@ const config = {
         indexDocs: true,
         indexBlog: false,
         indexPages: true,
-        docsRouteBasePath:
-          process.env.DOCS_SEARCH_ROUTE_BASE_PATH ??
-          (docsRouteBasePath === '/' ? '/' : `/${docsRouteBasePath}`),
+        docsRouteBasePath: releasePolicy.search.docsRouteBasePath,
         hashed: true,
         language: ['en'],
       },
