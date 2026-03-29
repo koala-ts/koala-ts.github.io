@@ -30,7 +30,7 @@ The architecture is defined in [`PLAN.md`](./PLAN.md).
   - `canonical_branch`
   - `deployable_branches`
   - `target_branch` for single-branch deploy
-- Branch-local Docusaurus config/runtime should stay outside this module and keep only the minimum explicit logic needed for that branch to build and preview correctly.
+- Branch-local Docusaurus config/runtime should stay outside this module and keep only the minimum explicit configuration needed for that branch to build and preview correctly.
 - Keep the top-level workflow set limited to:
   - [`../.github/workflows/ci.yml`](../.github/workflows/ci.yml)
   - [`../.github/workflows/publish-branch.yml`](../.github/workflows/publish-branch.yml)

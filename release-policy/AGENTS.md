@@ -37,6 +37,7 @@
 - Keep deployment helpers and operator workflows on the current default branch. Do not reintroduce `gh-pages-control` or any similar control branch.
 - Do not expose additional helpers under `core` or `github-pages` as repo-facing API unless the change explicitly documents a new transitional external entrypoint.
 - Keep branch-local Docusaurus runtime behavior outside this module unless there is a deliberate architecture change.
+- Keep `docusaurus.config.js` in docs branches completely unaware of this module.
 - For GitHub release operations, prefer this explicit config contract:
   - `site_base`
   - `canonical_branch`
