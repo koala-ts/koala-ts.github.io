@@ -371,7 +371,7 @@ const deployBranchCli = (args, {stdout = process.stdout} = {}) => {
 
   if (!currentBranch) {
     throw new Error(
-      'Usage: node release-policy/node.js deploy-branch <currentBranch> --canonical-branch <branch> --deployable-branches <csv> --existing-branches <csv> [--site-base <path>] [--catalog-path <path>] [--manifest-path <path>] [--docs-dir <path>] [--github-output <path>]',
+      'Usage: node release-policy/node.js deploy-branch <currentBranch> --canonical-branch <branch> --deployable-branches <csv> --existing-branches <csv> [--site-base <path>] [--versions-path <path>] [--doc-paths-path <path>] [--docs-dir <path>] [--github-output <path>]',
     );
   }
 
@@ -390,18 +390,18 @@ const deployBranchCli = (args, {stdout = process.stdout} = {}) => {
   }
 
   const shouldPrepareArtifacts =
-    typeof options['catalog-path'] === 'string' &&
-    typeof options['manifest-path'] === 'string' &&
+    typeof options['versions-path'] === 'string' &&
+    typeof options['doc-paths-path'] === 'string' &&
     typeof options['docs-dir'] === 'string';
   const deployment = deployBranch({
     currentBranch,
     existingBranches,
     siteBase: options['site-base'],
     loadedVersions: shouldPrepareArtifacts
-      ? loadJsonFileOrDefault(options['catalog-path'], [])
+      ? loadJsonFileOrDefault(options['versions-path'], [])
       : undefined,
     loadedManifest: shouldPrepareArtifacts
-      ? loadJsonFileOrDefault(options['manifest-path'], {})
+      ? loadJsonFileOrDefault(options['doc-paths-path'], {})
       : undefined,
     docsPaths: shouldPrepareArtifacts
       ? collectDocsPaths(options['docs-dir'])
@@ -412,11 +412,11 @@ const deployBranchCli = (args, {stdout = process.stdout} = {}) => {
 
   if (shouldPrepareArtifacts && deployment.status === 'ready') {
     writeFileSync(
-      options['catalog-path'],
+      options['versions-path'],
       `${JSON.stringify(deployment.versionCatalog.merged, null, 2)}\n`,
     );
     writeFileSync(
-      options['manifest-path'],
+      options['doc-paths-path'],
       `${JSON.stringify(deployment.docsPathManifest, null, 2)}\n`,
     );
   }

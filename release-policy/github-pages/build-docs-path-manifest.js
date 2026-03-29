@@ -32,16 +32,16 @@ const buildDocsPathManifest = ({
 });
 
 const buildDocsPathManifestCli = (args, {stdout = process.stdout} = {}) => {
-  const [manifestPath, docsDir, currentVersion] = args;
+  const [docPathsPath, docsDir, currentVersion] = args;
 
-  if (!manifestPath || !docsDir || !currentVersion) {
+  if (!docPathsPath || !docsDir || !currentVersion) {
     throw new Error(
-      'Usage: internal buildDocsPathManifestCli(<manifestPath> <docsDir> <currentVersion>)',
+      'Usage: internal buildDocsPathManifestCli(<docPathsPath> <docsDir> <currentVersion>)',
     );
   }
 
-  const loadedManifest = existsSync(manifestPath)
-    ? JSON.parse(readFileSync(manifestPath, 'utf8'))
+  const loadedManifest = existsSync(docPathsPath)
+    ? JSON.parse(readFileSync(docPathsPath, 'utf8'))
     : {};
   const docsPaths = collectDocsPaths(docsDir);
   const nextManifest = buildDocsPathManifest({
@@ -50,7 +50,7 @@ const buildDocsPathManifestCli = (args, {stdout = process.stdout} = {}) => {
     docsPaths,
   });
 
-  writeFileSync(manifestPath, `${JSON.stringify(nextManifest, null, 2)}\n`);
+  writeFileSync(docPathsPath, `${JSON.stringify(nextManifest, null, 2)}\n`);
   stdout.write(`${nextManifest[currentVersion].join(',')}\n`);
 
   return nextManifest;

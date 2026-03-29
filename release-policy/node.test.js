@@ -30,19 +30,19 @@ const readJsonFile = (filePath) => JSON.parse(readFileSync(filePath, 'utf8'));
 const createDeployBranchFixture = () => {
   const tempDir = mkdtempSync(join(tmpdir(), 'release-policy-node-'));
   const docsDir = join(tempDir, 'docs');
-  const catalogPath = join(tempDir, 'versions.json');
-  const manifestPath = join(tempDir, 'doc-paths.json');
+  const versionsPath = join(tempDir, 'versions.json');
+  const docPathsPath = join(tempDir, 'doc-paths.json');
 
   mkdirSync(join(docsDir, 'overview'), {recursive: true});
   writeFileSync(join(docsDir, 'overview', 'intro.md'), '# Intro\n');
 
-  writeJsonFile(catalogPath, ['2.x']);
-  writeJsonFile(manifestPath, {'2.x': ['overview/intro']});
+  writeJsonFile(versionsPath, ['2.x']);
+  writeJsonFile(docPathsPath, {'2.x': ['overview/intro']});
 
-  return {docsDir, catalogPath, manifestPath};
+  return {docsDir, versionsPath, docPathsPath};
 };
 
-const buildDeployBranchArgs = ({docsDir, catalogPath, manifestPath}) => [
+const buildDeployBranchArgs = ({docsDir, versionsPath, docPathsPath}) => [
   'deploy-branch',
   '1.x',
   '--canonical-branch',
@@ -53,10 +53,10 @@ const buildDeployBranchArgs = ({docsDir, catalogPath, manifestPath}) => [
   '1.x,2.x,main',
   '--site-base',
   '/',
-  '--catalog-path',
-  catalogPath,
-  '--manifest-path',
-  manifestPath,
+  '--versions-path',
+  versionsPath,
+  '--doc-paths-path',
+  docPathsPath,
   '--docs-dir',
   docsDir,
 ];
@@ -77,14 +77,14 @@ describe('release-policy node CLI', () => {
 
     const deployment = runCliJson(buildDeployBranchArgs(fixture));
 
-    const persistedCatalog = readJsonFile(fixture.catalogPath);
-    const persistedManifest = readJsonFile(fixture.manifestPath);
+    const persistedVersions = readJsonFile(fixture.versionsPath);
+    const persistedDocPaths = readJsonFile(fixture.docPathsPath);
 
     assert.equal(deployment.layout.buildBaseUrl, '/docs/1.x/');
     assert.equal(deployment.versionCatalog.versionCsv, '1.x,2.x');
 
-    assert.deepEqual(persistedCatalog, ['1.x', '2.x']);
-    assert.deepEqual(persistedManifest, {
+    assert.deepEqual(persistedVersions, ['1.x', '2.x']);
+    assert.deepEqual(persistedDocPaths, {
       '2.x': ['overview/intro'],
       '1.x': ['overview/intro'],
     });

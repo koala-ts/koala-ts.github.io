@@ -12,7 +12,7 @@ test('exposes the browser-safe routing helpers', () => {
     siteUrl: 'https://koala-ts.github.io',
     path: '/docs/',
   });
-  const manifestPath = buildSharedDocsManifestPath({docsSiteBase: '/'});
+  const docPathsPath = buildSharedDocsManifestPath({docsSiteBase: '/'});
   const switchTarget = resolveVersionSwitchTarget({
     availableDocPathsByVersion: {
       next: ['overview/intro'],
@@ -27,12 +27,12 @@ test('exposes the browser-safe routing helpers', () => {
   assert.deepEqual(
     {
       absoluteUrl,
-      manifestPath,
+      docPathsPath,
       switchTarget,
     },
     {
       absoluteUrl: 'https://koala-ts.github.io/docs/',
-      manifestPath: '/docs/doc-paths.json',
+      docPathsPath: '/docs/doc-paths.json',
       switchTarget: '/docs/next/overview/intro',
     },
   );

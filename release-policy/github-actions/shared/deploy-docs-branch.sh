@@ -108,8 +108,8 @@ PREPARED_JSON=$(
     --deployable-branches "${DEPLOYABLE_BRANCHES}" \
     --existing-branches "${REMOTE_BRANCHES}" \
     --site-base "${SITE_BASE}" \
-    --catalog-path ".gh-pages/docs/versions.json" \
-    --manifest-path ".gh-pages/docs/doc-paths.json" \
+    --versions-path ".gh-pages/docs/versions.json" \
+    --doc-paths-path ".gh-pages/docs/doc-paths.json" \
     --docs-dir "source/docs" \
     "${GITHUB_OUTPUT_ARGS[@]}"
 )
