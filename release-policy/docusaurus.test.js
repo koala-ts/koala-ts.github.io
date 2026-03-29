@@ -35,7 +35,7 @@ test('builds release-aware Docusaurus config for the default branch', () => {
     },
     navbar: {
       docsItem: {
-        href: 'https://koala-ts.github.io/docs/overview/intro',
+        href: '/docs/overview/intro',
         position: 'left',
         label: 'Documentation',
       },
@@ -95,7 +95,7 @@ test('builds release-aware Docusaurus config for a non-default branch', () => {
     },
     navbar: {
       docsItem: {
-        href: 'https://koala-ts.github.io/docs/1.x/overview/intro',
+        href: '/docs/1.x/overview/intro',
         position: 'left',
         label: 'Documentation',
       },
@@ -159,7 +159,7 @@ test('prefers explicit runtime overrides from the env adapter', () => {
     },
     navbar: {
       docsItem: {
-        href: 'https://koala-ts.github.io/docs/2.x/overview/intro',
+        href: '/docs/2.x/overview/intro',
         position: 'left',
         label: 'Documentation',
       },

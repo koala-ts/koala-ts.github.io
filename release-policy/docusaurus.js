@@ -23,13 +23,19 @@ function joinPath(basePath, childPath) {
   return `${normalizedBasePath}/${normalizedChildPath}`;
 }
 
-function resolveDocsBasePath({baseUrl, docsRouteBasePath}) {
+function resolveDocsBasePath({
+  baseUrl,
+  docsRouteBasePath,
+}) {
   return docsRouteBasePath === '/'
-    ? baseUrl.replace(/\/+$/, '')
-    : joinPath(baseUrl, docsRouteBasePath);
+      ? baseUrl.replace(/\/+$/, '')
+      : joinPath(baseUrl, docsRouteBasePath);
 }
 
-function buildAbsoluteSiteUrl({siteUrl, path}) {
+function buildAbsoluteSiteUrl({
+  siteUrl,
+  path,
+}) {
   return `${siteUrl.replace(/\/+$/, '')}${path}`;
 }
 
@@ -48,7 +54,10 @@ function createDocusaurusReleaseConfig({
   const docsRouteBasePath = env.DOCS_ROUTE_BASE_PATH ??
       (versionSlug === resolvedDefaultBranch ? 'docs' : `docs/${versionSlug}`);
   const versions = parseVersions(env.DOCS_VERSIONS, versionSlug);
-  const docsBasePath = resolveDocsBasePath({baseUrl, docsRouteBasePath});
+  const docsBasePath = resolveDocsBasePath({
+    baseUrl,
+    docsRouteBasePath,
+  });
   const resolvedDocsIntroPath = joinPath(docsBasePath, introDocPath);
   const resolvedDocsQuickStartPath = joinPath(docsBasePath, quickStartDocPath);
 
@@ -72,10 +81,7 @@ function createDocusaurusReleaseConfig({
     },
     navbar: {
       docsItem: {
-        href: buildAbsoluteSiteUrl({
-          siteUrl,
-          path: resolvedDocsIntroPath,
-        }),
+        href: resolvedDocsIntroPath,
         position: 'left',
         label: 'Documentation',
       },
