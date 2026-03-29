@@ -19,10 +19,11 @@ const releasePolicy = createDocusaurusReleaseConfig({
 
 const siteUrl = process.env.SITE_URL ?? 'https://koala-ts.github.io';
 const docsBasePath = releasePolicy.docs.routeBasePath === '/'
-  ? releasePolicy.site.baseUrl
+  ? ''
   : joinPath(releasePolicy.site.baseUrl, releasePolicy.docs.routeBasePath);
 const docsIntroPath = joinPath(docsBasePath, 'overview/intro');
 const docsQuickStartPath = joinPath(docsBasePath, 'get-started/configuration');
+const docsIntroHref = `${siteUrl}${docsIntroPath}`;
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
@@ -61,7 +62,7 @@ const config = {
       },
       items: [
         {
-          to: docsIntroPath,
+          href: docsIntroHref,
           position: 'left',
           label: 'Documentation',
         },
