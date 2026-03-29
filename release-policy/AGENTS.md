@@ -57,7 +57,7 @@
 - Prefer migrating repository Docusaurus wiring to documented external entrypoints and deleting repo-level runtime wrapper scripts once they become redundant.
 - Keep shared system design, homepage ownership, navigation behavior, and deployment orchestration on the default branch.
 - Limit a non-default docs branch to its versioned documentation and the minimum code needed for that version to run locally.
-- Keep repository code outside `release-policy` limited to configuration, content, workflow YAML, and release data.
+- Keep repository code outside `release-policy` limited to configuration, content, and workflow YAML.
 - Preserve the existing working publish model until the extraction plan is complete. Do not break current behavior in the name of cleanup.
 - Keep the design compatible with a future major release branch taking over as the default branch and inheriting the same shared responsibilities.
 
