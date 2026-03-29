@@ -1,13 +1,28 @@
 const prismReact = require('prism-react-renderer');
 const {createDocusaurusReleaseConfig} = require('./release-policy/docusaurus');
 
+function joinPath(basePath, childPath) {
+  const normalizedBasePath = basePath.replace(/\/+$/, '');
+  const normalizedChildPath = childPath.replace(/^\/+/, '');
+
+  if (!normalizedBasePath) {
+    return `/${normalizedChildPath}`;
+  }
+
+  return `${normalizedBasePath}/${normalizedChildPath}`;
+}
+
 const releasePolicy = createDocusaurusReleaseConfig({
   branch: '1.x',
   fallbackDocPath: 'overview/intro',
 });
 
 const siteUrl = process.env.SITE_URL ?? 'https://koala-ts.github.io';
-const docsIntroPath = '/docs/overview/intro';
+const docsBasePath = releasePolicy.docs.routeBasePath === '/'
+  ? releasePolicy.site.baseUrl
+  : joinPath(releasePolicy.site.baseUrl, releasePolicy.docs.routeBasePath);
+const docsIntroPath = joinPath(docsBasePath, 'overview/intro');
+const docsQuickStartPath = joinPath(docsBasePath, 'get-started/configuration');
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
@@ -28,6 +43,7 @@ const config = {
   },
   customFields: {
     docsIntroPath,
+    docsQuickStartPath,
     ...releasePolicy.customFields,
   },
   themeConfig: {
