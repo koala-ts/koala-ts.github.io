@@ -5,8 +5,9 @@ const {
   resolveDocsRuntime,
   resolveLocalDocsEnv,
 } = require('./release-policy/node');
-const {versionFallbackDocPath} = require('./docs-site.config');
 const prismReact = require('prism-react-renderer');
+
+const versionFallbackDocPath = 'overview/intro';
 
 const runtimeEnv = {
   ...process.env,
