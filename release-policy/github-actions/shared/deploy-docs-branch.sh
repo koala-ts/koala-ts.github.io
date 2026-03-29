@@ -72,7 +72,7 @@ DEPLOYMENT_JSON=$(
 SHOULD_SKIP=$(json_value "${DEPLOYMENT_JSON}" "availability.shouldSkip")
 
 if [ "${SHOULD_SKIP}" = "true" ]; then
-  echo "$(json_value "${DEPLOYMENT_JSON}" "availability.skipReason")"
+  json_value "${DEPLOYMENT_JSON}" "availability.skipReason"
   exit 0
 fi
 
@@ -149,7 +149,10 @@ if [ "${IS_DEFAULT_BRANCH}" = "true" ]; then
     --exclude CNAME \
     source/build/ .gh-pages/
 
-  VERSION_EXCLUDES=$(printf '%s\n' "${VERSION_CSV}" | tr ',' '\n' | sed '/^$/d' | sed 's#^#--exclude=#')
+  VERSION_EXCLUDES=()
+  while IFS= read -r version; do
+    VERSION_EXCLUDES+=(--exclude="${version}")
+  done < <(printf '%s\n' "${VERSION_CSV}" | tr ',' '\n' | sed '/^$/d')
 
   mkdir -p .gh-pages/docs
   rsync -a --delete \
@@ -157,7 +160,7 @@ if [ "${IS_DEFAULT_BRANCH}" = "true" ]; then
     --exclude '.git/***' \
     --exclude=versions.json \
     --exclude=doc-paths.json \
-    ${VERSION_EXCLUDES} \
+    "${VERSION_EXCLUDES[@]}" \
     source/build/docs/ .gh-pages/docs/
 else
   mkdir -p "${PUBLISH_TARGET_DIR}"
