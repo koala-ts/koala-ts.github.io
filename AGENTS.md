@@ -30,6 +30,7 @@
 ## Deployment Model
 
 - The current default branch owns release policy, deploy helpers, and the dispatchable workflows used by GitHub Actions.
+- The repo is bootstrapping a future MkDocs/Material + `mike` migration on the current default branch before switching the default branch to `main`.
 - Release-policy configuration should flow explicitly through workflow `with`, local action inputs, and the Node entrypoint.
 - Deployable docs branches must not become the source of truth for global release ownership.
 - Repository code outside `release-policy` should stay limited to configuration, content, workflow YAML, and the minimum explicit branch-local docs runtime needed for local builds.
@@ -55,7 +56,20 @@
   - [`ci.yml`](./.github/workflows/ci.yml)
   - [`publish-branch.yml`](./.github/workflows/publish-branch.yml)
   - [`republish-all.yml`](./.github/workflows/republish-all.yml)
+- During the MkDocs migration bootstrap, an extra manual preview workflow may exist temporarily before the final deployment cutover.
 - GitHub-specific runtime glue belongs in [`release-policy/github-actions`](./release-policy/github-actions).
 - Manual operators should use:
   - `🚀 Deploy Selected Docs Branch` on the current default branch
   - `🚀 Deploy All Deployable Docs Branches` on the current default branch
+- MkDocs bootstrap preview remains manual-only and must not auto-deploy on merge.
+
+## MkDocs Migration Bootstrap
+
+- The future target stack is Material for MkDocs with `mike` on GitHub Pages.
+- The bootstrap currently lives alongside Docusaurus and must not replace production deployment until the migration cutover PR.
+- Local MkDocs work should use Docker first:
+  - [`Dockerfile`](./Dockerfile)
+  - [`compose.yaml`](./compose.yaml)
+- The MkDocs bootstrap config currently starts from:
+  - [`mkdocs.yml`](./mkdocs.yml)
+  - [`mkdocs/docs`](./mkdocs/docs)

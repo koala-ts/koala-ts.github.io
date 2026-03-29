@@ -4,6 +4,9 @@ This repository contains the documentation website for KoalaTs.
 
 The site is generated with Docusaurus and published to GitHub Pages with branch-based version paths.
 
+The repository is also bootstrapping a MkDocs/Material + `mike` migration in parallel.
+That bootstrap is not authoritative yet and does not publish production docs in this slice.
+
 ## Canonical URL contract
 
 The repository targets this public URL model:
@@ -77,6 +80,33 @@ Run validation:
 npm run validate
 ```
 
+## MkDocs bootstrap
+
+The future target platform is Material for MkDocs with `mike`.
+
+This bootstrap currently lives alongside Docusaurus and exists only to prepare the migration.
+
+Requirements for local MkDocs work:
+
+- Docker
+
+Run the MkDocs bootstrap locally:
+
+```bash
+docker compose up mkdocs
+```
+
+The bootstrap preview is served at:
+
+- `http://localhost:8000/`
+
+Build the MkDocs bootstrap locally without Docker if needed:
+
+```bash
+python -m pip install -r requirements.txt
+mkdocs build --strict
+```
+
 ## GitHub Pages setup
 
 Set GitHub Pages source to the `gh-pages` branch root.
@@ -101,6 +131,7 @@ Available operator workflows on the current default branch:
 
 - `🚀 Deploy Selected Docs Branch` publishes the selected workflow branch with no manual inputs
 - `🚀 Deploy All Deployable Docs Branches` republishes all configured deployable branches in order
+- `🧪 Preview MkDocs Bootstrap` builds the future MkDocs platform manually and uploads an artifact preview
 
 Internal orchestration details such as the normalized release-policy payload stay hidden from manual workflow runs.
 
@@ -155,3 +186,12 @@ Missing deployable branches are skipped without failing a republish-all run.
 
 The repository no longer uses or depends on a separate control branch for release policy or deployment scripts.
 The current workflow entrypoint is [`release-policy/node.js`](./release-policy/node.js). Repository code outside `release-policy` should stay limited to configuration, content, workflow YAML, and the minimum explicit branch-local docs runtime needed for local builds.
+
+The MkDocs bootstrap currently uses:
+
+- [`mkdocs.yml`](./mkdocs.yml)
+- [`requirements.txt`](./requirements.txt)
+- [`Dockerfile`](./Dockerfile)
+- [`compose.yaml`](./compose.yaml)
+
+That bootstrap is intentionally manual-only in this phase and does not replace the current GitHub Pages deployment flow yet.
