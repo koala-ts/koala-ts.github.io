@@ -24,6 +24,7 @@ jobs:
         uses: ./release-policy/github-actions/redeploy-all-docs
         with:
           site_base: /
+          site_url: https://koala-ts.github.io
           canonical_branch: ${{ github.event.repository.default_branch }}
           deployable_branches: 1.x,2.x,main
           github_token: ${{ secrets.GITHUB_TOKEN }}

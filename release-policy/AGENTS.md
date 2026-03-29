@@ -9,6 +9,7 @@
 
 - The final long-term public API is intentionally undecided at this stage.
 - The current repository-facing external entrypoint is [`node.js`](./node.js).
+- The current Docusaurus-facing transitional entrypoint is [`docusaurus.js`](./docusaurus.js).
 - [`core`](./core) is reserved for pure release-policy functions.
 - [`github-pages`](./github-pages) is reserved for the GitHub Pages adapter.
 - [`github-actions`](./github-actions) is reserved for GitHub Actions-specific wrappers and shared scripts that travel with the release-policy tree.
@@ -37,12 +38,22 @@
 - Keep deployment helpers and operator workflows on the current default branch. Do not reintroduce `gh-pages-control` or any similar control branch.
 - Do not expose additional helpers under `core` or `github-pages` as repo-facing API unless the change explicitly documents a new transitional external entrypoint.
 - Keep branch-local Docusaurus runtime behavior outside this module unless there is a deliberate architecture change.
-- Keep `docusaurus.config.js` in docs branches completely unaware of this module.
+- A docs branch may use the standalone Docusaurus adapter at [`docusaurus.js`](./docusaurus.js), but it must stay independent from `core`, `github-pages`, and workflow logic.
 - For GitHub release operations, prefer this explicit config contract:
   - `site_base`
+  - `site_url`
   - `canonical_branch`
   - `deployable_branches`
   - `target_branch` for single-branch deploy
+- The standalone Docusaurus adapter currently reads only:
+  - `DOCS_VERSION`
+  - `DOCS_DEFAULT_BRANCH`
+  - `DOCS_BASE_URL`
+  - `DOCS_SITE_BASE`
+  - `DOCS_ROUTE_BASE_PATH`
+  - `DOCS_VERSIONS`
+  - `DOCS_SEARCH_ROUTE_BASE_PATH`
+- Keep `SITE_URL` out of the standalone adapter. It belongs only in branch-local `docusaurus.config.js`.
 - Keep the final top-level workflow set limited to:
   - [`../.github/workflows/ci.yml`](../.github/workflows/ci.yml)
   - [`../.github/workflows/publish-branch.yml`](../.github/workflows/publish-branch.yml)

@@ -20,6 +20,7 @@ jobs:
         uses: ./release-policy/github-actions/deploy-docs-branch
         with:
           site_base: /
+          site_url: https://koala-ts.github.io
           canonical_branch: ${{ github.event.repository.default_branch }}
           deployable_branches: 1.x,2.x,main
           target_branch: ${{ github.ref_name }}

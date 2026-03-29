@@ -12,7 +12,6 @@ type SwitchTarget = {
 type CustomFields = {
   defaultBranch: string;
   docsSiteBase: string;
-  siteUrl: string;
   versionFallbackDocPath: string;
 };
 
@@ -41,14 +40,6 @@ const buildSharedDocsManifestPath = ({
 }: {
   docsSiteBase: string;
 }): string => `${buildCanonicalHomePath({docsSiteBase})}docs/doc-paths.json`;
-
-const buildAbsoluteSiteUrl = ({
-  siteUrl,
-  path,
-}: {
-  siteUrl: string;
-  path: string;
-}): string => `${siteUrl.replace(/\/+$/, '')}${path}`;
 
 const buildCanonicalDocsRootPath = ({
   docsSiteBase,
@@ -164,12 +155,9 @@ export const useVersionSwitchTargets = ({
 }: UseVersionSwitchTargetsParams): SwitchTarget[] => {
   const {pathname} = useLocation();
   const {siteConfig} = useDocusaurusContext();
-  const {defaultBranch, docsSiteBase, siteUrl, versionFallbackDocPath} =
+  const {defaultBranch, docsSiteBase, versionFallbackDocPath} =
     siteConfig.customFields as CustomFields;
-  const manifestUrl = buildAbsoluteSiteUrl({
-    siteUrl,
-    path: buildSharedDocsManifestPath({docsSiteBase}),
-  });
+  const manifestUrl = buildSharedDocsManifestPath({docsSiteBase});
   const [manifest, setManifest] = useState<VersionPathsManifest>({});
 
   useEffect(() => {
@@ -191,16 +179,13 @@ export const useVersionSwitchTargets = ({
   }, [manifestUrl]);
 
   return versions.map((version) => ({
-    href: buildAbsoluteSiteUrl({
-      siteUrl,
-      path: resolveVersionSwitchTarget({
-        availableDocPathsByVersion: manifest,
-        currentPathname: pathname,
-        defaultBranch,
-        docsSiteBase,
-        fallbackDocPath: versionFallbackDocPath,
-        targetVersion: version,
-      }),
+    href: resolveVersionSwitchTarget({
+      availableDocPathsByVersion: manifest,
+      currentPathname: pathname,
+      defaultBranch,
+      docsSiteBase,
+      fallbackDocPath: versionFallbackDocPath,
+      targetVersion: version,
     }),
     label: version,
   }));

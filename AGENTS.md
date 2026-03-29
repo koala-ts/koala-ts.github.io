@@ -36,11 +36,21 @@
 - External release-policy consumers should go through [`release-policy/node.js`](./release-policy/node.js).
 - The current release workflow contract uses:
   - `site_base`
+  - `site_url`
   - `canonical_branch`
   - `deployable_branches`
   - `target_branch` for single-branch deploy
 - Branch-local docs runtime should prefer explicit configured values over reusable helper layers when the behavior is intentionally branch-specific.
-- `docusaurus.config.js` in any docs branch must stay release-policy-agnostic. It may read explicit injected runtime values, but it must not import or depend on `release-policy`.
+- `docusaurus.config.js` in a docs branch may depend on the standalone Docusaurus adapter at [`release-policy/docusaurus.js`](./release-policy/docusaurus.js), but it must not import or depend on `release-policy` core deploy logic.
+- The standalone Docusaurus adapter currently reads these runtime env variables:
+  - `DOCS_VERSION`
+  - `DOCS_DEFAULT_BRANCH`
+  - `DOCS_BASE_URL`
+  - `DOCS_SITE_BASE`
+  - `DOCS_ROUTE_BASE_PATH`
+  - `DOCS_VERSIONS`
+  - `DOCS_SEARCH_ROUTE_BASE_PATH`
+- `SITE_URL` is branch-local and should be consumed only by `docusaurus.config.js`, not by the standalone adapter.
 - Keep the final top-level workflow set limited to:
   - [`ci.yml`](./.github/workflows/ci.yml)
   - [`publish-branch.yml`](./.github/workflows/publish-branch.yml)
