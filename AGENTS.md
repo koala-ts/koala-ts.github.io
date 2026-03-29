@@ -40,6 +40,7 @@
   - `deployable_branches`
   - `target_branch` for single-branch deploy
 - Branch-local docs runtime should prefer explicit configured values over reusable helper layers when the behavior is intentionally branch-specific.
+- `docusaurus.config.js` in any docs branch must stay release-policy-agnostic. It may read explicit injected runtime values, but it must not import or depend on `release-policy`.
 - Keep the final top-level workflow set limited to:
   - [`ci.yml`](./.github/workflows/ci.yml)
   - [`publish-branch.yml`](./.github/workflows/publish-branch.yml)

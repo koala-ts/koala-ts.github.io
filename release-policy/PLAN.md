@@ -4,7 +4,7 @@
 
 Stabilize the documentation publishing model inside this repository before extracting it for reuse in other repositories.
 
-The target state is a clear separation between pure release-policy logic, GitHub Pages deployment orchestration, GitHub-specific runtime glue, and explicit branch-local docs runtime outside this module.
+The target state is a clear separation between pure release-policy logic, GitHub Pages deployment orchestration, GitHub-specific runtime glue, and explicit branch-local docs configuration outside this module.
 
 ## Architectural Boundaries
 

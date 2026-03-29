@@ -63,7 +63,7 @@ DOCS_DEFAULT_BRANCH=<current-default-branch> npm run start
 
 That keeps the injected default branch canonical at `/docs`. For a non-default release branch such as `1.x`, publish simulation would serve the docs under `/docs/1.x`.
 
-Branch-local docs runtime behavior now lives explicitly in the branch Docusaurus config and browser components. Release-policy remains the deployment control plane on the current default branch.
+Branch-local docs runtime behavior now lives explicitly in the branch Docusaurus config and browser components. Those files do not import or depend on `release-policy`. Release-policy remains the deployment control plane on the current default branch.
 
 Build static files:
 
