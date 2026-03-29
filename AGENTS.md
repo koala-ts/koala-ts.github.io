@@ -29,7 +29,7 @@
 
 ## Deployment Model
 
-- The current default branch owns release policy, registry data, deploy helpers, and the dispatchable workflows used by GitHub Actions.
+- The current default branch owns release policy, deploy helpers, and the dispatchable workflows used by GitHub Actions.
 - Release-policy configuration should flow explicitly through workflow `with`, local action inputs, and the Node entrypoint.
 - Deployable docs branches must not become the source of truth for global release ownership.
 - Repository code outside `release-policy` should stay limited to configuration, content, workflow YAML, and release data.

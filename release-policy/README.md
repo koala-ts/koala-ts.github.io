@@ -45,6 +45,7 @@ The architecture is defined in [`PLAN.md`](./PLAN.md).
 - Future implementation must preserve the separation between pure policy and adapters.
 - Production logic must not be added to the adapters when it belongs in `core`.
 - Production logic must not be added directly to repo-level workflows or Docusaurus bootstrap code when it belongs in this module.
+- Prefer explicit config payloads over file-based release-policy lookup.
 - Keep each release-policy rule authoritative in one core implementation and compose from it instead of duplicating the same rule in multiple core files.
 - Treat the versioned publish contract as one unit: `baseUrl`, `docsRouteBasePath`, and the publish target path must stay aligned for non-default branches.
 - Avoid barrels in this module unless there is a clear documented justification.

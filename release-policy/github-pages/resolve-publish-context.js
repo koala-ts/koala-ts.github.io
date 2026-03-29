@@ -1,5 +1,4 @@
 const {classifyDocsBranch} = require('../core/classify-docs-branch');
-const {loadReleaseRegistry} = require('./release-registry');
 
 const resolvePublishContext = ({currentBranch, registry}) => {
   if (!currentBranch || typeof currentBranch !== 'string') {
@@ -24,6 +23,5 @@ const resolvePublishContext = ({currentBranch, registry}) => {
 };
 
 module.exports = {
-  loadReleaseRegistry,
   resolvePublishContext,
 };
