@@ -1,12 +1,8 @@
-import {useEffect, useState} from 'react';
-import {useLocation} from '@docusaurus/router';
+import { useLocation } from '@docusaurus/router';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 
-const {
-  buildAbsoluteSiteUrl,
-  buildSharedDocsManifestPath,
-  resolveVersionSwitchTarget,
-} = require('@site/release-policy/browser');
+import { buildAbsoluteSiteUrl, buildSharedDocsManifestPath, resolveVersionSwitchTarget } from '@site/release-policy/browser';
+import { useEffect, useState } from 'react';
 
 type VersionPathsManifest = Record<string, string[]>;
 
@@ -44,18 +40,15 @@ export const useVersionSwitchTargets = ({
   useEffect(() => {
     let cancelled = false;
 
-    fetch(manifestUrl)
-      .then((response) => (response.ok ? response.json() : {}))
-      .then((loadedManifest) => {
-        if (!cancelled) {
-          setManifest(loadedManifest);
-        }
-      })
-      .catch(() => {
-        if (!cancelled) {
-          setManifest({});
-        }
-      });
+    fetch(manifestUrl).then((response) => (response.ok ? response.json() : {})).then((loadedManifest) => {
+      if (!cancelled) {
+        setManifest(loadedManifest);
+      }
+    }).catch(() => {
+      if (!cancelled) {
+        setManifest({});
+      }
+    });
 
     return () => {
       cancelled = true;
