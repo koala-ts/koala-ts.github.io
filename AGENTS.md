@@ -32,14 +32,14 @@
 - The current default branch owns release policy, deploy helpers, and the dispatchable workflows used by GitHub Actions.
 - Release-policy configuration should flow explicitly through workflow `with`, local action inputs, and the Node entrypoint.
 - Deployable docs branches must not become the source of truth for global release ownership.
-- Repository code outside `release-policy` should stay limited to configuration, content, and workflow YAML.
-- External consumers should go through [`release-policy/node.js`](./release-policy/node.js) or [`release-policy/browser.js`](./release-policy/browser.js), depending on the runtime they execute in.
+- Repository code outside `release-policy` should stay limited to configuration, content, workflow YAML, and the minimum explicit branch-local docs runtime needed for local builds.
+- External release-policy consumers should go through [`release-policy/node.js`](./release-policy/node.js).
 - The current release workflow contract uses:
   - `site_base`
   - `canonical_branch`
   - `deployable_branches`
   - `target_branch` for single-branch deploy
-- Runtime helpers must require explicit branch inputs; branch discovery belongs only in the current Docusaurus config/runtime entrypoint under `release-policy/docusaurus` or CI/workflow env injection.
+- Branch-local docs runtime should prefer explicit configured values over reusable helper layers when the behavior is intentionally branch-specific.
 - Keep the final top-level workflow set limited to:
   - [`ci.yml`](./.github/workflows/ci.yml)
   - [`publish-branch.yml`](./.github/workflows/publish-branch.yml)

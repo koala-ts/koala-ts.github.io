@@ -4,7 +4,7 @@
 
 Stabilize the documentation publishing model inside this repository before extracting it for reuse in other repositories.
 
-The target state is a clear separation between pure release-policy logic, Docusaurus integration, GitHub Pages deployment orchestration, and GitHub-specific runtime glue.
+The target state is a clear separation between pure release-policy logic, GitHub Pages deployment orchestration, GitHub-specific runtime glue, and explicit branch-local docs runtime outside this module.
 
 ## Architectural Boundaries
 
@@ -17,23 +17,14 @@ The target state is a clear separation between pure release-policy logic, Docusa
 
 ### Release Policy Module
 
-- This module currently exposes a transitional external API for repository consumers.
+- This module currently exposes a narrow transitional Node API for repository deployment consumers.
 - The final long-term public API is intentionally deferred and must not be documented as settled.
-- Current external entrypoints are:
-  - [`node.js`](./node.js) for all Node-side external usage, including workflows and Docusaurus config/runtime wiring
-  - [`browser.js`](./browser.js) for browser-safe external usage
+- The current external entrypoint is [`node.js`](./node.js) for workflow and local-action release operations.
 - [`core`](./core) will contain pure functions only.
 - Core logic must not depend on Docusaurus, GitHub Actions, shell scripts, the filesystem, or Git state.
 - Core logic must receive required inputs explicitly. Do not rely on hidden process state or convenience fallbacks unless a fallback is an intentional domain rule.
 - Core logic will own branch deployability, version slug resolution, canonical URL policy, publish layout policy, and republish planning.
 - Core logic will classify branches explicitly: `main`, `<number>.x`, and non-deployable branches.
-
-### Docusaurus Adapter
-
-- [`docusaurus`](./docusaurus) will adapt the core policy to Docusaurus configuration and runtime needs.
-- Remaining files under [`docusaurus`](./docusaurus) are private implementation detail unless they are surfaced through [`../node.js`](./node.js) or [`../browser.js`](./browser.js).
-- This adapter may translate policy outputs into `baseUrl`, `routeBasePath`, navigation inputs, and local runtime inputs.
-- This adapter must not become a second source of release-policy truth.
 
 ### GitHub Pages Adapter
 
@@ -67,7 +58,7 @@ The target state is a clear separation between pure release-policy logic, Docusa
 ### Branch Responsibility Model
 
 - The default branch owns all repository-wide behavior: system design, homepage ownership, shared navigation, release policy, and deployment orchestration.
-- A non-default docs branch owns only its documentation version and the minimum local runtime code required to build and preview that version correctly.
+- A docs branch owns only its documentation version and the minimum explicit local runtime code required to build and preview that version correctly.
 - A non-default docs branch must not become the source of truth for shared design or deployment behavior.
 - When default-branch ownership moves to a new major release branch, that branch inherits the full default-branch responsibility set.
 

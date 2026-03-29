@@ -1,34 +1,58 @@
-const {
-  buildAbsoluteSiteUrl,
-  buildCanonicalHomePath,
-  buildCurrentDocsRoutePath,
-  resolveDocsRuntime,
-  resolveLocalDocsEnv,
-} = require('./release-policy/node');
 const prismReact = require('prism-react-renderer');
 
+const BRANCH_VERSION = '2.x';
 const versionFallbackDocPath = 'overview/intro';
 
-const runtimeEnv = {
-  ...process.env,
-  ...resolveLocalDocsEnv(process.env),
+const trimLeadingSlash = (value) => value.replace(/^\/+/, '');
+const normalizeBasePath = (value) => {
+  const trimmed = value.trim();
+  const withLeadingSlash = trimmed.startsWith('/') ? trimmed : `/${trimmed}`;
+  const withTrailingSlash = withLeadingSlash.endsWith('/')
+    ? withLeadingSlash
+    : `${withLeadingSlash}/`;
+
+  return withTrailingSlash.replace(/\/{2,}/g, '/');
 };
-const {
-  versionSlug,
-  siteUrl,
+const buildCanonicalHomePath = ({docsSiteBase = '/'}) =>
+  normalizeBasePath(docsSiteBase);
+const buildCurrentDocsContentPath = ({
+  baseUrl = '/',
+  docsRouteBasePath = 'docs',
+  docPath,
+}) => {
+  const normalizedBaseUrl = normalizeBasePath(baseUrl);
+  const normalizedDocsRouteBasePath = trimLeadingSlash(
+    normalizeBasePath(docsRouteBasePath),
+  );
+
+  return `${normalizedBaseUrl}${normalizedDocsRouteBasePath}${trimLeadingSlash(docPath)}`;
+};
+const buildAbsoluteSiteUrl = ({siteUrl, path}) =>
+  `${siteUrl.replace(/\/+$/, '')}${path}`;
+const parseVersions = (rawValue, fallbackVersion) =>
+  (rawValue ?? fallbackVersion)
+    .split(',')
+    .map((value) => value.trim())
+    .filter(Boolean);
+
+const versionSlug = process.env.DOCS_VERSION ?? BRANCH_VERSION;
+const defaultBranch = process.env.DOCS_DEFAULT_BRANCH ?? BRANCH_VERSION;
+const isDefaultBranch = versionSlug === defaultBranch;
+const siteUrl = process.env.SITE_URL ?? 'http://localhost:3000';
+const baseUrl = process.env.DOCS_BASE_URL ?? '/';
+const docsSiteBase = process.env.DOCS_SITE_BASE ?? '/';
+const docsRouteBasePath =
+  process.env.DOCS_ROUTE_BASE_PATH ??
+  (isDefaultBranch ? 'docs' : `docs/${versionSlug}`);
+const versions = parseVersions(process.env.DOCS_VERSIONS, versionSlug);
+const homePath = buildCanonicalHomePath({docsSiteBase});
+const docsIntroPath = buildCurrentDocsContentPath({
   baseUrl,
-  docsSiteBase,
-  docsRouteBasePath,
-  defaultBranch,
-  isDefaultBranch,
-  versions,
-} = resolveDocsRuntime(runtimeEnv);
-const homePath = isDefaultBranch ? buildCanonicalHomePath({docsSiteBase}) : baseUrl;
-const docsIntroPath = buildCurrentDocsRoutePath({
   docsRouteBasePath,
   docPath: 'overview/intro',
 });
-const docsQuickStartPath = buildCurrentDocsRoutePath({
+const docsQuickStartPath = buildCurrentDocsContentPath({
+  baseUrl,
   docsRouteBasePath,
   docPath: 'getting-started/quick-start',
 });
@@ -102,7 +126,7 @@ const config = {
       logo: {
         alt: 'KoalaTs Logo',
         src: 'img/logo.png',
-        href: homeHref,
+        href: homePath,
         width: 32,
         height: 32,
       },

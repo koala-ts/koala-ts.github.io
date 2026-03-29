@@ -1,26 +1,5 @@
 const {appendFileSync, existsSync, readFileSync, writeFileSync} = require('node:fs');
 const {
-  buildAbsoluteSiteUrl,
-  buildCanonicalDocsContentPath,
-  buildCanonicalDocsRootPath,
-  buildCanonicalHomePath,
-  buildCurrentDocsContentPath,
-  buildCurrentDocsRoutePath,
-  buildSharedDocsManifestPath,
-  buildVersionNavbarItems,
-  LOCAL_PREVIEW_MODE,
-  PUBLISH_SIMULATION_MODE,
-  parseDocsVersions,
-  requireEnvValue,
-  resolveBranchRuntime,
-  resolveCurrentBranch,
-  resolveDocsRouteBasePath,
-  resolveDocsRuntime,
-  resolveGitBranch,
-  resolveLocalDocsEnv,
-  resolveRuntimeMode,
-} = require('./docusaurus/config');
-const {
   resolvePublishContext,
 } = require('./github-pages/resolve-publish-context');
 const {
@@ -486,26 +465,7 @@ if (require.main === module) {
 }
 
 module.exports = {
-  buildAbsoluteSiteUrl,
-  buildCanonicalDocsContentPath,
-  buildCanonicalDocsRootPath,
-  buildCanonicalHomePath,
-  buildCurrentDocsContentPath,
-  buildCurrentDocsRoutePath,
-  buildSharedDocsManifestPath,
-  buildVersionNavbarItems,
-  LOCAL_PREVIEW_MODE,
-  PUBLISH_SIMULATION_MODE,
   deployBranch,
-  parseDocsVersions,
   redeployAll,
-  requireEnvValue,
-  resolveBranchRuntime,
-  resolveCurrentBranch,
-  resolveDocsRouteBasePath,
-  resolveDocsRuntime,
-  resolveGitBranch,
-  resolveLocalDocsEnv,
-  resolveRuntimeMode,
   runCli,
 };

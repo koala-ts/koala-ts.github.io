@@ -6,13 +6,10 @@ The architecture is defined in [`PLAN.md`](./PLAN.md).
 
 ## Boundaries
 
-- This module currently exposes a transitional external API for repository consumers.
+- This module currently exposes a narrow transitional Node API for repository deployment consumers.
 - The final long-term public API is intentionally deferred.
-- Current external entrypoints are:
-  - [`node.js`](./node.js) for all Node-side external usage, including workflows and Docusaurus config/runtime wiring
-  - [`browser.js`](./browser.js) for browser-safe external usage
+- The current external entrypoint is [`node.js`](./node.js) for workflow and local-action release operations.
 - [`core`](./core) will contain pure release-policy functions.
-- [`docusaurus`](./docusaurus) will contain the Docusaurus adapter.
 - [`github-pages`](./github-pages) will contain the GitHub Pages adapter.
 - [`github-actions`](./github-actions) is reserved for GitHub Actions-specific wrappers and shared scripts.
 
@@ -33,8 +30,7 @@ The architecture is defined in [`PLAN.md`](./PLAN.md).
   - `canonical_branch`
   - `deployable_branches`
   - `target_branch` for single-branch deploy
-- Docusaurus config/runtime wiring should consume [`node.js`](./node.js).
-- Browser-safe Docusaurus integrations should consume [`browser.js`](./browser.js).
+- Branch-local Docusaurus config/runtime should stay outside this module and keep only the minimum explicit logic needed for that branch to build and preview correctly.
 - Keep the top-level workflow set limited to:
   - [`../.github/workflows/ci.yml`](../.github/workflows/ci.yml)
   - [`../.github/workflows/publish-branch.yml`](../.github/workflows/publish-branch.yml)
