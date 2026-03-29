@@ -9,202 +9,124 @@ type SwitchTarget = {
   label: string;
 };
 
-type CustomFields = {
-  defaultBranch: string;
-  docsSiteBase: string;
-  versionFallbackDocPath: string;
+type VersionEntry = {
+  slug: string;
+  label: string;
+  routeBasePath: string;
+  introDocId: string;
+  fallbackDocId: string;
 };
 
-type UseVersionSwitchTargetsParams = {
-  currentVersion: string;
-  versions: string[];
+type CustomFields = {
+  versions: VersionEntry[];
+  latestVersion: string;
+  docPathManifest: VersionPathsManifest;
 };
 
 const trimSlashes = (value: string): string => value.replace(/^\/+|\/+$/g, '');
 
-const normalizeBasePath = (value: string): string => {
-  const trimmed = value.trim();
-  const withLeadingSlash = trimmed.startsWith('/') ? trimmed : `/${trimmed}`;
-  const withTrailingSlash = withLeadingSlash.endsWith('/')
-    ? withLeadingSlash
-    : `${withLeadingSlash}/`;
-
-  return withTrailingSlash.replace(/\/{2,}/g, '/');
-};
-
-const buildCanonicalHomePath = ({docsSiteBase}: {docsSiteBase: string}): string =>
-  normalizeBasePath(docsSiteBase);
-
-const buildSharedDocsManifestPath = ({
-  docsSiteBase,
-}: {
-  docsSiteBase: string;
-}): string => `${buildCanonicalHomePath({docsSiteBase})}docs/doc-paths.json`;
-
-const buildAbsoluteSiteUrl = ({
-  siteUrl,
-  path,
-}: {
-  siteUrl: string;
-  path: string;
-}): string => `${siteUrl.replace(/\/+$/, '')}${path}`;
-
-const buildCanonicalDocsRootPath = ({
-  docsSiteBase,
-  defaultBranch,
-  version,
-}: {
-  docsSiteBase: string;
-  defaultBranch: string;
-  version: string;
-}): string => {
-  const homePath = buildCanonicalHomePath({docsSiteBase});
-
-  if (version === defaultBranch) {
-    return `${homePath}docs/`;
-  }
-
-  if (version === 'main') {
-    return `${homePath}docs/next/`;
-  }
-
-  return `${homePath}docs/${version}/`;
-};
-
-const buildCanonicalDocsContentPath = ({
-  docsSiteBase,
-  defaultBranch,
+const buildDocsContentPath = ({
   version,
   docPath,
 }: {
-  docsSiteBase: string;
-  defaultBranch: string;
-  version: string;
+  version: VersionEntry;
   docPath: string;
-}): string =>
-  `${buildCanonicalDocsRootPath({docsSiteBase, defaultBranch, version})}${trimSlashes(docPath)}`;
+}): string => `/${trimSlashes(version.routeBasePath)}/${trimSlashes(docPath)}`;
+
+const parseCurrentVersion = ({
+  currentPathname,
+  versions,
+  latestVersion,
+}: {
+  currentPathname: string;
+  versions: VersionEntry[];
+  latestVersion: string;
+}): VersionEntry => {
+  const normalizedPath = trimSlashes(currentPathname);
+  const matchedVersion = versions.find(({routeBasePath}) =>
+    normalizedPath === trimSlashes(routeBasePath) ||
+    normalizedPath.startsWith(`${trimSlashes(routeBasePath)}/`),
+  );
+
+  return matchedVersion ?? versions.find(({slug}) => slug === latestVersion) ?? versions[0];
+};
 
 const parseCurrentDocPath = ({
   currentPathname,
-  defaultBranch,
-  docsSiteBase,
-  targetVersion,
+  currentVersion,
 }: {
   currentPathname: string;
-  defaultBranch: string;
-  docsSiteBase: string;
-  targetVersion: string;
+  currentVersion: VersionEntry;
 }): string | null => {
-  const normalizedCurrentPathname = trimSlashes(currentPathname);
-  const normalizedSiteBase = trimSlashes(docsSiteBase);
+  const normalizedPath = trimSlashes(currentPathname);
+  const normalizedRouteBasePath = trimSlashes(currentVersion.routeBasePath);
 
-  if (normalizedSiteBase) {
-    const siteBasePrefix = `${normalizedSiteBase}/`;
-
-    if (!normalizedCurrentPathname.startsWith(siteBasePrefix)) {
-      return null;
-    }
-  }
-
-  const relativePath = normalizedSiteBase
-    ? normalizedCurrentPathname.slice(normalizedSiteBase.length + 1)
-    : normalizedCurrentPathname;
-  const segments = relativePath.split('/').filter(Boolean);
-
-  if (segments[0] !== 'docs' || segments.length < 2) {
+  if (
+    normalizedPath !== normalizedRouteBasePath &&
+    !normalizedPath.startsWith(`${normalizedRouteBasePath}/`)
+  ) {
     return null;
   }
 
-  if (segments[1] === targetVersion) {
-    return trimSlashes(segments.slice(2).join('/')) || null;
-  }
-
-  if (segments[1] === defaultBranch || segments[1] === 'next') {
-    return trimSlashes(segments.slice(2).join('/')) || null;
-  }
-
-  return trimSlashes(segments.slice(1).join('/')) || null;
+  return trimSlashes(normalizedPath.slice(normalizedRouteBasePath.length)) || null;
 };
 
 const resolveVersionSwitchTarget = ({
   availableDocPathsByVersion,
   currentPathname,
-  defaultBranch,
-  docsSiteBase,
-  fallbackDocPath,
+  currentVersion,
   targetVersion,
 }: {
   availableDocPathsByVersion: VersionPathsManifest;
   currentPathname: string;
-  defaultBranch: string;
-  docsSiteBase: string;
-  fallbackDocPath: string;
-  targetVersion: string;
+  currentVersion: VersionEntry;
+  targetVersion: VersionEntry;
 }): string => {
   const currentDocPath = parseCurrentDocPath({
     currentPathname,
-    defaultBranch,
-    docsSiteBase,
-    targetVersion,
+    currentVersion,
   });
-  const targetDocPaths = new Set(availableDocPathsByVersion[targetVersion] ?? []);
+  const targetDocPaths = new Set(availableDocPathsByVersion[targetVersion.slug] ?? []);
   const targetDocPath =
     currentDocPath && targetDocPaths.has(currentDocPath)
       ? currentDocPath
-      : trimSlashes(fallbackDocPath);
+      : trimSlashes(targetVersion.fallbackDocId);
 
-  return buildCanonicalDocsContentPath({
-    docsSiteBase,
-    defaultBranch,
+  return buildDocsContentPath({
     version: targetVersion,
     docPath: targetDocPath,
   });
 };
 
-export const useVersionSwitchTargets = ({
-  currentVersion,
-  versions,
-}: UseVersionSwitchTargetsParams): SwitchTarget[] => {
+export const useVersionSwitchTargets = (): {
+  currentVersion: string;
+  items: SwitchTarget[];
+} => {
   const {pathname} = useLocation();
   const {siteConfig} = useDocusaurusContext();
-  const {defaultBranch, docsSiteBase, versionFallbackDocPath} =
+  const {versions, latestVersion, docPathManifest} =
     siteConfig.customFields as CustomFields;
-  const manifestUrl = buildAbsoluteSiteUrl({
-    siteUrl: siteConfig.url,
-    path: buildSharedDocsManifestPath({docsSiteBase}),
+  const [manifest, setManifest] = useState<VersionPathsManifest>(docPathManifest);
+  const currentVersion = parseCurrentVersion({
+    currentPathname: pathname,
+    versions,
+    latestVersion,
   });
-  const [manifest, setManifest] = useState<VersionPathsManifest>({});
 
   useEffect(() => {
-    let cancelled = false;
+    setManifest(docPathManifest);
+  }, [docPathManifest]);
 
-    fetch(manifestUrl).then((response) => (response.ok ? response.json() : {})).then((loadedManifest) => {
-      if (!cancelled) {
-        setManifest(loadedManifest);
-      }
-    }).catch(() => {
-      if (!cancelled) {
-        setManifest({});
-      }
-    });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [manifestUrl]);
-
-  return versions.map((version) => ({
-    href: buildAbsoluteSiteUrl({
-      siteUrl: siteConfig.url,
-      path: resolveVersionSwitchTarget({
+  return {
+    currentVersion: currentVersion.label,
+    items: versions.map((version) => ({
+      href: resolveVersionSwitchTarget({
         availableDocPathsByVersion: manifest,
         currentPathname: pathname,
-        defaultBranch,
-        docsSiteBase,
-        fallbackDocPath: versionFallbackDocPath,
+        currentVersion,
         targetVersion: version,
       }),
-    }),
-    label: version,
-  }));
+      label: version.label,
+    })),
+  };
 };

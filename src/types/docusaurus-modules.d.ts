@@ -12,6 +12,7 @@ declare module '@docusaurus/useDocusaurusContext' {
   type DocusaurusContext = {
     siteConfig: {
       title?: string;
+      url: string;
       customFields?: unknown;
     };
   };
