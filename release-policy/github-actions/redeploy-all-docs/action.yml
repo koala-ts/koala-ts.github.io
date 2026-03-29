@@ -5,6 +5,9 @@ inputs:
   site_base:
     description: GitHub Pages site base path
     required: false
+  site_url:
+    description: Published site URL
+    required: false
   canonical_branch:
     description: Branch that owns the canonical homepage and docs URLs
     required: false
@@ -27,6 +30,7 @@ runs:
       shell: bash
       env:
         SITE_BASE: ${{ inputs.site_base || '/' }}
+        SITE_URL: ${{ inputs.site_url }}
         CANONICAL_BRANCH: ${{ inputs.canonical_branch || github.event.repository.default_branch }}
         DEPLOYABLE_BRANCHES: ${{ inputs.deployable_branches || inputs.canonical_branch || github.event.repository.default_branch }}
         GITHUB_TOKEN: ${{ inputs.github_token }}
@@ -55,6 +59,7 @@ runs:
 
         for branch in "${BRANCHES[@]}"; do
           SITE_BASE="${SITE_BASE}" \
+          SITE_URL="${SITE_URL}" \
           CANONICAL_BRANCH="${CANONICAL_BRANCH}" \
           DEPLOYABLE_BRANCHES="${DEPLOYABLE_BRANCHES}" \
           TARGET_BRANCH="${branch}" \

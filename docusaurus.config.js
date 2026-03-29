@@ -1,20 +1,13 @@
 const prismReact = require('prism-react-renderer');
-const {buildVersionConfigs} = require('./release-policy/docusaurus');
+const {createDocusaurusReleaseConfig} = require('./release-policy/docusaurus');
 
-const {
-  baseUrl,
-  siteUrl,
-  homePath,
-  docsIntroPath,
-  versionSlug,
-  versions,
-  docsRouteBasePath,
-  searchDocsRouteBasePath,
-  customFields,
-} = buildVersionConfigs({
+const releasePolicy = createDocusaurusReleaseConfig({
   branch: '2.x',
-  docsFallbackPath: 'overview/intro',
+  fallbackDocPath: 'overview/intro',
 });
+
+const siteUrl = process.env.SITE_URL ?? 'https://koala-ts.github.io';
+const docsIntroPath = '/docs/overview/intro';
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
@@ -22,7 +15,7 @@ const config = {
   tagline: 'TypeScript framework documentation',
   favicon: 'favicon.ico',
   url: siteUrl,
-  baseUrl,
+  baseUrl: releasePolicy.site.baseUrl,
   onBrokenLinks: 'throw',
   markdown: {
     hooks: {
@@ -34,7 +27,8 @@ const config = {
     locales: ['en'],
   },
   customFields: {
-    ...customFields,
+    ...releasePolicy.customFields,
+    docsIntroPath,
   },
   themeConfig: {
     colorMode: {
@@ -47,7 +41,7 @@ const config = {
       logo: {
         alt: 'KoalaTs Logo',
         src: 'img/logo.png',
-        href: homePath,
+        href: '/',
       },
       items: [
         {
@@ -55,12 +49,7 @@ const config = {
           position: 'left',
           label: 'Documentation',
         },
-        {
-          type: 'custom-version-switcher',
-          currentVersion: versionSlug,
-          position: 'right',
-          versions,
-        },
+        releasePolicy.navbar.versionSwitcherItem,
         {
           href: 'https://github.com/koala-ts',
           label: 'GitHub',
@@ -75,7 +64,7 @@ const config = {
       logo: {
         alt: 'KoalaTs Logo',
         src: 'img/logo.png',
-        href: homePath,
+        href: '/',
         width: 32,
         height: 32,
       },
@@ -91,7 +80,7 @@ const config = {
       attributes: {
         rel: 'apple-touch-icon',
         sizes: '180x180',
-        href: `${baseUrl}favicon/apple-touch-icon.png`,
+        href: `${releasePolicy.site.baseUrl}favicon/apple-touch-icon.png`,
       },
     },
     {
@@ -100,7 +89,7 @@ const config = {
         rel: 'icon',
         type: 'image/png',
         sizes: '32x32',
-        href: `${baseUrl}favicon/favicon-32x32.png`,
+        href: `${releasePolicy.site.baseUrl}favicon/favicon-32x32.png`,
       },
     },
     {
@@ -109,14 +98,14 @@ const config = {
         rel: 'icon',
         type: 'image/png',
         sizes: '16x16',
-        href: `${baseUrl}favicon/favicon-16x16.png`,
+        href: `${releasePolicy.site.baseUrl}favicon/favicon-16x16.png`,
       },
     },
     {
       tagName: 'link',
       attributes: {
         rel: 'manifest',
-        href: `${baseUrl}site.webmanifest`,
+        href: `${releasePolicy.site.baseUrl}site.webmanifest`,
       },
     },
   ],
@@ -125,7 +114,7 @@ const config = {
       'classic',
       {
         docs: {
-          routeBasePath: docsRouteBasePath,
+          ...releasePolicy.docs.presetConfig,
           sidebarPath: require.resolve('./sidebars.js'),
         },
         blog: false,
@@ -142,9 +131,9 @@ const config = {
         indexDocs: true,
         indexBlog: false,
         indexPages: true,
-        docsRouteBasePath: searchDocsRouteBasePath,
         hashed: true,
         language: ['en'],
+        docsRouteBasePath: releasePolicy.search.docsRouteBasePath,
       },
     ],
   ],

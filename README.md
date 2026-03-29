@@ -63,7 +63,7 @@ DOCS_DEFAULT_BRANCH=<current-default-branch> npm run start
 
 That keeps the injected default branch canonical at `/docs`. For a non-default release branch such as `1.x`, publish simulation would serve the docs under `/docs/1.x`.
 
-Branch-local docs runtime behavior now lives explicitly in the branch Docusaurus config and browser components. Those files do not import or depend on `release-policy`. Release-policy remains the deployment control plane on the current default branch.
+Branch-local docs runtime behavior now lives explicitly in the branch Docusaurus config and browser components. In the current branch shape, `docusaurus.config.js` may use the standalone Docusaurus adapter at [`release-policy/docusaurus.js`](./release-policy/docusaurus.js), but it must not depend on `release-policy` core deploy logic. Release-policy core remains the deployment control plane on the current default branch.
 
 Build static files:
 
@@ -115,9 +115,41 @@ GitHub-specific runtime glue lives under [`release-policy/github-actions`](./rel
 The workflow-to-action release-policy contract currently passes:
 
 - `site_base`
+- `site_url`
 - `canonical_branch`
 - `deployable_branches`
 - `target_branch` for single-branch deploy
+
+## Runtime env variables
+
+The current branch uses two distinct env-variable surfaces.
+
+Workflow and action inputs:
+
+- `site_base`
+- `site_url`
+- `canonical_branch`
+- `deployable_branches`
+- `target_branch` for single-branch deploy
+
+Docusaurus runtime env variables used by the standalone adapter in [`release-policy/docusaurus.js`](./release-policy/docusaurus.js):
+
+- `DOCS_VERSION`
+  - current version slug for the build
+- `DOCS_DEFAULT_BRANCH`
+  - canonical branch name used to distinguish default-branch vs non-default docs behavior
+- `DOCS_BASE_URL`
+  - final Docusaurus `baseUrl`
+- `DOCS_SITE_BASE`
+  - canonical site base used by version-switching URLs and shared manifest lookup
+- `DOCS_ROUTE_BASE_PATH`
+  - final docs route base path
+- `DOCS_VERSIONS`
+  - ordered versions list for the version switcher
+- `DOCS_SEARCH_ROUTE_BASE_PATH`
+  - docs route base path used by the local search plugin
+
+`SITE_URL` is intentionally branch-local. It is read only in [`docusaurus.config.js`](./docusaurus.config.js), injected from workflows during deploy builds, and not consumed by the standalone adapter or browser custom fields.
 
 Missing deployable branches are skipped without failing a republish-all run.
 

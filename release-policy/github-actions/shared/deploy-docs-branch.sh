@@ -22,8 +22,10 @@ json_value() {
 
 resolve_site_base() {
   if [ -f .gh-pages/CNAME ]; then
-    DOMAIN=$(head -n 1 .gh-pages/CNAME | tr -d '[:space:]')
-    SITE_URL="https://${DOMAIN}"
+    if [ -z "${SITE_URL:-}" ]; then
+      DOMAIN=$(head -n 1 .gh-pages/CNAME | tr -d '[:space:]')
+      SITE_URL="https://${DOMAIN}"
+    fi
     if [ -z "${SITE_BASE:-}" ]; then
       SITE_BASE="/"
     fi
@@ -33,7 +35,10 @@ resolve_site_base() {
   OWNER_LC=$(echo "${GITHUB_REPOSITORY_OWNER}" | tr '[:upper:]' '[:lower:]')
   REPO_NAME="${GITHUB_REPOSITORY#*/}"
   REPO_LC=$(echo "${REPO_NAME}" | tr '[:upper:]' '[:lower:]')
-  SITE_URL="https://${GITHUB_REPOSITORY_OWNER}.github.io"
+
+  if [ -z "${SITE_URL:-}" ]; then
+    SITE_URL="https://${GITHUB_REPOSITORY_OWNER}.github.io"
+  fi
 
   if [ -n "${SITE_BASE:-}" ]; then
     return
@@ -129,12 +134,12 @@ VERSION_CSV=$(json_value "${PREPARED_JSON}" "versionCatalog.versionCsv")
   cd source
   DOCS_DEFAULT_BRANCH="${DEFAULT_BRANCH}" \
     DOCS_VERSION="${VERSION_SLUG}" \
-    DOCS_VERSIONS="${VERSION_CSV}" \
-    DOCS_SITE_BASE="${SITE_BASE}" \
-    DOCS_BASE_URL="${BUILD_BASE_URL}" \
-    DOCS_ROUTE_BASE_PATH="${DOCS_ROUTE_BASE_PATH}" \
-    SITE_URL="${SITE_URL}" \
-    npm run build
+  DOCS_VERSIONS="${VERSION_CSV}" \
+  DOCS_SITE_BASE="${SITE_BASE}" \
+  DOCS_BASE_URL="${BUILD_BASE_URL}" \
+  DOCS_ROUTE_BASE_PATH="${DOCS_ROUTE_BASE_PATH}" \
+  SITE_URL="${SITE_URL}" \
+  npm run build
 )
 
 if [ "${IS_DEFAULT_BRANCH}" = "true" ]; then

@@ -7,7 +7,8 @@ The architecture is defined in [`PLAN.md`](./PLAN.md).
 ## Boundaries
 
 - This module currently exposes a narrow transitional Node API for repository deployment consumers.
-- The final long-term public API is intentionally deferred.
+- This branch also exposes a standalone Docusaurus adapter at [`docusaurus.js`](./docusaurus.js) for branch config/runtime assembly.
+- The final long-term public API is intentionally deferred beyond these transitional entrypoints.
 - The current external entrypoint is [`node.js`](./node.js) for workflow and local-action release operations.
 - [`core`](./core) will contain pure release-policy functions.
 - [`github-pages`](./github-pages) will contain the GitHub Pages adapter.
@@ -25,12 +26,14 @@ The architecture is defined in [`PLAN.md`](./PLAN.md).
 - Start each new PR branch from a freshly fetched current default branch.
 - Repository consumers should use only the documented external entrypoints and avoid importing private internal files directly.
 - The workflow entrypoint for release operations is [`node.js`](./node.js).
+- The Docusaurus-facing transitional entrypoint is [`docusaurus.js`](./docusaurus.js).
 - Current workflow-to-action release-policy config is passed explicitly as:
   - `site_base`
+  - `site_url`
   - `canonical_branch`
   - `deployable_branches`
   - `target_branch` for single-branch deploy
-- Branch-local Docusaurus config/runtime should stay outside this module and keep only the minimum explicit configuration needed for that branch to build and preview correctly.
+- Branch-local Docusaurus config/runtime should keep only the minimum explicit configuration needed for that branch to build and preview correctly. When it uses the standalone adapter, that adapter must stay independent from `core`.
 - Keep the top-level workflow set limited to:
   - [`../.github/workflows/ci.yml`](../.github/workflows/ci.yml)
   - [`../.github/workflows/publish-branch.yml`](../.github/workflows/publish-branch.yml)
@@ -62,3 +65,19 @@ GitHub-specific runtime glue now lives in:
 - [`github-actions/deploy-docs-branch`](./github-actions/deploy-docs-branch)
 - [`github-actions/redeploy-all-docs`](./github-actions/redeploy-all-docs)
 - [`github-actions/shared`](./github-actions/shared)
+
+## Current Runtime Env Contract
+
+The standalone Docusaurus adapter in [`docusaurus.js`](./docusaurus.js) currently reads:
+
+- `DOCS_VERSION`
+- `DOCS_DEFAULT_BRANCH`
+- `DOCS_BASE_URL`
+- `DOCS_SITE_BASE`
+- `DOCS_ROUTE_BASE_PATH`
+- `DOCS_VERSIONS`
+- `DOCS_SEARCH_ROUTE_BASE_PATH`
+
+These values shape the published docs runtime only. They do not replace workflow-side release-policy inputs.
+
+`SITE_URL` is intentionally outside the adapter. It is read in branch-local [`../docusaurus.config.js`](../docusaurus.config.js), passed from workflows during deploy builds, and kept separate so a future site URL migration does not require changing every branch.
