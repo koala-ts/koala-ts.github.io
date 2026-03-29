@@ -1,6 +1,7 @@
 const {resolveDocsRuntime} = require('./scripts/resolve-docs-runtime');
-const {versionFallbackDocPath} = require('./docs-site.config');
 const prismReact = require('prism-react-renderer');
+
+const versionFallbackDocPath = 'overview/intro';
 
 const {
   versionSlug,
