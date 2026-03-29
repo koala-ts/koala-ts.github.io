@@ -122,4 +122,4 @@ The workflow-to-action release-policy contract currently passes:
 Missing deployable branches are skipped without failing a republish-all run.
 
 The repository no longer uses or depends on a separate control branch for release policy or deployment scripts.
-The current external entrypoints are [`release-policy/node.js`](./release-policy/node.js) for Node-side consumers and [`release-policy/browser.js`](./release-policy/browser.js) for browser-side consumers. Repository code outside `release-policy` should stay limited to configuration, content, workflow YAML, and release data.
+The current external entrypoints are [`release-policy/node.js`](./release-policy/node.js) for Node-side consumers and [`release-policy/browser.js`](./release-policy/browser.js) for browser-side consumers. Repository code outside `release-policy` should stay limited to configuration, content, and workflow YAML.

@@ -25,23 +25,23 @@ const buildVersionCatalog = ({loadedVersions, currentVersion}) => {
 };
 
 const buildVersionCatalogCli = (args, {stdout = process.stdout} = {}) => {
-  const [catalogPath, currentVersion] = args;
+  const [versionsPath, currentVersion] = args;
 
-  if (!catalogPath || !currentVersion) {
+  if (!versionsPath || !currentVersion) {
     throw new Error(
-      'Usage: internal buildVersionCatalogCli(<catalogPath> <currentVersion>)',
+      'Usage: internal buildVersionCatalogCli(<versionsPath> <currentVersion>)',
     );
   }
 
-  const loadedVersions = existsSync(catalogPath)
-    ? JSON.parse(readFileSync(catalogPath, 'utf8'))
+  const loadedVersions = existsSync(versionsPath)
+    ? JSON.parse(readFileSync(versionsPath, 'utf8'))
     : [];
   const {merged, versionCsv} = buildVersionCatalog({
     loadedVersions,
     currentVersion,
   });
 
-  writeFileSync(catalogPath, `${JSON.stringify(merged, null, 2)}\n`);
+  writeFileSync(versionsPath, `${JSON.stringify(merged, null, 2)}\n`);
   stdout.write(`${versionCsv}\n`);
 
   return {

@@ -32,7 +32,7 @@
 - The current default branch owns release policy, deploy helpers, and the dispatchable workflows used by GitHub Actions.
 - Release-policy configuration should flow explicitly through workflow `with`, local action inputs, and the Node entrypoint.
 - Deployable docs branches must not become the source of truth for global release ownership.
-- Repository code outside `release-policy` should stay limited to configuration, content, workflow YAML, and release data.
+- Repository code outside `release-policy` should stay limited to configuration, content, and workflow YAML.
 - External consumers should go through [`release-policy/node.js`](./release-policy/node.js) or [`release-policy/browser.js`](./release-policy/browser.js), depending on the runtime they execute in.
 - The current release workflow contract uses:
   - `site_base`

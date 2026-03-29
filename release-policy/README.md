@@ -56,7 +56,7 @@ The architecture is defined in [`PLAN.md`](./PLAN.md).
 - Update existing tests when policy changes. Do not treat the suite as append-only.
 - Path-policy changes must keep explicit regression coverage for both the default branch contract and at least one non-default versioned branch contract.
 - Keep release-policy helpers and deployment workflows on the current default branch. Do not reintroduce a separate control branch.
-- Keep repository code outside this module limited to configuration, content, workflow YAML, and release data.
+- Keep repository code outside this module limited to configuration, content, and workflow YAML.
 - The existing workflow model must keep working until the extraction plan is finished.
 
 ## Current GitHub Action State
