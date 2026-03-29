@@ -42,6 +42,8 @@ DOCS_DEFAULT_BRANCH=<current-default-branch> npm run start
 
 That serves this branch under `/docs/1.x`.
 
+This branch-local Docusaurus config is intentionally self-contained and does not import or depend on `release-policy`.
+
 Run validation:
 
 ```bash
