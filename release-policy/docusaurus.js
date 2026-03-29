@@ -32,19 +32,11 @@ function resolveDocsBasePath({
       : joinPath(baseUrl, docsRouteBasePath);
 }
 
-function buildAbsoluteSiteUrl({
-  siteUrl,
-  path,
-}) {
-  return `${siteUrl.replace(/\/+$/, '')}${path}`;
-}
-
 function createDocusaurusReleaseConfig({
   branch,
   fallbackDocPath,
   introDocPath,
   quickStartDocPath,
-  siteUrl,
   env = process.env,
 }) {
   const versionSlug = env.DOCS_VERSION ?? branch;

@@ -8,7 +8,6 @@ const releasePolicy = createDocusaurusReleaseConfig({
   fallbackDocPath: 'overview/intro',
   introDocPath: 'overview/intro',
   quickStartDocPath: 'getting-started/quick-start',
-  siteUrl,
 });
 
 /** @type {import('@docusaurus/types').Config} */
