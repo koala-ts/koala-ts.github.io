@@ -1,0 +1,21 @@
+site_name: KoalaTs
+site_description: KoalaTs documentation platform bootstrap
+site_url: https://koala-ts.github.io
+docs_dir: mkdocs/docs
+site_dir: build/mkdocs
+theme:
+  name: material
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.sections
+    - search.suggest
+    - search.highlight
+plugins:
+  - search
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+nav:
+  - Home: index.md

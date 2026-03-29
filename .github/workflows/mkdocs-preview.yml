@@ -1,0 +1,32 @@
+name: 🧪 Preview MkDocs Bootstrap
+run-name: Preview MkDocs bootstrap
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install MkDocs toolchain
+        run: pip install -r requirements.txt
+
+      - name: Build MkDocs preview
+        run: mkdocs build --strict
+
+      - name: Upload preview artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mkdocs-preview
+          path: build/mkdocs

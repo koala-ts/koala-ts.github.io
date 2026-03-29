@@ -1,0 +1,12 @@
+services:
+  mkdocs:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: koala-ts-docs-mkdocs
+    ports:
+      - "8000:8000"
+    working_dir: /workspace
+    volumes:
+      - .:/workspace
+    command: mkdocs serve --dev-addr 0.0.0.0:8000
