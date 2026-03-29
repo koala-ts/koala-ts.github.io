@@ -64,8 +64,8 @@ Publication is centralized and this branch remains deployable.
 
 The live deployment control plane is owned by the current default branch:
 
-- the current default branch owns the release-policy module and deploy workflows
-- this `1.x` branch owns only its versioned docs content and explicit branch-local Docusaurus runtime/config
+- the current default branch owns release policy, GitHub actions, and deploy workflows
+- this `1.x` branch owns only its versioned docs content and explicit branch-local docs runtime/config
 
 Current deployment state:
 

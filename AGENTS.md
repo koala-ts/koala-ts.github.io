@@ -31,7 +31,7 @@
 
 - The current default branch owns release policy, deploy helpers, and the dispatchable workflows used by GitHub Actions.
 - Deployable docs branches must not become the source of truth for global release ownership.
-- Branch-local runtime code should stay limited to what is necessary for local development and branch builds, and it should prefer explicit branch-owned values over unnecessary dynamic helper layers.
+- Branch-local docs runtime should stay limited to what is necessary for local development and branch builds, and it should prefer explicit branch-owned values over unnecessary dynamic helper layers.
 - Manual operators should use:
   - `🚀 Deploy Selected Docs Branch` on the current default branch
   - `🚀 Deploy All Deployable Docs Branches` on the current default branch
