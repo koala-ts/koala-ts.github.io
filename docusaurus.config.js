@@ -1,14 +1,16 @@
 const prismReact = require('prism-react-renderer');
-const {createDocusaurusReleaseConfig} = require('./release-policy/docusaurus');
+const {
+  buildDocPathManifest,
+  buildSearchContexts,
+  createDocsPlugins,
+  latestVersion,
+  versions,
+} = require('./versioned-docs/registry');
 
 const siteUrl = process.env.SITE_URL ?? 'https://koala-ts.github.io';
-const releasePolicy = createDocusaurusReleaseConfig({
-  branch: '2.x',
-  fallbackDocPath: 'overview/intro',
-  introDocPath: 'overview/intro',
-  quickStartDocPath: 'getting-started/quick-start',
-  siteUrl,
-});
+const latestVersionEntry = versions.find(({slug}) => slug === latestVersion);
+const docsIntroPath = `/docs/${latestVersionEntry.slug}/${latestVersionEntry.introDocId}`;
+const docsQuickStartPath = `/docs/${latestVersionEntry.slug}/${latestVersionEntry.quickStartDocId}`;
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
@@ -16,7 +18,7 @@ const config = {
   tagline: 'TypeScript framework documentation',
   favicon: 'favicon.ico',
   url: siteUrl,
-  baseUrl: releasePolicy.site.baseUrl,
+  baseUrl: '/',
   onBrokenLinks: 'throw',
   markdown: {
     hooks: {
@@ -28,7 +30,19 @@ const config = {
     locales: ['en'],
   },
   customFields: {
-    ...releasePolicy.customFields,
+    versions: versions.map(
+      ({slug, label, routeBasePath, introDocId, fallbackDocId}) => ({
+        slug,
+        label,
+        routeBasePath,
+        introDocId,
+        fallbackDocId,
+      }),
+    ),
+    latestVersion,
+    docsIntroPath,
+    docsQuickStartPath,
+    docPathManifest: buildDocPathManifest(versions),
   },
   themeConfig: {
     colorMode: {
@@ -44,8 +58,15 @@ const config = {
         href: '/',
       },
       items: [
-        releasePolicy.navbar.docsItem,
-        releasePolicy.navbar.versionSwitcherItem,
+        {
+          href: docsIntroPath,
+          position: 'left',
+          label: 'Documentation',
+        },
+        {
+          type: 'custom-version-switcher',
+          position: 'right',
+        },
         {
           href: 'https://github.com/koala-ts',
           label: 'GitHub',
@@ -76,7 +97,7 @@ const config = {
       attributes: {
         rel: 'apple-touch-icon',
         sizes: '180x180',
-        href: `${releasePolicy.site.baseUrl}favicon/apple-touch-icon.png`,
+        href: '/favicon/apple-touch-icon.png',
       },
     },
     {
@@ -85,7 +106,7 @@ const config = {
         rel: 'icon',
         type: 'image/png',
         sizes: '32x32',
-        href: `${releasePolicy.site.baseUrl}favicon/favicon-32x32.png`,
+        href: '/favicon/favicon-32x32.png',
       },
     },
     {
@@ -94,14 +115,14 @@ const config = {
         rel: 'icon',
         type: 'image/png',
         sizes: '16x16',
-        href: `${releasePolicy.site.baseUrl}favicon/favicon-16x16.png`,
+        href: '/favicon/favicon-16x16.png',
       },
     },
     {
       tagName: 'link',
       attributes: {
         rel: 'manifest',
-        href: `${releasePolicy.site.baseUrl}site.webmanifest`,
+        href: '/site.webmanifest',
       },
     },
   ],
@@ -109,10 +130,7 @@ const config = {
     [
       'classic',
       {
-        docs: {
-          ...releasePolicy.docs.presetConfig,
-          sidebarPath: require.resolve('./sidebars.js'),
-        },
+        docs: false,
         blog: false,
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
@@ -121,6 +139,7 @@ const config = {
     ],
   ],
   plugins: [
+    ...createDocsPlugins(versions),
     [
       '@easyops-cn/docusaurus-search-local',
       {
@@ -129,7 +148,9 @@ const config = {
         indexPages: true,
         hashed: true,
         language: ['en'],
-        docsRouteBasePath: releasePolicy.search.docsRouteBasePath,
+        docsRouteBasePath: versions.map(({routeBasePath}) => routeBasePath),
+        searchContextByPaths: buildSearchContexts(versions),
+        hideSearchBarWithNoSearchContext: true,
       },
     ],
   ],

@@ -4,19 +4,14 @@ on:
   push:
     branches:
       - main
-      - "*.x"
 
   pull_request:
     branches:
       - main
-      - "*.x"
 
 jobs:
   validate:
     runs-on: ubuntu-latest
-    env:
-      DOCS_CURRENT_BRANCH: ${{ github.event_name == 'pull_request' && github.head_ref || github.ref_name }}
-      DOCS_DEFAULT_BRANCH: ${{ github.event_name == 'pull_request' && github.base_ref || github.ref_name }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
