@@ -53,17 +53,17 @@ Run the docs locally:
 npm run start
 ```
 
-Local development uses the checked out Git branch as both `DOCS_CURRENT_BRANCH` and `DOCS_DEFAULT_BRANCH`, so the current branch stays canonical locally and the docs are served at `/docs`.
+Local development defaults the checked out branch to the canonical branch locally, so the docs are served at `/docs`.
 
-To simulate published routing from the configured canonical branch, use publish simulation mode:
+To simulate published routing from an injected canonical branch, set only the canonical branch explicitly:
 
 ```bash
-DOCS_RUNTIME_MODE=publish-simulation DOCS_DEFAULT_BRANCH=<current-default-branch> npm run start
+DOCS_DEFAULT_BRANCH=<current-default-branch> npm run start
 ```
 
 That keeps the injected default branch canonical at `/docs`. For a non-default release branch such as `1.x`, publish simulation would serve the docs under `/docs/1.x`.
 
-Runtime helpers require explicit `DOCS_CURRENT_BRANCH` and `DOCS_DEFAULT_BRANCH` inputs. The current Node-side entrypoint is [`release-policy/node.js`](./release-policy/node.js), which derives them from the checked out Git branch for regular local development, while CI and deployment workflows pass them explicitly.
+Branch-local docs runtime behavior now lives explicitly in the branch Docusaurus config and browser components. Release-policy remains the deployment control plane on the current default branch.
 
 Build static files:
 
@@ -122,4 +122,4 @@ The workflow-to-action release-policy contract currently passes:
 Missing deployable branches are skipped without failing a republish-all run.
 
 The repository no longer uses or depends on a separate control branch for release policy or deployment scripts.
-The current external entrypoints are [`release-policy/node.js`](./release-policy/node.js) for Node-side consumers and [`release-policy/browser.js`](./release-policy/browser.js) for browser-side consumers. Repository code outside `release-policy` should stay limited to configuration, content, and workflow YAML.
+The current workflow entrypoint is [`release-policy/node.js`](./release-policy/node.js). Repository code outside `release-policy` should stay limited to configuration, content, workflow YAML, and the minimum explicit branch-local docs runtime needed for local builds.

@@ -8,11 +8,8 @@
 ## Boundaries
 
 - The final long-term public API is intentionally undecided at this stage.
-- Current repository-facing external entrypoints are:
-  - [`node.js`](./node.js)
-  - [`browser.js`](./browser.js)
+- The current repository-facing external entrypoint is [`node.js`](./node.js).
 - [`core`](./core) is reserved for pure release-policy functions.
-- [`docusaurus`](./docusaurus) is reserved for the Docusaurus adapter.
 - [`github-pages`](./github-pages) is reserved for the GitHub Pages adapter.
 - [`github-actions`](./github-actions) is reserved for GitHub Actions-specific wrappers and shared scripts that travel with the release-policy tree.
 - Any other file under this module is private implementation detail unless it is explicitly listed above.
@@ -38,8 +35,8 @@
 - Keep the current default branch as the target single source of truth for release policy and deployment orchestration.
 - Prefer explicit workflow -> action -> JS inputs for release-policy configuration over filesystem config discovery.
 - Keep deployment helpers and operator workflows on the current default branch. Do not reintroduce `gh-pages-control` or any similar control branch.
-- Do not expose additional helpers under `core`, `docusaurus`, or `github-pages` as repo-facing API unless the change explicitly documents a new transitional external entrypoint.
-- When a function is consumed from outside `release-policy`, expose it through [`node.js`](./node.js) or [`browser.js`](./browser.js) according to the runtime that consumes it.
+- Do not expose additional helpers under `core` or `github-pages` as repo-facing API unless the change explicitly documents a new transitional external entrypoint.
+- Keep branch-local Docusaurus runtime behavior outside this module unless there is a deliberate architecture change.
 - For GitHub release operations, prefer this explicit config contract:
   - `site_base`
   - `canonical_branch`
@@ -54,7 +51,6 @@
   - [`github-actions/redeploy-all-docs`](./github-actions/redeploy-all-docs)
 - Keep workflow YAML thin. Put triggers, permissions, concurrency, and top-level wiring there; keep checkout/build/publish mechanics in local actions.
 - Prefer migrating release workflows to documented external entrypoints and deleting repo-level wrapper scripts once they become redundant.
-- Prefer migrating repository Docusaurus wiring to documented external entrypoints and deleting repo-level runtime wrapper scripts once they become redundant.
 - Keep shared system design, homepage ownership, navigation behavior, and deployment orchestration on the default branch.
 - Limit a non-default docs branch to its versioned documentation and the minimum code needed for that version to run locally.
 - Keep repository code outside `release-policy` limited to configuration, content, and workflow YAML.

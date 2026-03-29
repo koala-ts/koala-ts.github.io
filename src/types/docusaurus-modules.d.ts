@@ -153,54 +153,6 @@ declare module '@theme/DocSidebar/Mobile' {
   };
 }
 
-declare module '@site/release-policy/browser' {
-  export function buildAbsoluteSiteUrl(input: {
-    siteUrl: string;
-    path: string;
-  }): string;
-
-  export function buildCanonicalDocsContentPath(input: {
-    docsSiteBase: string;
-    version: string;
-    docPath: string;
-  }): string;
-
-  export function buildCanonicalDocsRootPath(input: {
-    docsSiteBase: string;
-    version: string;
-  }): string;
-
-  export function buildCurrentDocsContentPath(input: {
-    baseUrl: string;
-    docsRouteBasePath: string;
-    docPath: string;
-  }): string;
-
-  export function buildCurrentDocsRoutePath(input: {
-    docsRouteBasePath: string;
-    docPath: string;
-  }): string;
-
-  export function buildSharedDocsManifestPath(input: {
-    docsSiteBase: string;
-  }): string;
-
-  export function parseCurrentDocPath(input: {
-    currentPathname: string;
-    defaultBranch: string;
-    docsSiteBase: string;
-  }): string | null;
-
-  export function resolveVersionSwitchTarget(input: {
-    availableDocPathsByVersion: Record<string, string[]>;
-    currentPathname: string;
-    defaultBranch: string;
-    docsSiteBase: string;
-    fallbackDocPath: string;
-    targetVersion: string;
-  }): string;
-}
-
 declare module '*.module.css' {
   const classes: Record<string, string>;
   export default classes;
