@@ -3,57 +3,26 @@ const prismReact = require('prism-react-renderer');
 const BRANCH_VERSION = '1.x';
 const versionFallbackDocPath = 'overview/intro';
 
-const trimLeadingSlash = (value) => value.replace(/^\/+/, '');
-const normalizeBasePath = (value) => {
-  const trimmed = value.trim();
-  const withLeadingSlash = trimmed.startsWith('/') ? trimmed : `/${trimmed}`;
-  const withTrailingSlash = withLeadingSlash.endsWith('/')
-    ? withLeadingSlash
-    : `${withLeadingSlash}/`;
-
-  return withTrailingSlash.replace(/\/{2,}/g, '/');
-};
-const buildCanonicalHomePath = ({docsSiteBase = '/'}) =>
-  normalizeBasePath(docsSiteBase);
-const buildCurrentDocsContentPath = ({
-  baseUrl = '/',
-  docsRouteBasePath = 'docs',
-  docPath,
-}) => {
-  const normalizedBaseUrl = normalizeBasePath(baseUrl);
-  const normalizedDocsRouteBasePath = trimLeadingSlash(
-    normalizeBasePath(docsRouteBasePath),
-  );
-
-  return `${normalizedBaseUrl}${normalizedDocsRouteBasePath}${trimLeadingSlash(docPath)}`;
-};
-const parseVersions = (rawValue, fallbackVersion) =>
-  (rawValue ?? fallbackVersion)
-    .split(',')
-    .map((value) => value.trim())
-    .filter(Boolean);
-
 const versionSlug = process.env.DOCS_VERSION ?? BRANCH_VERSION;
 const defaultBranch = process.env.DOCS_DEFAULT_BRANCH ?? BRANCH_VERSION;
-const isDefaultBranch = versionSlug === defaultBranch;
+const versions = process.env.DOCS_VERSIONS
+  ? process.env.DOCS_VERSIONS.split(',').map((value) => value.trim()).filter(Boolean)
+  : [BRANCH_VERSION];
 const siteUrl = process.env.SITE_URL ?? 'http://localhost:3000';
 const baseUrl = process.env.DOCS_BASE_URL ?? '/';
 const docsSiteBase = process.env.DOCS_SITE_BASE ?? '/';
-const docsRouteBasePath =
-  process.env.DOCS_ROUTE_BASE_PATH ??
-  (isDefaultBranch ? 'docs' : `docs/${versionSlug}`);
-const versions = parseVersions(process.env.DOCS_VERSIONS, versionSlug);
-const homePath = buildCanonicalHomePath({docsSiteBase});
-const docsIntroPath = buildCurrentDocsContentPath({
-  baseUrl,
-  docsRouteBasePath,
-  docPath: 'overview/intro',
-});
-const docsQuickStartPath = buildCurrentDocsContentPath({
-  baseUrl,
-  docsRouteBasePath,
-  docPath: 'get-started/configuration',
-});
+const docsRouteBasePath = process.env.DOCS_ROUTE_BASE_PATH ?? 'docs';
+const homePath = process.env.DOCS_HOME_PATH ?? '/';
+const docsIntroPath =
+  process.env.DOCS_INTRO_PATH ??
+  (docsRouteBasePath === '/'
+    ? `${baseUrl}overview/intro`
+    : `${baseUrl}${docsRouteBasePath}/overview/intro`);
+const docsQuickStartPath =
+  process.env.DOCS_QUICK_START_PATH ??
+  (docsRouteBasePath === '/'
+    ? `${baseUrl}get-started/configuration`
+    : `${baseUrl}${docsRouteBasePath}/get-started/configuration`);
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
@@ -187,7 +156,9 @@ const config = {
         indexDocs: true,
         indexBlog: false,
         indexPages: true,
-        docsRouteBasePath: `/${docsRouteBasePath}`,
+        docsRouteBasePath:
+          process.env.DOCS_SEARCH_ROUTE_BASE_PATH ??
+          (docsRouteBasePath === '/' ? '/' : `/${docsRouteBasePath}`),
         hashed: true,
         language: ['en'],
       },
