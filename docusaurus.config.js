@@ -74,7 +74,7 @@ const config = {
       logo: {
         alt: 'KoalaTs Logo',
         src: 'img/logo.png',
-        href: homeHref,
+        href: homePath,
       },
       items: [
         {
