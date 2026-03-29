@@ -2,6 +2,7 @@ const prismReact = require('prism-react-renderer');
 const {createDocusaurusReleaseConfig} = require('./release-policy/docusaurus');
 
 const siteUrl = process.env.SITE_URL ?? 'https://koala-ts.github.io';
+
 const releasePolicy = createDocusaurusReleaseConfig({
   branch: '2.x',
   fallbackDocPath: 'overview/intro',
