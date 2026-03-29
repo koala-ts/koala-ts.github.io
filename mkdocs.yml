@@ -1,10 +1,14 @@
 site_name: KoalaTs
-site_description: KoalaTs documentation platform bootstrap
+site_description: KoalaTs landing page and versioned documentation
 site_url: https://koala-ts.github.io
 docs_dir: mkdocs/docs
 site_dir: build/mkdocs
 theme:
   name: material
+  palette:
+    - scheme: default
+      primary: teal
+      accent: teal
   features:
     - navigation.instant
     - navigation.tracking
@@ -17,5 +21,13 @@ markdown_extensions:
   - admonition
   - attr_list
   - md_in_html
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+extra_css:
+  - stylesheets/landing.css
 nav:
   - Home: index.md
+  - Docs:
+      - "2.x Overview": docs/2.x/overview/intro.md
+      - "2.x Quick Start": docs/2.x/getting-started/quick-start.md
