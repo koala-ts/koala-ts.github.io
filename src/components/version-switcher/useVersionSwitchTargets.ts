@@ -5,8 +5,8 @@ import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 const {
   buildAbsoluteSiteUrl,
   buildSharedDocsManifestPath,
-} = require('@site/scripts/build-canonical-site-paths');
-const {resolveVersionSwitchTarget} = require('@site/scripts/resolve-version-switch-target');
+  resolveVersionSwitchTarget,
+} = require('@site/release-policy/browser');
 
 type VersionPathsManifest = Record<string, string[]>;
 
