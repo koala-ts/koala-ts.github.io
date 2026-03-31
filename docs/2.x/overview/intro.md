@@ -1,5 +1,6 @@
 ---
 title: Introduction
+sidebar_position: 1
 ---
 
 KoalaTs is a TypeScript framework for backend developers who want explicit HTTP primitives, predictable request flow, and a structure that stays readable as applications grow.

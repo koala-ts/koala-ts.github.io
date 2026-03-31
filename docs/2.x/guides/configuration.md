@@ -1,5 +1,6 @@
 ---
 title: Configuration
+sidebar_position: 1
 ---
 
 Koala uses [dotenv](https://www.npmjs.com/package/dotenv) to load environment files in a predictable order. The goal is

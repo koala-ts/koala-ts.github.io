@@ -1,4 +1,7 @@
-# Http Request
+---
+title: Http Request
+sidebar_position: 2
+---
 
 The `IScope` interface that is passed to a controller method provides access to the incoming request data.
 

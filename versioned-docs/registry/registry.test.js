@@ -53,8 +53,10 @@ test('registry config derives versioned docs settings from raw declarations', ()
   assert.equal(docsPlugins.length, 2);
   assert.equal(docsPlugins[0][1].id, 'version-1-x');
   assert.equal(docsPlugins[0][1].routeBasePath, 'docs/1.x');
+  assert.equal(docsPlugins[0][1].sidebarPath, undefined);
   assert.equal(docsPlugins[1][1].routeBasePath, 'docs/2.x');
   assert.equal(docsPlugins[1][1].id, undefined);
+  assert.equal(docsPlugins[1][1].sidebarPath, undefined);
 
   assert.equal(latestVersion, '2.x');
   assert.equal(rawVersions.at(-1)?.version, latestVersion);

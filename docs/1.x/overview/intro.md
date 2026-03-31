@@ -1,4 +1,7 @@
-# KoalaTs
+---
+title: KoalaTs
+sidebar_position: 1
+---
 
 Welcome to KoalaTs. KoalaTs is crafted for backend developers who want a clear starting point for controllers, routing, request handling, response handling, and configuration.
 

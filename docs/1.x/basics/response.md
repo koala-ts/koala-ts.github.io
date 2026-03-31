@@ -1,4 +1,7 @@
-# Http Response
+---
+title: Http Response
+sidebar_position: 3
+---
 
 All controller methods should return a response. You can set response data using the `response` object of `IScope`.
 

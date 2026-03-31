@@ -1,5 +1,6 @@
 ---
 title: Response
+sidebar_position: 3
 ---
 
 All routes should return a response. You can set the response data using the `response` object of the `HttpScope`

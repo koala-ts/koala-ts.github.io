@@ -1,5 +1,6 @@
 ---
 title: Request Scope Store
+sidebar_position: 1
 ---
 
 The Request Scope Store is a utility that helps manage and propagate context-specific data (such as user information, request IDs, or feature flags) across asynchronous operations without manual parameter passing.
