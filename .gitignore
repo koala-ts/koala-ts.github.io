@@ -1,4 +1,5 @@
 .idea/
+.air/
 node_modules/
 build/
 .docusaurus/

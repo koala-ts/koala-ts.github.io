@@ -20,14 +20,17 @@ docs/
   1.x/
   2.x/
 versioned-docs/
-  registry.js
+  versions.js
+  registry/
+    registry.js
   sidebars/
 src/
 .github/workflows/
 ```
 
 - `docs/<version>` stores version-specific markdown content
-- `versioned-docs/registry.js` is the single source of truth for published versions
+- `versioned-docs/versions.js` is the single source of truth for published versions
+- `versioned-docs/registry/registry.js` derives the Docusaurus configuration from `versioned-docs/versions.js`
 - `versioned-docs/sidebars/*.js` defines each version sidebar independently
 - `src/components/version-switcher` resolves cross-version navigation targets
 
@@ -74,6 +77,6 @@ Search is scoped by version path.
 
 The site is built once and deployed once to GitHub Pages.
 
-- version ownership comes from `versioned-docs/registry.js`
+- version ownership comes from `versioned-docs/versions.js`
 - published content comes from `docs/<version>`
 - the workflow model is limited to CI and single-site publication
