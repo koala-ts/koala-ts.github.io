@@ -15,7 +15,7 @@
 
 ## Source Of Truth
 
-- Use https://github.com/koala-ts/framework as the primary source of product truth.
+- Use [koala-ts/framework](https://github.com/koala-ts/framework) as the primary source of product truth.
 - Read framework source code before trusting existing prose when they disagree.
 - Use framework tests to confirm behavior and edge cases.
 - Use merged PRs to understand intent, recommended direction, migration context, and emerging patterns.
