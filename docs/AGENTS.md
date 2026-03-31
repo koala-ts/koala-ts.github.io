@@ -94,4 +94,5 @@
 - Ensure examples make the recommended workflow feel attainable and useful.
 - Ensure the explanation reduces friction for the reader instead of adding ceremony.
 - Ensure the page helps the reader understand why KoalaTs works the way it does.
+- Ensure the final Markdown is ready for the repository validation pipeline, including markdownlint.
 - Ensure the final result feels authored by a careful human maintainer.
