@@ -1,4 +1,7 @@
-# Configuration
+---
+title: Configuration
+sidebar_position: 1
+---
 
 Applications often need to be configured to run in different environments. For example, you might want to use a
 different database in development than in production.

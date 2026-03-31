@@ -1,5 +1,6 @@
 ---
 title: Request
+sidebar_position: 2
 ---
 
 The `HttpScope` instance passed to a route handler provides access to the incoming request data.

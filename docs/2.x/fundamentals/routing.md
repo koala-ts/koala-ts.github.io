@@ -1,5 +1,6 @@
 ---
 title: Routing
+sidebar_position: 1
 ---
 
 KoalaTs routing is function-first. You define routes as explicit values and register them through the application

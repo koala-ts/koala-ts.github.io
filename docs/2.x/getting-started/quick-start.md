@@ -1,5 +1,6 @@
 ---
 title: Quick Start
+sidebar_position: 1
 ---
 
 This is the shortest path to a running KoalaTs application.

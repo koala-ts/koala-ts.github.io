@@ -1,5 +1,6 @@
 ---
 title: Serving Static Files
+sidebar_position: 2
 ---
 
 KoalaTs includes built-in support for serving static files such as HTML, CSS, JavaScript, images, and other assets. This is useful for serving public files like client-side assets, documentation, or any files that don't require server-side processing.

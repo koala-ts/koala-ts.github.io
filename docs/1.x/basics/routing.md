@@ -1,4 +1,7 @@
-# Routing
+---
+title: Routing
+sidebar_position: 1
+---
 
 When your application receives a request, it calls a controller method to generate the response. The routing
 configuration defines which action to run for each incoming URL.
