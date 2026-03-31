@@ -1,16 +1,8 @@
 const prismReact = require('prism-react-renderer');
-const {
-  buildDocPathManifest,
-  buildSearchContexts,
-  createDocsPlugins,
-  latestVersion,
-  versions,
-} = require('./versioned-docs/registry');
+const createRegistryConfig = require('./versioned-docs/registry/registry');
 
 const siteUrl = process.env.SITE_URL ?? 'https://koala-ts.github.io';
-const latestVersionEntry = versions.find(({slug}) => slug === latestVersion);
-const docsIntroPath = `/docs/${latestVersionEntry.slug}/${latestVersionEntry.introDocId}`;
-const docsQuickStartPath = `/docs/${latestVersionEntry.slug}/${latestVersionEntry.quickStartDocId}`;
+const registryConfig = createRegistryConfig();
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
@@ -29,21 +21,7 @@ const config = {
     defaultLocale: 'en',
     locales: ['en'],
   },
-  customFields: {
-    versions: versions.map(
-      ({slug, label, routeBasePath, introDocId, fallbackDocId}) => ({
-        slug,
-        label,
-        routeBasePath,
-        introDocId,
-        fallbackDocId,
-      }),
-    ),
-    latestVersion,
-    docsIntroPath,
-    docsQuickStartPath,
-    docPathManifest: buildDocPathManifest(versions),
-  },
+  customFields: registryConfig.customFields,
   themeConfig: {
     colorMode: {
       defaultMode: 'light',
@@ -59,7 +37,7 @@ const config = {
       },
       items: [
         {
-          href: docsIntroPath,
+          href: registryConfig.customFields.docsIntroPath,
           position: 'left',
           label: 'Documentation',
         },
@@ -139,7 +117,7 @@ const config = {
     ],
   ],
   plugins: [
-    ...createDocsPlugins(versions),
+    ...registryConfig.docsPlugins,
     [
       '@easyops-cn/docusaurus-search-local',
       {
@@ -148,8 +126,8 @@ const config = {
         indexPages: true,
         hashed: true,
         language: ['en'],
-        docsRouteBasePath: versions.map(({routeBasePath}) => routeBasePath),
-        searchContextByPaths: buildSearchContexts(versions),
+        docsRouteBasePath: registryConfig.search.docsRouteBasePath,
+        searchContextByPaths: registryConfig.search.searchContextByPaths,
         hideSearchBarWithNoSearchContext: true,
       },
     ],
